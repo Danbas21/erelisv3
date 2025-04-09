@@ -1,14 +1,12 @@
 // lib/screens/login_screen.dart
 import 'package:erelis/config/app_colors.dart';
 import 'package:erelis/config/routes.dart';
-import 'package:erelis/core/utils/images_utils.dart';
 import 'package:erelis/core/utils/validators.dart';
 import 'package:erelis/presentation/widgets/common/custom_text_field.dart';
 import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/auth/auth_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginPage extends StatelessWidget {
   final TextEditingController _emailController = TextEditingController();
@@ -41,11 +39,7 @@ class LoginPage extends StatelessWidget {
                   const SizedBox(height: 60),
                   // Logo y título
                   Center(
-                    child: SvgPicture.asset(
-                      ImagesUtils.logo,
-                      height: 100,
-                      width: 100,
-                    ),
+                    child: Image.asset('assets/images/logo.png', height: 100),
                   ),
                   const SizedBox(height: 20),
                   Text(

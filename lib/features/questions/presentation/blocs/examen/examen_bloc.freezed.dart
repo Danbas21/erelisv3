@@ -45,8 +45,8 @@ $ExamenStateCopyWith(ExamenState _, $Res Function(ExamenState) __);
 /// @nodoc
 
 
-class Inicial implements ExamenState {
-  const Inicial();
+class InicialExamen implements ExamenState {
+  const InicialExamen();
   
 
 
@@ -56,7 +56,7 @@ class Inicial implements ExamenState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Inicial);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InicialExamen);
 }
 
 
@@ -598,8 +598,8 @@ as String,
 /// @nodoc
 
 
-class ProgresoGuardado implements ExamenEvent {
-  const ProgresoGuardado({required this.examenId, required this.usuarioId});
+class ProgresoGuardadoExamen implements ExamenEvent {
+  const ProgresoGuardadoExamen({required this.examenId, required this.usuarioId});
   
 
  final  String examenId;
@@ -609,13 +609,13 @@ class ProgresoGuardado implements ExamenEvent {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ProgresoGuardadoCopyWith<ProgresoGuardado> get copyWith => _$ProgresoGuardadoCopyWithImpl<ProgresoGuardado>(this, _$identity);
+$ProgresoGuardadoExamenCopyWith<ProgresoGuardadoExamen> get copyWith => _$ProgresoGuardadoExamenCopyWithImpl<ProgresoGuardadoExamen>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProgresoGuardado&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ProgresoGuardadoExamen&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId));
 }
 
 
@@ -631,8 +631,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $ProgresoGuardadoCopyWith<$Res> implements $ExamenEventCopyWith<$Res> {
-  factory $ProgresoGuardadoCopyWith(ProgresoGuardado value, $Res Function(ProgresoGuardado) _then) = _$ProgresoGuardadoCopyWithImpl;
+abstract mixin class $ProgresoGuardadoExamenCopyWith<$Res> implements $ExamenEventCopyWith<$Res> {
+  factory $ProgresoGuardadoExamenCopyWith(ProgresoGuardadoExamen value, $Res Function(ProgresoGuardadoExamen) _then) = _$ProgresoGuardadoExamenCopyWithImpl;
 @useResult
 $Res call({
  String examenId, String usuarioId
@@ -643,17 +643,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$ProgresoGuardadoCopyWithImpl<$Res>
-    implements $ProgresoGuardadoCopyWith<$Res> {
-  _$ProgresoGuardadoCopyWithImpl(this._self, this._then);
+class _$ProgresoGuardadoExamenCopyWithImpl<$Res>
+    implements $ProgresoGuardadoExamenCopyWith<$Res> {
+  _$ProgresoGuardadoExamenCopyWithImpl(this._self, this._then);
 
-  final ProgresoGuardado _self;
-  final $Res Function(ProgresoGuardado) _then;
+  final ProgresoGuardadoExamen _self;
+  final $Res Function(ProgresoGuardadoExamen) _then;
 
 /// Create a copy of ExamenEvent
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? examenId = null,Object? usuarioId = null,}) {
-  return _then(ProgresoGuardado(
+  return _then(ProgresoGuardadoExamen(
 examenId: null == examenId ? _self.examenId : examenId // ignore: cast_nullable_to_non_nullable
 as String,usuarioId: null == usuarioId ? _self.usuarioId : usuarioId // ignore: cast_nullable_to_non_nullable
 as String,

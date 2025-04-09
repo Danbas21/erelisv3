@@ -4,7 +4,7 @@ part of 'progreso_bloc.dart';
 @freezed
 class ProgresoState with _$ProgresoState {
   /// Estado inicial.
-  const factory ProgresoState.inicial() = _Inicial;
+  const factory ProgresoState.inicial() = Inicial;
 
   /// Estado durante la ejecución del examen.
   const factory ProgresoState.enCurso({
@@ -12,11 +12,11 @@ class ProgresoState with _$ProgresoState {
     required String usuarioId,
     required int totalPreguntas,
     required int preguntasRespondidas,
-    required int tiempoRestante,
+    required int tiempoRestantes,
     required Map<String, String> respuestas,
     DateTime? ultimoGuardado,
     String? errorGuardado,
-  }) = _EnCurso;
+  }) = EnCursoP;
 
   /// Estado cuando se ha agotado el tiempo.
   const factory ProgresoState.tiempoAgotado({
@@ -25,5 +25,5 @@ class ProgresoState with _$ProgresoState {
     required int totalPreguntas,
     required int preguntasRespondidas,
     required Map<String, String> respuestas,
-  }) = _TiempoAgotado;
+  }) = TiempoAgotado;
 }

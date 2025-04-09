@@ -23,22 +23,24 @@ class UnitsRemoteDataSourceImpl implements UnitsRemoteDataSource {
         .collection('units')
         .snapshots()
         .map((snapshot) {
-      final units = snapshot.docs.map((doc) {
-        return UnitModel.fromFirestore(doc.data(), doc.id);
-      }).toList();
+          final units =
+              snapshot.docs.map((doc) {
+                return UnitModel.fromFirestore(doc.data(), doc.id);
+              }).toList();
 
-      return units;
-    });
+          return units;
+        });
   }
 
   @override
   Future<List<UnitModel>> getUnitsByCourseOnce(String courseId) async {
     try {
-      final snapshot = await firestore
-          .collection('courses')
-          .doc(courseId)
-          .collection('units')
-          .get();
+      final snapshot =
+          await firestore
+              .collection('courses')
+              .doc(courseId)
+              .collection('units')
+              .get();
 
       final units = <UnitModel>[];
 
@@ -52,15 +54,16 @@ class UnitsRemoteDataSourceImpl implements UnitsRemoteDataSource {
 
       return units;
     } catch (e) {
-      throw e;
+      rethrow;
     }
   }
 
   Future<UnitModel> getUnitByIdOnce(String unitId) async {
-    final snapshot = await firestore
-        .collectionGroup('units')
-        .where(FieldPath.documentId, isEqualTo: unitId)
-        .get();
+    final snapshot =
+        await firestore
+            .collectionGroup('units')
+            .where(FieldPath.documentId, isEqualTo: unitId)
+            .get();
 
     if (snapshot.docs.isEmpty) {
       throw Exception("Unidad no encontrada");
@@ -80,12 +83,13 @@ class UnitsRemoteDataSourceImpl implements UnitsRemoteDataSource {
         .doc(unitId)
         .snapshots()
         .map((snapshot) {
-      if (!snapshot.exists) {
-        throw Exception('Unidad no encontrada');
-      }
-      return UnitModel.fromFirestore(snapshot.data()!, snapshot.id);
-    }).handleError((error) {
-      throw error;
-    });
+          if (!snapshot.exists) {
+            throw Exception('Unidad no encontrada');
+          }
+          return UnitModel.fromFirestore(snapshot.data()!, snapshot.id);
+        })
+        .handleError((error) {
+          throw error;
+        });
   }
 }

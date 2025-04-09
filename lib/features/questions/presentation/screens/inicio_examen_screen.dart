@@ -1,7 +1,6 @@
 import 'package:erelis/features/questions/domain/repository/examen_repository.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:provider/provider.dart';
 
 import '../../domain/entities/examen_entity.dart';
 

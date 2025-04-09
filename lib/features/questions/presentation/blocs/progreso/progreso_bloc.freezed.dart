@@ -45,8 +45,8 @@ $ProgresoStateCopyWith(ProgresoState _, $Res Function(ProgresoState) __);
 /// @nodoc
 
 
-class _Inicial implements ProgresoState {
-  const _Inicial();
+class Inicial implements ProgresoState {
+  const Inicial();
   
 
 
@@ -56,7 +56,7 @@ class _Inicial implements ProgresoState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Inicial);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Inicial);
 }
 
 
@@ -77,15 +77,15 @@ String toString() {
 /// @nodoc
 
 
-class _EnCurso implements ProgresoState {
-  const _EnCurso({required this.examenId, required this.usuarioId, required this.totalPreguntas, required this.preguntasRespondidas, required this.tiempoRestante, required final  Map<String, String> respuestas, this.ultimoGuardado, this.errorGuardado}): _respuestas = respuestas;
+class EnCursoP implements ProgresoState {
+  const EnCursoP({required this.examenId, required this.usuarioId, required this.totalPreguntas, required this.preguntasRespondidas, required this.tiempoRestantes, required final  Map<String, String> respuestas, this.ultimoGuardado, this.errorGuardado}): _respuestas = respuestas;
   
 
  final  String examenId;
  final  String usuarioId;
  final  int totalPreguntas;
  final  int preguntasRespondidas;
- final  int tiempoRestante;
+ final  int tiempoRestantes;
  final  Map<String, String> _respuestas;
  Map<String, String> get respuestas {
   if (_respuestas is EqualUnmodifiableMapView) return _respuestas;
@@ -100,33 +100,33 @@ class _EnCurso implements ProgresoState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$EnCursoCopyWith<_EnCurso> get copyWith => __$EnCursoCopyWithImpl<_EnCurso>(this, _$identity);
+$EnCursoPCopyWith<EnCursoP> get copyWith => _$EnCursoPCopyWithImpl<EnCursoP>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EnCurso&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId)&&(identical(other.totalPreguntas, totalPreguntas) || other.totalPreguntas == totalPreguntas)&&(identical(other.preguntasRespondidas, preguntasRespondidas) || other.preguntasRespondidas == preguntasRespondidas)&&(identical(other.tiempoRestante, tiempoRestante) || other.tiempoRestante == tiempoRestante)&&const DeepCollectionEquality().equals(other._respuestas, _respuestas)&&(identical(other.ultimoGuardado, ultimoGuardado) || other.ultimoGuardado == ultimoGuardado)&&(identical(other.errorGuardado, errorGuardado) || other.errorGuardado == errorGuardado));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EnCursoP&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId)&&(identical(other.totalPreguntas, totalPreguntas) || other.totalPreguntas == totalPreguntas)&&(identical(other.preguntasRespondidas, preguntasRespondidas) || other.preguntasRespondidas == preguntasRespondidas)&&(identical(other.tiempoRestantes, tiempoRestantes) || other.tiempoRestantes == tiempoRestantes)&&const DeepCollectionEquality().equals(other._respuestas, _respuestas)&&(identical(other.ultimoGuardado, ultimoGuardado) || other.ultimoGuardado == ultimoGuardado)&&(identical(other.errorGuardado, errorGuardado) || other.errorGuardado == errorGuardado));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,examenId,usuarioId,totalPreguntas,preguntasRespondidas,tiempoRestante,const DeepCollectionEquality().hash(_respuestas),ultimoGuardado,errorGuardado);
+int get hashCode => Object.hash(runtimeType,examenId,usuarioId,totalPreguntas,preguntasRespondidas,tiempoRestantes,const DeepCollectionEquality().hash(_respuestas),ultimoGuardado,errorGuardado);
 
 @override
 String toString() {
-  return 'ProgresoState.enCurso(examenId: $examenId, usuarioId: $usuarioId, totalPreguntas: $totalPreguntas, preguntasRespondidas: $preguntasRespondidas, tiempoRestante: $tiempoRestante, respuestas: $respuestas, ultimoGuardado: $ultimoGuardado, errorGuardado: $errorGuardado)';
+  return 'ProgresoState.enCurso(examenId: $examenId, usuarioId: $usuarioId, totalPreguntas: $totalPreguntas, preguntasRespondidas: $preguntasRespondidas, tiempoRestantes: $tiempoRestantes, respuestas: $respuestas, ultimoGuardado: $ultimoGuardado, errorGuardado: $errorGuardado)';
 }
 
 
 }
 
 /// @nodoc
-abstract mixin class _$EnCursoCopyWith<$Res> implements $ProgresoStateCopyWith<$Res> {
-  factory _$EnCursoCopyWith(_EnCurso value, $Res Function(_EnCurso) _then) = __$EnCursoCopyWithImpl;
+abstract mixin class $EnCursoPCopyWith<$Res> implements $ProgresoStateCopyWith<$Res> {
+  factory $EnCursoPCopyWith(EnCursoP value, $Res Function(EnCursoP) _then) = _$EnCursoPCopyWithImpl;
 @useResult
 $Res call({
- String examenId, String usuarioId, int totalPreguntas, int preguntasRespondidas, int tiempoRestante, Map<String, String> respuestas, DateTime? ultimoGuardado, String? errorGuardado
+ String examenId, String usuarioId, int totalPreguntas, int preguntasRespondidas, int tiempoRestantes, Map<String, String> respuestas, DateTime? ultimoGuardado, String? errorGuardado
 });
 
 
@@ -134,22 +134,22 @@ $Res call({
 
 }
 /// @nodoc
-class __$EnCursoCopyWithImpl<$Res>
-    implements _$EnCursoCopyWith<$Res> {
-  __$EnCursoCopyWithImpl(this._self, this._then);
+class _$EnCursoPCopyWithImpl<$Res>
+    implements $EnCursoPCopyWith<$Res> {
+  _$EnCursoPCopyWithImpl(this._self, this._then);
 
-  final _EnCurso _self;
-  final $Res Function(_EnCurso) _then;
+  final EnCursoP _self;
+  final $Res Function(EnCursoP) _then;
 
 /// Create a copy of ProgresoState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? examenId = null,Object? usuarioId = null,Object? totalPreguntas = null,Object? preguntasRespondidas = null,Object? tiempoRestante = null,Object? respuestas = null,Object? ultimoGuardado = freezed,Object? errorGuardado = freezed,}) {
-  return _then(_EnCurso(
+@pragma('vm:prefer-inline') $Res call({Object? examenId = null,Object? usuarioId = null,Object? totalPreguntas = null,Object? preguntasRespondidas = null,Object? tiempoRestantes = null,Object? respuestas = null,Object? ultimoGuardado = freezed,Object? errorGuardado = freezed,}) {
+  return _then(EnCursoP(
 examenId: null == examenId ? _self.examenId : examenId // ignore: cast_nullable_to_non_nullable
 as String,usuarioId: null == usuarioId ? _self.usuarioId : usuarioId // ignore: cast_nullable_to_non_nullable
 as String,totalPreguntas: null == totalPreguntas ? _self.totalPreguntas : totalPreguntas // ignore: cast_nullable_to_non_nullable
 as int,preguntasRespondidas: null == preguntasRespondidas ? _self.preguntasRespondidas : preguntasRespondidas // ignore: cast_nullable_to_non_nullable
-as int,tiempoRestante: null == tiempoRestante ? _self.tiempoRestante : tiempoRestante // ignore: cast_nullable_to_non_nullable
+as int,tiempoRestantes: null == tiempoRestantes ? _self.tiempoRestantes : tiempoRestantes // ignore: cast_nullable_to_non_nullable
 as int,respuestas: null == respuestas ? _self._respuestas : respuestas // ignore: cast_nullable_to_non_nullable
 as Map<String, String>,ultimoGuardado: freezed == ultimoGuardado ? _self.ultimoGuardado : ultimoGuardado // ignore: cast_nullable_to_non_nullable
 as DateTime?,errorGuardado: freezed == errorGuardado ? _self.errorGuardado : errorGuardado // ignore: cast_nullable_to_non_nullable
@@ -163,8 +163,8 @@ as String?,
 /// @nodoc
 
 
-class _TiempoAgotado implements ProgresoState {
-  const _TiempoAgotado({required this.examenId, required this.usuarioId, required this.totalPreguntas, required this.preguntasRespondidas, required final  Map<String, String> respuestas}): _respuestas = respuestas;
+class TiempoAgotado implements ProgresoState {
+  const TiempoAgotado({required this.examenId, required this.usuarioId, required this.totalPreguntas, required this.preguntasRespondidas, required final  Map<String, String> respuestas}): _respuestas = respuestas;
   
 
  final  String examenId;
@@ -183,13 +183,13 @@ class _TiempoAgotado implements ProgresoState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-_$TiempoAgotadoCopyWith<_TiempoAgotado> get copyWith => __$TiempoAgotadoCopyWithImpl<_TiempoAgotado>(this, _$identity);
+$TiempoAgotadoCopyWith<TiempoAgotado> get copyWith => _$TiempoAgotadoCopyWithImpl<TiempoAgotado>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _TiempoAgotado&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId)&&(identical(other.totalPreguntas, totalPreguntas) || other.totalPreguntas == totalPreguntas)&&(identical(other.preguntasRespondidas, preguntasRespondidas) || other.preguntasRespondidas == preguntasRespondidas)&&const DeepCollectionEquality().equals(other._respuestas, _respuestas));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is TiempoAgotado&&(identical(other.examenId, examenId) || other.examenId == examenId)&&(identical(other.usuarioId, usuarioId) || other.usuarioId == usuarioId)&&(identical(other.totalPreguntas, totalPreguntas) || other.totalPreguntas == totalPreguntas)&&(identical(other.preguntasRespondidas, preguntasRespondidas) || other.preguntasRespondidas == preguntasRespondidas)&&const DeepCollectionEquality().equals(other._respuestas, _respuestas));
 }
 
 
@@ -205,8 +205,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class _$TiempoAgotadoCopyWith<$Res> implements $ProgresoStateCopyWith<$Res> {
-  factory _$TiempoAgotadoCopyWith(_TiempoAgotado value, $Res Function(_TiempoAgotado) _then) = __$TiempoAgotadoCopyWithImpl;
+abstract mixin class $TiempoAgotadoCopyWith<$Res> implements $ProgresoStateCopyWith<$Res> {
+  factory $TiempoAgotadoCopyWith(TiempoAgotado value, $Res Function(TiempoAgotado) _then) = _$TiempoAgotadoCopyWithImpl;
 @useResult
 $Res call({
  String examenId, String usuarioId, int totalPreguntas, int preguntasRespondidas, Map<String, String> respuestas
@@ -217,17 +217,17 @@ $Res call({
 
 }
 /// @nodoc
-class __$TiempoAgotadoCopyWithImpl<$Res>
-    implements _$TiempoAgotadoCopyWith<$Res> {
-  __$TiempoAgotadoCopyWithImpl(this._self, this._then);
+class _$TiempoAgotadoCopyWithImpl<$Res>
+    implements $TiempoAgotadoCopyWith<$Res> {
+  _$TiempoAgotadoCopyWithImpl(this._self, this._then);
 
-  final _TiempoAgotado _self;
-  final $Res Function(_TiempoAgotado) _then;
+  final TiempoAgotado _self;
+  final $Res Function(TiempoAgotado) _then;
 
 /// Create a copy of ProgresoState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? examenId = null,Object? usuarioId = null,Object? totalPreguntas = null,Object? preguntasRespondidas = null,Object? respuestas = null,}) {
-  return _then(_TiempoAgotado(
+  return _then(TiempoAgotado(
 examenId: null == examenId ? _self.examenId : examenId // ignore: cast_nullable_to_non_nullable
 as String,usuarioId: null == usuarioId ? _self.usuarioId : usuarioId // ignore: cast_nullable_to_non_nullable
 as String,totalPreguntas: null == totalPreguntas ? _self.totalPreguntas : totalPreguntas // ignore: cast_nullable_to_non_nullable

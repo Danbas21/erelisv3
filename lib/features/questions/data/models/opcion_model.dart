@@ -1,5 +1,7 @@
 /// Modelo de datos para representar una opción de respuesta.
 ///
+library;
+
 import 'package:erelis/features/questions/domain/entities/option_entity.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
 

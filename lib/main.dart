@@ -5,8 +5,7 @@ import 'package:erelis/data/datasources/firebase/categories_firebase_datasource.
 import 'package:erelis/data/datasources/firebase/courses_firebase_datasource.dart';
 import 'package:erelis/data/repositories/categories_repository_impl.dart';
 import 'package:erelis/data/repositories/courses_repository_impl.dart';
-import 'package:erelis/features/questions/domain/repositories/question_repository.dart';
-import 'package:erelis/features/questions/presentation/test/test_bloc.dart';
+
 import 'package:erelis/features/salon/domain/repositories/subjects_repository.dart';
 import 'package:erelis/features/salon/presentation/bloc/salon_bloc.dart';
 
@@ -62,114 +61,115 @@ void main() async {
 class MyApp extends StatelessWidget {
   final AuthService authService;
 
-  MyApp({
-    super.key,
-    required this.authService,
-  });
+  MyApp({super.key, required this.authService});
   final SubjectsRepository subjectRepository = SubjectsRepository();
 
   @override
   Widget build(BuildContext context) => MultiRepositoryProvider(
-        providers: [
-          // Repositorios existentes
-          RepositoryProvider(create: (context) => subjectRepository),
-          // Nuevos repositorios para unidades
+    providers: [
+      // Repositorios existentes
+      RepositoryProvider(create: (context) => subjectRepository),
 
-          RepositoryProvider<HighlightRepository>(
-            create: (context) => HighlightRepositoryImpl(
+      // Nuevos repositorios para unidades
+      RepositoryProvider<HighlightRepository>(
+        create:
+            (context) => HighlightRepositoryImpl(
               remoteDataSource: HighlightRemoteDataSource(
                 firestore: FirebaseFirestore.instance,
               ),
             ),
-          ),
-          RepositoryProvider<UnitsRemoteDataSource>(
-            create: (context) => UnitsRemoteDataSourceImpl(
+      ),
+      RepositoryProvider<UnitsRemoteDataSource>(
+        create:
+            (context) => UnitsRemoteDataSourceImpl(
               firestore: FirebaseFirestore.instance,
             ),
-          ),
-          RepositoryProvider<UnitsRepository>(
-            create: (context) => UnitsRepositoryImpl(
+      ),
+      RepositoryProvider<UnitsRepository>(
+        create:
+            (context) => UnitsRepositoryImpl(
               remoteDataSource: context.read<UnitsRemoteDataSource>(),
             ),
-          ),
-        ],
-        child: MultiBlocProvider(
-          providers: [
-            // BLoCs existentes
-            BlocProvider<NavigationBloc>(
-              create: (context) => NavigationBloc(),
-            ),
-            BlocProvider<CoursesBloc>(
-              create: (context) => CoursesBloc(
+      ),
+    ],
+    child: MultiBlocProvider(
+      providers: [
+        // BLoCs existentes
+        BlocProvider<NavigationBloc>(create: (context) => NavigationBloc()),
+        BlocProvider<CoursesBloc>(
+          create:
+              (context) => CoursesBloc(
                 coursesRepository: CoursesRepositoryImpl(
                   remoteDataSource: CoursesFirebaseDataSource(),
                 ),
               )..add(FetchCourses()),
-            ),
-            BlocProvider<CategoryBloc>(
-              create: (context) => CategoryBloc(
+        ),
+        BlocProvider<CategoryBloc>(
+          create:
+              (context) => CategoryBloc(
                 categoriesRepository: CategoriesRepositoryImpl(
                   remoteDataSource: CategoriesFirebaseDataSource(),
                 ),
               )..add(FetchCategories()),
-            ),
-            BlocProvider<AuthBloc>(
-              create: (context) => AuthBloc(authService: authService)
-                ..add(const AuthEvent.checkAuthStatus()),
-            ),
-            BlocProvider<TableroBloc>(
-              create: (context) {
-                return TableroBloc(
-                  getLeadersUseCase:
-                      GetLeadersUseCase(context.read<TableroRepository>()),
-                  getCourseProgressUseCase: GetCourseProgressUseCase(
-                      context.read<TableroRepository>()),
-                  getExamsUseCase:
-                      GetExamsUseCase(context.read<TableroRepository>()),
-                  getUserProfileUseCase:
-                      GetUserProfileUseCase(context.read<TableroRepository>()),
-                  updateCourseProgressUseCase: UpdateCourseProgressUseCase(
-                      context.read<TableroRepository>()),
-                );
-              },
-            ),
-            BlocProvider<SalonBloc>(
-                create: (context) => SalonBloc(
-                      subjectsRepository: subjectRepository,
-                    )),
-            BlocProvider<UnitsBloc>(
-              create: (context) => UnitsBloc(
-                repository: context.read<UnitsRepository>(),
-              ),
-            ),
-            BlocProvider<UnitDetailBloc>(
-              create: (context) => UnitDetailBloc(
-                repository: context.read<UnitsRepository>(),
-              ),
-            ),
-            BlocProvider<TestBloc>(
-              create: (context) => TestBloc(
-                questionRepository: context.read(),
-                resultRepository: context.read(),
-              ),
-            ),
-            // Nuevos BLoCs para unidades
-
-            // El UnitContentBloc no se crea aquí, se creará en la página de contenido
-            // cuando sea necesario para evitar cargas innecesarias
-          ],
-          child: MaterialApp(
-            navigatorKey: navigationService.navigatorKey,
-            title: 'Erelis - Plataforma Educativa',
-            debugShowCheckedModeBanner: false,
-            theme: AppTheme.darkTheme,
-            darkTheme: AppTheme.darkTheme,
-            themeMode: ThemeMode.light,
-
-            initialRoute: '/initial',
-            onGenerateRoute: AppRoutes
-                .onGenerateRoute, // Usar onGenerateRoute en vez de routes
-          ),
         ),
-      );
+        BlocProvider<AuthBloc>(
+          create:
+              (context) =>
+                  AuthBloc(authService: authService)
+                    ..add(const AuthEvent.checkAuthStatus()),
+        ),
+        BlocProvider<TableroBloc>(
+          create: (context) {
+            return TableroBloc(
+              getLeadersUseCase: GetLeadersUseCase(
+                context.read<TableroRepository>(),
+              ),
+              getCourseProgressUseCase: GetCourseProgressUseCase(
+                context.read<TableroRepository>(),
+              ),
+              getExamsUseCase: GetExamsUseCase(
+                context.read<TableroRepository>(),
+              ),
+              getUserProfileUseCase: GetUserProfileUseCase(
+                context.read<TableroRepository>(),
+              ),
+              updateCourseProgressUseCase: UpdateCourseProgressUseCase(
+                context.read<TableroRepository>(),
+              ),
+            );
+          },
+        ),
+        BlocProvider<SalonBloc>(
+          create: (context) => SalonBloc(subjectsRepository: subjectRepository),
+        ),
+        BlocProvider<UnitsBloc>(
+          create:
+              (context) =>
+                  UnitsBloc(repository: context.read<UnitsRepository>()),
+        ),
+        BlocProvider<UnitDetailBloc>(
+          create:
+              (context) =>
+                  UnitDetailBloc(repository: context.read<UnitsRepository>()),
+        ),
+
+        // Nuevos BLoCs para unidades
+
+        // El UnitContentBloc no se crea aquí, se creará en la página de contenido
+        // cuando sea necesario para evitar cargas innecesarias
+      ],
+      child: MaterialApp(
+        navigatorKey: navigationService.navigatorKey,
+        title: 'Erelis - Plataforma Educativa',
+        debugShowCheckedModeBanner: false,
+        theme: AppTheme.darkTheme,
+        darkTheme: AppTheme.darkTheme,
+        themeMode: ThemeMode.light,
+
+        initialRoute: '/initial',
+        onGenerateRoute:
+            AppRoutes.onGenerateRoute, // Usar onGenerateRoute en vez de routes
+      ),
+    ),
+  );
 }

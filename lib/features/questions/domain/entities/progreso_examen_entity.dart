@@ -1,6 +1,7 @@
 /// Entidad que representa el progreso de un usuario en un examen.
 ///
 ///
+library;
 
 import 'package:freezed_annotation/freezed_annotation.dart';
 part 'progreso_examen_entity.freezed.dart';

@@ -1,8 +1,5 @@
 // lib/config/routes.dart
-import 'package:erelis/features/questions/domain/models/question.dart';
-import 'package:erelis/features/questions/presentation/pages/test_intro_page.dart';
-import 'package:erelis/features/questions/presentation/pages/test_page.dart';
-import 'package:erelis/features/questions/presentation/pages/test_results_detail_page.dart';
+
 import 'package:erelis/features/salon/presentation/pages/salon_screen.dart';
 
 import 'package:erelis/features/unidad/presentation/pages/units_page.dart';
@@ -58,63 +55,13 @@ class AppRoutes {
         return MaterialPageRoute(
           builder: (_) => UnitsPage(courseId: courseId, courseName: courseName),
         );
-      case testIntro:
-        final args = settings.arguments as Map<String, dynamic>?;
-        final courseId = args?['courseId'] as String? ?? '';
-        final unitId = args?['unitId'] as String? ?? '';
-        final title = args?['title'] as String? ?? 'Examen';
-        final questionCount = args?['questionCount'] as int? ?? 0;
-
-        return MaterialPageRoute(
-          builder: (context) => TestIntroPage(
-            courseId: courseId,
-            unitId: unitId,
-            title: title,
-            questionCount: questionCount,
-          ),
-        );
-
-      case test:
-        final args = settings.arguments as Map<String, dynamic>?;
-        final courseId = args?['courseId'] as String? ?? '';
-        final unitId = args?['unitId'] as String? ?? '';
-        final title = args?['title'] as String? ?? 'Examen';
-
-        return MaterialPageRoute(
-          builder: (context) => TestPage(
-            courseId: courseId,
-            unitId: unitId,
-            title: title,
-          ),
-        );
-
-      case testResults:
-        final args = settings.arguments as Map<String, dynamic>?;
-        final questions = args?['questions'] as List<Question>? ?? [];
-        final result = args?['result'] as TestResult? ??
-            TestResult(
-              testId: '',
-              answers: [],
-              totalPoints: 0,
-              earnedPoints: 0,
-              percentage: 0,
-              isCompleted: false,
-            );
-
-        return MaterialPageRoute(
-          builder: (context) => TestResultsDetailPage(
-            questions: questions,
-            result: result,
-          ),
-        );
 
       default:
         return MaterialPageRoute(
-          builder: (_) => Scaffold(
-            body: Center(
-              child: Text('Ruta no definida: ${settings.name}'),
-            ),
-          ),
+          builder:
+              (_) => Scaffold(
+                body: Center(child: Text('Ruta no definida: ${settings.name}')),
+              ),
         );
     }
   }

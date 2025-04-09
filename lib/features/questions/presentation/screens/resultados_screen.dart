@@ -1,10 +1,10 @@
+import 'package:erelis/features/questions/presentation/widgets/grafico_resultado_widget.dart';
+import 'package:erelis/features/questions/presentation/widgets/lista_respuestas_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
 import 'package:share_plus/share_plus.dart';
 
 import '../../domain/entities/examen_entity.dart';
-import '../widgets/grafico_resultado_widget.dart';
-import '../widgets/lista_respuestas_widget.dart';
 
 /// Pantalla de resultados del examen finalizado.
 class ResultadosScreen extends StatelessWidget {
@@ -15,13 +15,13 @@ class ResultadosScreen extends StatelessWidget {
   final int respuestasCorrectas;
 
   const ResultadosScreen({
-    Key? key,
+    super.key,
     required this.examen,
     required this.puntajeObtenido,
     required this.totalPreguntas,
     required this.preguntasRespondidas,
     required this.respuestasCorrectas,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {

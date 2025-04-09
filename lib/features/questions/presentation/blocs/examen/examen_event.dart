@@ -24,7 +24,7 @@ sealed class ExamenEvent with _$ExamenEvent {
   const factory ExamenEvent.progresoGuardado({
     required String examenId,
     required String usuarioId,
-  }) = ProgresoGuardado;
+  }) = ProgresoGuardadoExamen;
 
   /// Evento para finalizar el examen y calcular resultados.
   const factory ExamenEvent.finalizado({required String usuarioId}) =

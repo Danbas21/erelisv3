@@ -1,8 +1,14 @@
+import 'package:erelis/features/questions/presentation/blocs/examen/examen_bloc.dart';
+import 'package:erelis/features/questions/presentation/screens/resultados_screen.dart';
+import 'package:erelis/features/questions/presentation/widgets/opcion_barra_widget.dart';
+import 'package:erelis/features/questions/presentation/widgets/pregunta_card_widget.dart';
+import 'package:erelis/features/questions/presentation/widgets/progreso_barra_widget.dart';
+import 'package:erelis/features/questions/presentation/widgets/temporizador_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import '../../domain/entities/pregunta_entity.dart';
-import '../blocs/examen/examen_bloc.dart';
+
 import '../blocs/progreso/progreso_bloc.dart';
 
 /// Pantalla principal del cuestionario de examen.
@@ -11,10 +17,10 @@ class CuestionarioScreen extends StatelessWidget {
   final String usuarioId;
 
   const CuestionarioScreen({
-    Key? key,
+    super.key,
     required this.examenId,
     required this.usuarioId,
-  }) : super(key: key);
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +46,7 @@ class CuestionarioScreen extends StatelessWidget {
         ),
         BlocListener<ProgresoBloc, ProgresoState>(
           listener: (context, state) {
-            if (state is _TiempoAgotado) {
+            if (state is TiempoAgotado) {
               // Cuando se agota el tiempo, finalizamos el examen
               context.read<ExamenBloc>().add(
                 ExamenEvent.finalizado(usuarioId: usuarioId),
@@ -58,7 +64,7 @@ class CuestionarioScreen extends StatelessWidget {
       ],
       child: BlocBuilder<ExamenBloc, ExamenState>(
         builder: (context, state) {
-          if (state is Inicial || state is Cargando) {
+          if (state is InicialExamen || state is Cargando) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
@@ -159,8 +165,8 @@ class _VistaExamen extends StatelessWidget {
         actions: [
           BlocBuilder<ProgresoBloc, ProgresoState>(
             builder: (context, state) {
-              if (state is EnCurso) {
-                return TemporizadorWidget(segundos: state.tiempoRestante);
+              if (state is EnCursoP) {
+                return TemporizadorWidget(segundos: state.tiempoRestantes);
               }
               return const SizedBox.shrink();
             },
@@ -170,7 +176,10 @@ class _VistaExamen extends StatelessWidget {
             tooltip: 'Guardar progreso',
             onPressed: () {
               context.read<ExamenBloc>().add(
-                ProgresoGuardado(examenId: examenId, usuarioId: usuarioId),
+                ProgresoGuardadoExamen(
+                  examenId: examenId,
+                  usuarioId: usuarioId,
+                ),
               );
 
               ScaffoldMessenger.of(context).showSnackBar(
@@ -188,7 +197,7 @@ class _VistaExamen extends StatelessWidget {
           // Barra de progreso
           BlocBuilder<ProgresoBloc, ProgresoState>(
             builder: (context, state) {
-              if (state is EnCurso) {
+              if (state is EnCursoP) {
                 return ProgresoBarraWidget(
                   total: state.totalPreguntas,
                   completadas: state.preguntasRespondidas,

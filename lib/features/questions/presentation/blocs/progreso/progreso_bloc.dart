@@ -37,7 +37,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
         usuarioId: event.usuarioId,
         totalPreguntas: event.totalPreguntas,
         preguntasRespondidas: event.respuestas.length,
-        tiempoRestante: event.tiempoTotalSegundos,
+        tiempoRestantes: event.tiempoTotalSegundos,
         respuestas: event.respuestas,
       ),
     );
@@ -54,7 +54,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
     Emitter<ProgresoState> emit,
   ) {
     final currentState = state;
-    if (currentState is! _EnCurso) {
+    if (currentState is! EnCursoP) {
       return;
     }
 
@@ -83,7 +83,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
       );
     } else {
       // Actualizamos el tiempo restante
-      emit(currentState.copyWith(tiempoRestante: event.segundosRestantes));
+      emit(currentState.copyWith(tiempoRestantes: event.segundosRestantes));
     }
   }
 
@@ -93,7 +93,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
     Emitter<ProgresoState> emit,
   ) async {
     final currentState = state;
-    if (currentState is! _EnCurso && currentState is! _TiempoAgotado) {
+    if (currentState is! EnCursoP && currentState is! TiempoAgotado) {
       return;
     }
 
@@ -113,7 +113,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
     resultado.fold(
       (failure) {
         // Si estamos en un estado de curso, actualizamos con el error
-        if (currentState is _EnCurso) {
+        if (currentState is EnCursoP) {
           emit(
             currentState.copyWith(
               errorGuardado: 'Error al guardar: ${failure.mensaje}',
@@ -123,7 +123,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
       },
       (_) {
         // Si estamos en un estado de curso, actualizamos el mensaje de guardado
-        if (currentState is _EnCurso) {
+        if (currentState is EnCursoP) {
           emit(
             currentState.copyWith(
               ultimoGuardado: DateTime.now(),
@@ -141,7 +141,7 @@ class ProgresoBloc extends Bloc<ProgresoEvent, ProgresoState> {
     Emitter<ProgresoState> emit,
   ) {
     final currentState = state;
-    if (currentState is! _EnCurso) {
+    if (currentState is! EnCursoP) {
       return;
     }
 

@@ -4,7 +4,7 @@ part of 'examen_bloc.dart';
 @freezed
 sealed class ExamenState with _$ExamenState {
   /// Estado inicial antes de cargar el examen.
-  const factory ExamenState.inicial() = Inicial;
+  const factory ExamenState.inicial() = InicialExamen;
 
   /// Estado durante la carga del examen o procesamiento.
   const factory ExamenState.cargando() = Cargando;

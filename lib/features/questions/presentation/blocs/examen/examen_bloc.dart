@@ -19,7 +19,7 @@ class ExamenBloc extends Bloc<ExamenEvent, ExamenState> {
     on<ExamenIniciado>(_onExamenIniciado);
     on<PreguntaCambiada>(_onPreguntaCambiada);
     on<RespuestaSeleccionada>(_onRespuestaSeleccionada);
-    on<ProgresoGuardado>(_onProgresoGuardado);
+    on<ProgresoGuardadoExamen>(_onProgresoGuardadoExamen);
     on<ExamenFinalizado>(_onExamenFinalizado);
     on<ProgresoRecuperado>(_onProgresoRecuperado);
   }
@@ -145,7 +145,7 @@ class ExamenBloc extends Bloc<ExamenEvent, ExamenState> {
 
     // Guardamos el progreso automáticamente
     add(
-      ProgresoGuardado(
+      ProgresoGuardadoExamen(
         examenId: currentState.examen.id,
         usuarioId: event.usuarioId,
       ),
@@ -153,8 +153,8 @@ class ExamenBloc extends Bloc<ExamenEvent, ExamenState> {
   }
 
   /// Maneja el evento de guardar progreso.
-  Future<void> _onProgresoGuardado(
-    ProgresoGuardado event,
+  Future<void> _onProgresoGuardadoExamen(
+    ProgresoGuardadoExamen event,
     Emitter<ExamenState> emit,
   ) async {
     // Solo procedemos si estamos en estado "enCurso"
