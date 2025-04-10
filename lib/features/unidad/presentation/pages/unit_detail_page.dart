@@ -1,6 +1,11 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:erelis/config/responsive_utils.dart';
 import 'package:erelis/features/questions/domain/entities/examen_entity.dart';
+import 'package:erelis/features/questions/domain/entities/option_entity.dart';
+import 'package:erelis/features/questions/domain/entities/pregunta_entity.dart';
 import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
 import 'package:erelis/features/unidad/presentation/pages/test_intro_page.dart';
+import 'package:erelis/features/unidad/presentation/widgets/unit_content_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:erelis/config/app_colors.dart';
@@ -24,6 +29,8 @@ class UnitDetailPage extends StatefulWidget {
 }
 
 class _UnitDetailPageState extends State<UnitDetailPage> {
+  String? selectedText;
+  String? activeHighlightColor;
   @override
   void initState() {
     super.initState();
@@ -53,7 +60,7 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
           return switch (state) {
             Initial() => const Center(child: Text("Inicializando...")),
             Loading() => const Center(child: CircularProgressIndicator()),
-            Loaded success => _buildContent(success.unit),
+            Loaded success => _buildContent(success.unit, context, success),
             Error error => Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
@@ -85,94 +92,37 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
     );
   }
 
-  Widget _buildContent(Unit unit) {
-    return SingleChildScrollView(
-      padding: const EdgeInsets.all(16.0),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // Información de la unidad
-          _buildUnitInfo(unit),
-
-          const SizedBox(height: 24),
-
-          // Sección de contenido
-          if (unit.content.isNotEmpty) _buildContentSection(unit.content),
-
-          const SizedBox(height: 24),
-
-          // Sección de archivos
-          if (unit.content.isNotEmpty)
-            _buildFilesSection(unit.courseId as List<String>),
-
-          const SizedBox(height: 24),
-
-          // Sección de evaluaciones
-          _buildTestsSection(unit),
-        ],
-      ),
-    );
-  }
-
-  Widget _buildUnitInfo(Unit unit) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
+  Widget _buildContent(Unit unit, BuildContext context, Loaded state) {
+    return Container(
+      color: AppColors.background,
+      padding: ResponsiveUtils.getContentPadding(context),
+      child: SingleChildScrollView(
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Row(
-              children: [
-                Icon(Icons.school, color: AppColors.primaryLightBlue),
-                const SizedBox(width: 10),
-                Expanded(child: Text(unit.title, style: AppTextStyles.h2)),
-              ],
-            ),
-            if (unit.content.isNotEmpty) ...[
-              const SizedBox(height: 16),
-              Text(unit.content, style: AppTextStyles.body1),
-            ],
-            const SizedBox(height: 16),
-            Row(
-              children: [
-                Icon(
-                  Icons.calendar_today,
-                  size: 16,
-                  color: AppColors.textSecondary,
-                ),
-                const SizedBox(width: 6),
-                Text(
-                  'Actualizada: ${_formatDate(unit.lastVisited)}',
-                  style: AppTextStyles.body2,
-                ),
-              ],
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+            // Información de la unidad
 
-  Widget _buildContentSection(String content) {
-    return Card(
-      elevation: 3,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
-      child: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.article, color: AppColors.primaryLightBlue),
-                const SizedBox(width: 10),
-                Text('Contenido', style: AppTextStyles.h3),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Text(content, style: AppTextStyles.body1),
+            // Sección de contenido
+            if (unit.content.isNotEmpty)
+              UnitContentWidget(
+                unit: state.unit,
+                highlights: state.highlights,
+                onTextSelected: (text) {
+                  setState(() {
+                    selectedText = text;
+                  });
+                },
+              ),
+
+            const SizedBox(height: 24),
+
+            // Sección de archivos
+            if (unit.courseId.isNotEmpty) _buildFilesSection([unit.title]),
+
+            const SizedBox(height: 24),
+
+            // Sección de evaluaciones
+            _buildTestsSection(unit),
           ],
         ),
       ),
@@ -344,41 +294,130 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
   }
 
   // Método para obtener los exámenes disponibles
-  Future<List<Test>> _fetchTests(
+  // Método para obtener los exámenes disponibles
+  Future<List<ExamenEntity>> _fetchTests(
     String courseId,
     String unitId,
     String unitTitle,
   ) async {
     try {
-      // Verificamos si hay preguntas para esta unidad
+      print("Buscando preguntas para el curso $courseId y unidad $unitId");
+
+      // Ruta correcta según tu estructura de Firestore:
+      // courses/{courseId}/units/{unitId}/questions
       final preguntasSnapshot =
           await FirebaseFirestore.instance
-              .collection('cursos')
+              .collection('courses')
               .doc(courseId)
-              .collection('unidades')
+              .collection('units')
               .doc(unitId)
-              .collection('preguntas')
-              .count()
+              .collection('questions')
+              .orderBy(
+                'order',
+              ) // Ordenamos por el campo order que tienes en tus documentos
               .get();
 
-      // Si hay preguntas, creamos un examen para esta unidad
-      if (preguntasSnapshot.count > 0) {
+      print(
+        "Número de preguntas encontradas: ${preguntasSnapshot.docs.length}",
+      );
+
+      // Si hay preguntas, creamos un examen con ellas
+      if (preguntasSnapshot.docs.isNotEmpty) {
+        final List<PreguntaEntity> preguntas = [];
+
+        for (var doc in preguntasSnapshot.docs) {
+          final data = doc.data();
+
+          print("Datos de pregunta: ${data.length}");
+
+          // Construimos las opciones según la estructura que tienes
+          final List<OpcionEntity> opciones = [];
+
+          if (data['options'] != null && data['options'] is List) {
+            for (var option in data['options']) {
+              opciones.add(
+                OpcionEntity(
+                  texto: option['text'] ?? '',
+                  esCorrecta: option['isCorrect'] ?? false,
+                ),
+              );
+            }
+          }
+
+          // Creamos la entidad de pregunta
+          preguntas.add(
+            PreguntaEntity(
+              id: doc.id,
+              texto: data['text'] ?? 'Pregunta sin texto',
+              tipo: data['type'] ?? 'multiple-choice',
+              puntos: data['points'] ?? 1,
+              opciones: opciones,
+              explicacion: data['explanation'] ?? '',
+              orden:
+                  data['order'] ??
+                  0, // Usamos el campo order que tienes en tus documentos
+            ),
+          );
+        }
+
+        // Creamos el examen con las preguntas encontradas
         return [
-          Test(
+          ExamenEntity(
             id: unitId,
-            title: 'Examen: $unitTitle',
-            description: 'Evaluación de los conocimientos sobre $unitTitle',
-            questionCount: preguntasSnapshot.count,
-            timeLimit: 30, // Por defecto 30 minutos
-            availableAt: DateTime.now(),
-            expiresAt: DateTime.now().add(const Duration(days: 365)),
+            titulo: 'Examen: $unitTitle',
+            preguntas: [],
+            fechaCreacion: DateTime.now(),
+            tiempoLimiteMinutos: 30,
+            completado: false,
+            puntajeTotal: preguntas.fold(
+              0,
+              (sum, pregunta) => sum + pregunta.puntos,
+            ),
+            puntajeObtenido: 0,
           ),
         ];
+      } else {
+        print("No se encontraron preguntas para este examen en Firestore");
+        // Si no se encuentran preguntas, puedes elegir devolver un examen vacío o uno de prueba
       }
 
-      return [];
+      // Si no se encontraron preguntas, devolvemos un examen de prueba
+      return [
+        ExamenEntity(
+          id: unitId,
+          titulo: 'Examen de prueba: $unitTitle',
+          fechaCreacion: DateTime.now(),
+          tiempoLimiteMinutos: 30,
+          completado: false,
+          puntajeTotal: 40,
+          puntajeObtenido: 0,
+          preguntas: [
+            PreguntaEntity(
+              id: 'pregunta1',
+              texto: '¿Cuál es la capital de Francia?',
+              tipo: 'multiple-choice',
+              puntos: 10,
+              opciones: [
+                OpcionEntity(texto: 'París', esCorrecta: true),
+                OpcionEntity(texto: 'Londres', esCorrecta: false),
+                OpcionEntity(texto: 'Berlín', esCorrecta: false),
+                OpcionEntity(texto: 'Madrid', esCorrecta: false),
+              ],
+              explicacion: 'París es la capital de Francia.',
+              orden: 1,
+            ),
+            // Añade más preguntas de ejemplo si lo deseas
+          ],
+        ),
+      ];
     } catch (e) {
       print("Error al cargar exámenes: $e");
+      // Si ocurre un error, imprimimos detalles para depuración
+      print(e.toString());
+      if (e is FirebaseException) {
+        print("Código de error: ${e.code}");
+        print("Mensaje: ${e.message}");
+      }
       return [];
     }
   }

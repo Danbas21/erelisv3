@@ -5,6 +5,8 @@ import 'package:erelis/data/datasources/firebase/categories_firebase_datasource.
 import 'package:erelis/data/datasources/firebase/courses_firebase_datasource.dart';
 import 'package:erelis/data/repositories/categories_repository_impl.dart';
 import 'package:erelis/data/repositories/courses_repository_impl.dart';
+import 'package:erelis/features/questions/data/repository/examen_repository_impl.dart';
+import 'package:erelis/features/questions/domain/repository/examen_repository.dart';
 
 import 'package:erelis/features/salon/domain/repositories/subjects_repository.dart';
 import 'package:erelis/features/salon/presentation/bloc/salon_bloc.dart';
@@ -23,6 +25,8 @@ import 'package:erelis/features/unidad/domain/repositories/highlight_repository.
 import 'package:erelis/features/unidad/domain/repositories/unit_repository.dart';
 import 'package:erelis/features/unidad/presentation/blocs/unit_detail/unit_detail_bloc.dart';
 import 'package:erelis/features/unidad/presentation/blocs/units/units_bloc.dart';
+
+// Importaciones para el módulo de exámenes
 
 import 'package:erelis/presentation/blocs/auth/auth_bloc.dart';
 import 'package:erelis/presentation/blocs/category/category_bloc.dart';
@@ -91,6 +95,13 @@ class MyApp extends StatelessWidget {
               remoteDataSource: context.read<UnitsRemoteDataSource>(),
             ),
       ),
+
+      // Nuevo repositorio para exámenes
+      RepositoryProvider<ExamenRepository>(
+        create:
+            (context) =>
+                ExamenRepositoryImpl(firestore: FirebaseFirestore.instance),
+      ),
     ],
     child: MultiBlocProvider(
       providers: [
@@ -153,10 +164,8 @@ class MyApp extends StatelessWidget {
                   UnitDetailBloc(repository: context.read<UnitsRepository>()),
         ),
 
-        // Nuevos BLoCs para unidades
-
-        // El UnitContentBloc no se crea aquí, se creará en la página de contenido
-        // cuando sea necesario para evitar cargas innecesarias
+        // No proporcionamos BLoCs de exámenes aquí, ya que se crearán dinámicamente
+        // cuando sean necesarios usando el TestProviders
       ],
       child: MaterialApp(
         navigatorKey: navigationService.navigatorKey,
@@ -165,7 +174,6 @@ class MyApp extends StatelessWidget {
         theme: AppTheme.darkTheme,
         darkTheme: AppTheme.darkTheme,
         themeMode: ThemeMode.light,
-
         initialRoute: '/initial',
         onGenerateRoute:
             AppRoutes.onGenerateRoute, // Usar onGenerateRoute en vez de routes

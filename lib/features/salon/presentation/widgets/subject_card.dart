@@ -1,5 +1,6 @@
 // lib/features/salon/presentation/widgets/subject_card.dart
 import 'package:erelis/config/routes.dart';
+import 'package:erelis/core/utils/images_utils.dart';
 import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:erelis/config/app_colors.dart';
@@ -24,6 +25,46 @@ class _SubjectCardState extends State<SubjectCard>
   late AnimationController _controller;
   late Animation<double> _scaleAnimation;
 
+  final List<String> coverImages = [
+    ImagesUtils.habilidadVerbal,
+    ImagesUtils.espanol,
+    ImagesUtils.historiaMx,
+    ImagesUtils.matematicas,
+    ImagesUtils.geografia,
+    ImagesUtils.biologia,
+    ImagesUtils.historiaUniversal,
+    ImagesUtils.quimica,
+    ImagesUtils.fisica,
+  ];
+
+  String getCoverImageForSubject(SubjectModel subject) {
+    // Mapeo directo basado en el título del tema
+    switch (subject.title.toLowerCase()) {
+      case 'matematicas':
+        return ImagesUtils.matematicas;
+      case 'español':
+        return ImagesUtils.espanol;
+      case 'historia de mexico':
+        return ImagesUtils.historiaMx;
+      case 'geografia':
+        return ImagesUtils.geografia;
+      case 'biologia':
+        return ImagesUtils.biologia;
+      case 'historia universal':
+        return ImagesUtils.historiaUniversal;
+      case 'quimica':
+        return ImagesUtils.quimica;
+      case 'fisica':
+        return ImagesUtils.fisica;
+      case 'habilidad verbal':
+        return ImagesUtils.habilidadVerbal;
+      case 'civismo y etica':
+        return ImagesUtils.civismo;
+      default:
+        return ImagesUtils.habilidadVerbal;
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -32,9 +73,10 @@ class _SubjectCardState extends State<SubjectCard>
       vsync: this,
     );
 
-    _scaleAnimation = Tween<double>(begin: 1.0, end: 0.95).animate(
-      CurvedAnimation(parent: _controller, curve: Curves.easeInOut),
-    );
+    _scaleAnimation = Tween<double>(
+      begin: 1.0,
+      end: 0.95,
+    ).animate(CurvedAnimation(parent: _controller, curve: Curves.easeInOut));
   }
 
   @override
@@ -51,10 +93,7 @@ class _SubjectCardState extends State<SubjectCard>
       child: AnimatedBuilder(
         animation: _scaleAnimation,
         builder: (context, child) {
-          return Transform.scale(
-            scale: _scaleAnimation.value,
-            child: child,
-          );
+          return Transform.scale(scale: _scaleAnimation.value, child: child);
         },
         child: Card(
           elevation: 0,
@@ -68,8 +107,11 @@ class _SubjectCardState extends State<SubjectCard>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
-                    widget.subject.imageUrl,
-                    fit: BoxFit.cover,
+                    // bucle for para obtener la imagen de la lista,
+                    getCoverImageForSubject(widget.subject),
+
+                    fit: BoxFit.contain,
+
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         color: AppColors.cardBackground,
@@ -106,7 +148,9 @@ class _SubjectCardState extends State<SubjectCard>
                 child: ElevatedButton(
                   onPressed: () {
                     print(
-                        "Navegando a unidades con courseId: ${widget.subject.id}");
+                      "Navegando a unidades con courseId: ${widget.subject.id}",
+                    );
+
                     navigationService.navigateTo(
                       AppRoutes.units,
                       arguments: {'courseId': widget.subject.id},

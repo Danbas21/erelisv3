@@ -11,5 +11,15 @@ class ImagesUtils {
   static const String student02 = '${_basePath}student2.svg';
   static const String googleLogo = '${_basePath}logo_google.svg';
   static const String avatarLogin = '${_basePath}login_avatar.svg';
+  static const String biologia = '${_basePath}biologia.jpg';
+  static const String espanol = '${_basePath}espanol.jpg';
+  static const String matematicas = '${_basePath}matematicas.jpg';
+  static const String historiaMx = '${_basePath}historia_mexcio.jpg';
+  static const String historiaUniversal = '${_basePath}historia.jpg';
+  static const String geografia = '${_basePath}geografia.jpg';
+  static const String habilidadVerbal = '${_basePath}habilidadVerbal.png';
+  static const String quimica = '${_basePath}quimica.png';
+  static const String fisica = '${_basePath}fisica.png';
+  static const String civismo = '${_basePath}civismo.jpg';
   // Agrega más imágenes según sea necesario
 }

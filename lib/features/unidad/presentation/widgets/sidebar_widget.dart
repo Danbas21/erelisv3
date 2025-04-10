@@ -4,7 +4,13 @@ import 'package:erelis/config/responsive_utils.dart';
 import 'package:flutter/material.dart';
 
 class SidebarWidget extends StatelessWidget {
-  const SidebarWidget({super.key});
+  final String? defaultCourseId;
+  final String? defaultCourseName;
+  const SidebarWidget({
+    super.key,
+    this.defaultCourseId,
+    this.defaultCourseName,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -128,9 +134,90 @@ class SidebarWidget extends StatelessWidget {
         child: InkWell(
           onTap: () {
             // Aquí iría la navegación o acción correspondiente
-            ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Navegando a $label')),
-            );
+            // Navigator.pushNamed(context, '/$label');
+            // Por ejemplo, para la opción de Logout:
+            //hagamos un switch para que no se rompa la app
+
+            switch (label) {
+              case 'Logout':
+                // Acción para cerrar sesión
+                showDialog(
+                  context: context,
+                  builder:
+                      (context) => AlertDialog(
+                        title: const Text('Cerrar sesión'),
+                        content: const Text(
+                          '¿Estás seguro de que deseas cerrar sesión?',
+                        ),
+                        actions: [
+                          TextButton(
+                            onPressed: () => Navigator.of(context).pop(),
+                            child: const Text('Cancelar'),
+                          ),
+                          TextButton(
+                            onPressed: () {
+                              Navigator.of(context).pop();
+                              // Aquí iría la lógica para cerrar sesión
+                              // Por ejemplo: context.read<AuthBloc>().add(LogoutEvent());
+                            },
+                            child: const Text('Cerrar sesión'),
+                          ),
+                        ],
+                      ),
+                );
+                break;
+              case 'Calendario':
+                Navigator.pushNamed(context, '/calendario');
+                break;
+
+              case 'Salón':
+                if (defaultCourseId != null && defaultCourseId!.isNotEmpty) {
+                  Navigator.pushNamed(
+                    context,
+                    '/units',
+                    arguments: {
+                      'courseId': defaultCourseId,
+                      'title': defaultCourseName ?? 'Curso',
+                    },
+                  );
+                } else {
+                  // Navegar a la lista de cursos o mostrar un mensaje
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Selecciona un curso primero'),
+                    ),
+                  );
+                  Navigator.pushNamed(context, '/salon');
+                }
+                break;
+
+              case 'Librería':
+                Navigator.pushNamed(context, '/libreria');
+                break;
+              case 'Cursos':
+                Navigator.pushNamed(context, '/cursos');
+                break;
+              case 'Integraciones':
+                Navigator.pushNamed(context, '/integraciones');
+                break;
+              case 'Asistencia':
+                Navigator.pushNamed(context, '/asistencia');
+                break;
+              case 'Mensajes':
+                Navigator.pushNamed(context, '/mensajes');
+                break;
+              case 'Ayuda':
+                Navigator.pushNamed(context, '/ayuda');
+                break;
+              case 'Configuración':
+                Navigator.pushNamed(context, '/configuracion');
+                break;
+              default:
+                // Acción predeterminada o manejo de error
+                ScaffoldMessenger.of(context).showSnackBar(
+                  const SnackBar(content: Text('Opción no reconocida')),
+                );
+            }
           },
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 12),

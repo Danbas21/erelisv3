@@ -1,4 +1,5 @@
 import 'package:erelis/config/app_colors.dart';
+import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:responsive_builder/responsive_builder.dart';
@@ -140,9 +141,10 @@ class PopularCoursesSection extends StatelessWidget {
     final popularCourses = courses.where((course) => course.isPopular).toList();
 
     // Determinar el número de columnas según el tamaño de pantalla
-    final crossAxisCount = isMobile
-        ? 1
-        : isTablet
+    final crossAxisCount =
+        isMobile
+            ? 1
+            : isTablet
             ? 2
             : 3;
 
@@ -242,7 +244,7 @@ class PopularCoursesSection extends StatelessWidget {
                 CustomButton(
                   text: 'Iniciar',
                   onPressed: () {
-                    // Navegar al detalle del curso
+                    navigationService.navigateTo('/login', arguments: course);
                   },
                   type: ButtonType.filled,
                   backgroundColor: AppColors.primaryGreen,

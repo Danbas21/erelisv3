@@ -67,10 +67,10 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
                       // Icono de comillas
                       Container(
                         margin: EdgeInsets.only(bottom: 20),
-                        child: Image.asset(
-                          'assets/icons/quote.png',
-                          height: 50,
+                        child: Icon(
+                          Icons.format_quote_rounded,
                           color: AppColors.primaryOrange,
+                          size: 40,
                         ),
                       ),
 
@@ -156,9 +156,10 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
       height: 8,
       width: isActive ? 24 : 8,
       decoration: BoxDecoration(
-        color: isActive
-            ? AppColors.primaryOrange
-            : AppColors.textSecondary.withOpacity(0.3),
+        color:
+            isActive
+                ? AppColors.primaryOrange
+                : AppColors.textSecondary.withOpacity(0.3),
         borderRadius: BorderRadius.circular(4),
       ),
     );
@@ -205,15 +206,16 @@ class _TestimonialsSectionState extends State<TestimonialsSection> {
           color: isCenter ? AppColors.primaryOrange : AppColors.background,
           width: isCenter ? 3 : 2,
         ),
-        boxShadow: isCenter
-            ? [
-                BoxShadow(
-                  color: AppColors.primaryOrange.withOpacity(0.3),
-                  blurRadius: 10,
-                  spreadRadius: 2,
-                ),
-              ]
-            : null,
+        boxShadow:
+            isCenter
+                ? [
+                  BoxShadow(
+                    color: AppColors.primaryOrange.withOpacity(0.3),
+                    blurRadius: 10,
+                    spreadRadius: 2,
+                  ),
+                ]
+                : null,
       ),
     );
   }

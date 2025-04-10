@@ -31,67 +31,41 @@ class ExamenBloc extends Bloc<ExamenEvent, ExamenState> {
   ) async {
     emit(const ExamenState.cargando());
 
-    // Intentamos recuperar progreso previo
-    final progresoResult = await _examenRepository.obtenerProgreso(
-      event.examenId,
-      event.usuarioId,
-    );
+    print("Iniciando examen con ID: ${event.examenId}");
 
-    await progresoResult.fold(
-      (failure) async {
-        // No hay progreso previo o error, iniciamos nuevo examen
-        final examenResult = await _examenRepository.obtenerExamen(
-          event.examenId,
-        );
+    // Obtener el examen
+    final examenResult = await _examenRepository.obtenerExamen(event.examenId);
 
-        examenResult.fold(
-          (failure) => emit(ExamenState.error(mensaje: failure.mensaje)),
-          (examen) {
-            if (examen.preguntas.isEmpty) {
-              emit(
-                const ExamenState.error(
-                  mensaje: 'El examen no tiene preguntas',
-                ),
-              );
-              return;
-            }
-
-            // Iniciamos con la primera pregunta
-            final preguntaActual = examen.preguntas.firstWhere(
-              (p) => p.orden == 1,
-              orElse: () => examen.preguntas.first,
-            );
-
-            emit(
-              ExamenState.enCurso(
-                examen: examen,
-                preguntaActual: preguntaActual,
-                indicePreguntaActual: 0,
-                respuestas: const {},
-                tiempoRestante: examen.tiempoLimiteMinutos * 60, // en segundos
-              ),
-            );
-          },
-        );
+    examenResult.fold(
+      (failure) {
+        print("Error al obtener el examen: ${failure.mensaje}");
+        emit(ExamenState.error(mensaje: failure.mensaje));
       },
-      (progreso) async {
-        if (progreso == null) {
-          // No hay progreso, iniciamos un nuevo examen
-          add(
-            ExamenIniciado(
-              examenId: event.examenId,
-              usuarioId: event.usuarioId,
-            ),
+      (examen) {
+        print(
+          "Examen cargado con éxito. Preguntas: ${examen.preguntas.length}",
+        );
+
+        if (examen.preguntas.isEmpty) {
+          print("El examen no tiene preguntas");
+          emit(
+            const ExamenState.error(mensaje: 'El examen no tiene preguntas'),
           );
           return;
         }
 
-        // Hay progreso previo, lo recuperamos
-        add(
-          ProgresoRecuperado(
-            examenId: event.examenId,
-            usuarioId: event.usuarioId,
-            progreso: progreso,
+        // Iniciamos con la primera pregunta
+        final preguntaActual = examen.preguntas.first;
+
+        print("Primera pregunta: ${preguntaActual.texto}");
+
+        emit(
+          ExamenState.enCurso(
+            examen: examen,
+            preguntaActual: preguntaActual,
+            indicePreguntaActual: 0,
+            respuestas: const {},
+            tiempoRestante: examen.tiempoLimiteMinutos * 60, // en segundos
           ),
         );
       },

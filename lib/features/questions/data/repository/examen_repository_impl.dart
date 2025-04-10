@@ -1,17 +1,15 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:dartz/dartz.dart';
 import 'package:erelis/config/failures.dart';
-import 'package:erelis/features/questions/data/models/opcion_model.dart';
-import 'package:erelis/features/questions/data/models/pregunta_model.dart';
+
 import 'package:erelis/features/questions/data/models/progreso_examen_model.dart';
+import 'package:erelis/features/questions/domain/entities/option_entity.dart';
 
 import 'package:erelis/features/questions/domain/entities/progreso_examen_entity.dart';
 import 'package:erelis/features/questions/domain/repository/examen_repository.dart';
 
 import '../../domain/entities/examen_entity.dart';
 import '../../domain/entities/pregunta_entity.dart';
-
-import '../models/examen_model.dart';
 
 /// Implementación del repositorio de exámenes que utiliza Firebase Firestore.
 class ExamenRepositoryImpl implements ExamenRepository {
@@ -28,28 +26,41 @@ class ExamenRepositoryImpl implements ExamenRepository {
   @override
   Future<Either<Failure, ExamenEntity>> obtenerExamen(String examenId) async {
     try {
-      // El examenId puede ser courseId_unitId
-      final partes = examenId.split('_');
-      if (partes.length != 2) {
-        return Left(
-          Failure(
-            mensaje: 'ID de examen inválido',
-            message: 'ID de examen inválido',
-          ),
-        );
+      print("Buscando examen con ID: $examenId");
+
+      // Extraer courseId y unitId del examenId combinado
+      String courseId, unitId;
+
+      if (examenId.contains('_')) {
+        // El ID es combinado (courseId_unitId)
+        final parts = examenId.split('_');
+        courseId = parts[0];
+        unitId = parts[1];
+      } else {
+        // Podría ser solo el unitId
+        unitId = examenId;
+
+        // Intenta obtener el courseId de alguna manera
+        // Si no es posible, usa un ID fijo (esto debes adaptarlo)
+        courseId = 'LJE1qjDXnOAfL9Hu4aQE'; // ID fijo para pruebas
       }
 
-      final courseId = partes[0];
-      final unitId = partes[1];
+      print("Buscando preguntas en courses/$courseId/units/$unitId/questions");
 
-      // Obtenemos las preguntas del curso para la unidad específica
+      // Buscar las preguntas
       final preguntasSnapshot =
-          await _cursosRef
+          await _firestore
+              .collection('courses')
               .doc(courseId)
-              .collection('unidades')
+              .collection('units')
               .doc(unitId)
-              .collection('preguntas')
+              .collection('questions')
+              .orderBy('order')
               .get();
+
+      print(
+        "Encontradas ${preguntasSnapshot.docs.length} preguntas para el examen",
+      );
 
       if (preguntasSnapshot.docs.isEmpty) {
         return Left(
@@ -60,80 +71,60 @@ class ExamenRepositoryImpl implements ExamenRepository {
         );
       }
 
-      // Obtenemos el documento de la unidad para obtener el título
-      final unitDoc =
-          await _cursosRef
-              .doc(courseId)
-              .collection('unidades')
-              .doc(unitId)
-              .get();
-
-      if (!unitDoc.exists) {
-        return Left(
-          Failure(
-            mensaje: 'La unidad no existe',
-            message: 'La unidad no existe',
-          ),
-        );
-      }
-
-      final unitData = unitDoc.data();
-      final String tituloExamen = unitData?['title'] ?? 'Examen sin título';
-
-      // Procesamos las preguntas
-      final List<PreguntaModel> preguntas = [];
+      // Construir lista de preguntas
+      final List<PreguntaEntity> preguntas = [];
 
       for (var doc in preguntasSnapshot.docs) {
         final data = doc.data();
 
-        // Procesamos las opciones de la pregunta
-        final opcionesData = (data['options'] as List<dynamic>?) ?? [];
-        final List<OpcionModel> opciones =
-            opcionesData.map((opcionData) {
-              final opcion = opcionData as Map<String, dynamic>;
-              return OpcionModel(
-                texto: opcion['text'] as String? ?? '',
-                esCorrecta: opcion['isCorrect'] as bool? ?? false,
-              );
-            }).toList();
+        // Construir opciones
+        final List<OpcionEntity> opciones = [];
 
-        // Creamos el modelo de pregunta
-        final pregunta = PreguntaModel(
-          id: doc.id,
-          texto: data['text'] as String? ?? '',
-          tipo: data['type'] as String? ?? 'multiple-choice',
-          puntos: data['points'] as int? ?? 1,
-          opciones: opciones,
-          explicacion: data['explanation'] as String? ?? '',
-          orden: data['order'] as int? ?? 0,
+        if (data['options'] != null && data['options'] is List) {
+          for (var option in data['options']) {
+            opciones.add(
+              OpcionEntity(
+                texto: option['text'] ?? '',
+                esCorrecta: option['isCorrect'] ?? false,
+              ),
+            );
+          }
+        }
+
+        // Añadir pregunta
+        preguntas.add(
+          PreguntaEntity(
+            id: doc.id,
+            texto: data['text'] ?? 'Pregunta sin texto',
+            tipo: data['type'] ?? 'multiple-choice',
+            puntos: data['points'] ?? 1,
+            opciones: opciones,
+            explicacion: data['explanation'] ?? '',
+            orden: data['order'] ?? 0,
+          ),
         );
-
-        preguntas.add(pregunta);
       }
 
-      // Ordenamos las preguntas por su orden
-      preguntas.sort((a, b) => a.orden.compareTo(b.orden));
-
-      // Calculamos el puntaje total
-      final puntajeTotal = preguntas.fold<int>(
-        0,
-        (sum, pregunta) => sum + pregunta.puntos,
-      );
-
-      // Creamos el modelo de examen
-      final examenModel = ExamenModel(
+      // Crear examen con las preguntas encontradas
+      final examen = ExamenEntity(
         id: examenId,
-        titulo: tituloExamen,
+        titulo: 'Examen', // Puedes intentar obtener el título de la unidad
         preguntas: preguntas,
         fechaCreacion: DateTime.now(),
-        tiempoLimiteMinutos: 30, // Por defecto 30 minutos
+        tiempoLimiteMinutos: 30,
         completado: false,
-        puntajeTotal: puntajeTotal,
+        puntajeTotal: preguntas.fold(
+          0,
+          (sum, pregunta) => sum + pregunta.puntos,
+        ),
         puntajeObtenido: 0,
       );
 
-      return Right(examenModel.toEntity());
+      print("Examen construido con ${preguntas.length} preguntas");
+
+      return Right(examen);
     } catch (e) {
+      print("Error en obtenerExamen: $e");
       return Left(
         Failure(
           mensaje: 'Error al obtener el examen: ${e.toString()}',

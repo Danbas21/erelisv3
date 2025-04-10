@@ -14,22 +14,14 @@ class HeroSection extends StatelessWidget {
       builder: (context, sizingInformation) {
         final isMobile =
             sizingInformation.deviceScreenType == DeviceScreenType.mobile;
-        final isTablet =
-            sizingInformation.deviceScreenType == DeviceScreenType.tablet;
 
         return Container(
           width: double.infinity,
           padding: EdgeInsets.symmetric(
-            vertical: isMobile ? 40 : 60,
+            vertical: 20,
             horizontal: isMobile ? 20 : 40,
           ),
-          child: Column(
-            children: [
-              isMobile || isTablet
-                  ? _buildMobileLayout()
-                  : _buildDesktopLayout(),
-            ],
-          ),
+          child: isMobile ? _buildMobileLayout() : _buildDesktopLayout(),
         );
       },
     );
@@ -63,58 +55,68 @@ class HeroSection extends StatelessWidget {
   }
 
   Widget _buildContent() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          'Prepárate con nosotros',
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 30,
-            fontWeight: FontWeight.w800,
-            height: 1.2,
-          ),
-        ),
-        SizedBox(height: 8),
-        RichText(
-          text: TextSpan(
-            children: [
-              TextSpan(
-                text: 'desde cualquier lugar con profesores ',
-                style: TextStyle(
-                  color: AppColors.textPrimary,
-                  fontSize: 27,
-                  fontWeight: FontWeight.w700,
-                  height: 1.2,
-                ),
+    return LayoutBuilder(
+      builder: (context, constraints) {
+        final maxWidth = constraints.maxWidth;
+        final scale = maxWidth < 600 ? 2.0 : .7;
+
+        return Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Text(
+              'Prepárate con nosotros',
+              style: TextStyle(
+                color: AppColors.textPrimary,
+                fontSize: 40 * scale,
+                fontWeight: FontWeight.w800,
+                height: 1.2,
               ),
-              TextSpan(
-                text: 'expertos',
-                style: TextStyle(
-                  color: AppColors.primaryOrange,
-                  fontSize: 32,
-                  fontWeight: FontWeight.w700,
-                  height: 1.2,
-                  decoration: TextDecoration.underline,
-                  decorationColor: AppColors.primaryOrange,
-                  decorationThickness: 2,
-                ),
+            ),
+            SizedBox(height: 8),
+            RichText(
+              text: TextSpan(
+                children: [
+                  TextSpan(
+                    text: 'desde cualquier lugar con profesores ',
+                    style: TextStyle(
+                      color: AppColors.textPrimary,
+                      fontSize: 27 * scale,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                    ),
+                  ),
+                  TextSpan(
+                    text: 'expertos',
+                    style: TextStyle(
+                      color: AppColors.primaryOrange,
+                      fontSize: 32 * scale,
+                      fontWeight: FontWeight.w700,
+                      height: 1.2,
+                      decoration: TextDecoration.underline,
+                      decorationColor: AppColors.primaryOrange,
+                      decorationThickness: 2,
+                    ),
+                  ),
+                  TextSpan(
+                    text: ' ✨',
+                    style: TextStyle(fontSize: 32 * scale, height: 1.2),
+                  ),
+                ],
               ),
-              TextSpan(text: ' ✨', style: TextStyle(fontSize: 32, height: 1.2)),
-            ],
-          ),
-        ),
-        SizedBox(height: 16),
-        Text(
-          'consigue el ingreso a la preparatoria o universidad que quieras',
-          style: TextStyle(
-            color: AppColors.textSecondary,
-            fontSize: 16,
-            height: 1.5,
-          ),
-        ),
-      ],
+            ),
+            SizedBox(height: 16),
+            Text(
+              'consigue el ingreso a la preparatoria o universidad que quieras',
+              style: TextStyle(
+                color: AppColors.textSecondary,
+                fontSize: 16 * scale,
+                height: 1.5,
+              ),
+            ),
+          ],
+        );
+      },
     );
   }
 
@@ -122,14 +124,14 @@ class HeroSection extends StatelessWidget {
     return LayoutBuilder(
       builder: (context, constraints) {
         final maxWidth = constraints.maxWidth;
-        final scale = maxWidth < 600 ? 0.8 : 1.0;
+        final scale = maxWidth < 600 ? 2.0 : .9;
 
         return Stack(
           alignment: Alignment.center,
           children: [
             // Elementos decorativos
             Positioned(
-              left: 30 * scale,
+              left: 10 * scale,
               bottom: 50 * scale,
               child: Container(
                 width: 40 * scale,
@@ -159,31 +161,32 @@ class HeroSection extends StatelessWidget {
             ),
 
             // Ilustraciones principales
-            Column(
+            Row(
               crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
 
               children: [
                 // Personaje izquierdo (estudiante sentado)
                 SizedBox(
-                  width: 300 * scale,
-                  height: 250 * scale,
+                  width: 210 * scale,
+                  height: 500 * scale,
                   child: Stack(
                     children: [
                       Positioned(
-                        left: 90,
+                        left: 0,
                         child: SvgPicture.asset(
                           ImagesUtils.form1,
-                          height: 280,
-                          width: 150,
+                          height: 280 * scale,
+                          width: 150 * scale,
                         ),
                       ),
                       Positioned(
-                        top: 40,
-                        left: 50,
+                        top: 0,
+                        left: 0,
                         child: SvgPicture.asset(
                           ImagesUtils.menSit,
-                          height: 270,
-                          width: 150,
+                          height: 300 * scale,
+                          width: 150 * scale,
                         ),
                       ),
                     ],
@@ -193,14 +196,15 @@ class HeroSection extends StatelessWidget {
                 _buildContent(),
                 // Personaje derecho (profesor)
                 SizedBox(
-                  width: 300,
+                  width: 210 * scale,
                   height: 500,
                   child: Stack(
                     children: [
                       Positioned(
+                        top: 60,
                         child: SvgPicture.asset(
                           ImagesUtils.form2,
-                          width: 300 * scale,
+                          width: 280 * scale,
                           height: 300 * scale,
                         ),
                       ),
@@ -208,8 +212,8 @@ class HeroSection extends StatelessWidget {
                         top: 80,
                         child: SvgPicture.asset(
                           ImagesUtils.womanSit,
-                          height: 300,
-                          width: 100,
+                          height: 280 * scale,
+                          width: 100 * scale,
                         ),
                       ),
                     ],

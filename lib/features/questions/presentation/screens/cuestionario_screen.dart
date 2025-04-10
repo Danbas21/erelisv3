@@ -1,4 +1,5 @@
 import 'package:erelis/features/questions/presentation/blocs/examen/examen_bloc.dart';
+import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
 import 'package:erelis/features/questions/presentation/screens/resultados_screen.dart';
 import 'package:erelis/features/questions/presentation/widgets/opcion_barra_widget.dart';
 import 'package:erelis/features/questions/presentation/widgets/pregunta_card_widget.dart';
@@ -10,6 +11,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/pregunta_entity.dart';
 
 import '../blocs/progreso/progreso_bloc.dart';
+
+/// Pantalla principal del cuestionario de examen.
 
 /// Pantalla principal del cuestionario de examen.
 class CuestionarioScreen extends StatelessWidget {
@@ -24,37 +27,55 @@ class CuestionarioScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("Construyendo CuestionarioScreen");
+
+    // Ya NO creamos un nuevo BLoC aquí - lo usamos desde TestProviders
+    // Solo iniciamos el examen con el evento
+    context.read<ExamenBloc>().add(
+      ExamenEvent.iniciado(examenId: examenId, usuarioId: usuarioId),
+    );
+
+    return _CuestionarioView(examenId: examenId, usuarioId: usuarioId);
+  }
+}
+
+class _CuestionarioView extends StatelessWidget {
+  final String examenId;
+  final String usuarioId;
+
+  const _CuestionarioView({required this.examenId, required this.usuarioId});
+
+  @override
+  Widget build(BuildContext context) {
+    print("Construyendo _CuestionarioView");
+
     return MultiBlocListener(
       listeners: [
         BlocListener<ExamenBloc, ExamenState>(
           listener: (context, state) {
+            print("Estado del ExamenBloc: ${state.hashCode}");
+
             if (state is Finalizado) {
+              print("Examen finalizado, navegando a resultados");
               Navigator.of(context).pushReplacement(
                 MaterialPageRoute(
                   builder:
-                      (_) => ResultadosScreen(
-                        examen: state.examen,
-                        puntajeObtenido: state.puntajeObtenido,
-                        totalPreguntas: state.totalPreguntas,
-                        preguntasRespondidas: state.preguntasRespondidas,
-                        respuestasCorrectas: state.respuestasCorrectas,
+                      (_) => TestProviders(
+                        child: ResultadosScreen(
+                          examen: state.examen,
+                          puntajeObtenido: state.puntajeObtenido,
+                          totalPreguntas: state.totalPreguntas,
+                          preguntasRespondidas: state.preguntasRespondidas,
+                          respuestasCorrectas: state.respuestasCorrectas,
+                        ),
                       ),
                 ),
               );
-            }
-          },
-        ),
-        BlocListener<ProgresoBloc, ProgresoState>(
-          listener: (context, state) {
-            if (state is TiempoAgotado) {
-              // Cuando se agota el tiempo, finalizamos el examen
-              context.read<ExamenBloc>().add(
-                ExamenEvent.finalizado(usuarioId: usuarioId),
-              );
-
+            } else if (state is Error) {
+              print("Error en ExamenBloc: ${state.mensaje}");
               ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('¡Tiempo agotado! Finalizando examen...'),
+                SnackBar(
+                  content: Text(state.mensaje),
                   backgroundColor: Colors.red,
                 ),
               );
@@ -64,7 +85,9 @@ class CuestionarioScreen extends StatelessWidget {
       ],
       child: BlocBuilder<ExamenBloc, ExamenState>(
         builder: (context, state) {
-          if (state is InicialExamen || state is Cargando) {
+          print("Construyendo UI para estado: ${state.hashCode}");
+
+          if (state is Inicial || state is Cargando) {
             return const Scaffold(
               body: Center(child: CircularProgressIndicator()),
             );
@@ -371,6 +394,8 @@ class _BarraNavegacion extends StatelessWidget {
                             context.read<ExamenBloc>().add(
                               ExamenEvent.finalizado(usuarioId: usuarioId),
                             );
+
+                            // Navegamos a la pantalla de resultados
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: Colors.red,

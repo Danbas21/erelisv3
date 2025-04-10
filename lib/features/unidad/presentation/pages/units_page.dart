@@ -1,20 +1,18 @@
-// presentation/pages/units_page.dart
-import 'package:erelis/config/app_colors.dart';
-import 'package:erelis/config/app_text_styles.dart';
 import 'package:erelis/features/questions/data/repository/examen_repository_impl.dart';
-import 'package:erelis/features/questions/domain/entities/examen_entity.dart';
-import 'package:erelis/features/questions/presentation/screens/inicio_examen_screen.dart';
-import 'package:erelis/features/unidad/presentation/blocs/units/units_bloc.dart';
+import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-// Importamos nuestro módulo de exámenes
-
+import '../../../../config/app_colors.dart';
+import '../../../../config/app_text_styles.dart';
 import '../../../../config/responsive_utils.dart' show ResponsiveUtils;
-import '../../../questions/presentation/providers/examenes _providers.dart';
+import '../../../questions/domain/entities/examen_entity.dart';
+
+import '../blocs/units/units_bloc.dart';
 import '../widgets/animated_list_item.dart';
 import '../widgets/sidebar_widget.dart';
 import '../widgets/unit_card_widget.dart';
+import 'test_intro_page.dart';
 import 'unit_detail_page.dart';
 
 class UnitsPage extends StatefulWidget {
@@ -32,20 +30,35 @@ class UnitsPage extends StatefulWidget {
 }
 
 class _UnitsPageState extends State<UnitsPage> {
-  final ScrollController _scrollController = ScrollController();
+  ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
     super.initState();
+
+    // Inicializar el controlador explícitamente si no lo has hecho ya
+    _scrollController = ScrollController();
+
     context.read<UnitsBloc>().add(
       UnitsEvent.started(widget.courseId, widget.courseName),
     );
 
     _scrollController.addListener(() {
+      print(
+        "Scroll position: ${_scrollController.position.pixels} / ${_scrollController.position.maxScrollExtent}",
+      );
+
       if (_scrollController.position.pixels >=
           _scrollController.position.maxScrollExtent * 0.8) {
+        print("Reached 80% of scroll");
         final state = context.read<UnitsBloc>().state;
+        print("State is Loaded: ${state is Loaded}");
+        print(
+          "hasMoreUnits: ${state is Loaded ? (state).hasMoreUnits : 'N/A'}",
+        );
+
         if (state is Loaded && state.hasMoreUnits) {
+          print("Loading more units");
           context.read<UnitsBloc>().add(const UnitsEvent.loadMore());
         }
       }
@@ -82,7 +95,15 @@ class _UnitsPageState extends State<UnitsPage> {
                   ),
                 ],
               ),
-      drawer: isDesktop ? null : const Drawer(child: SidebarWidget()),
+      drawer:
+          isDesktop
+              ? null
+              : Drawer(
+                child: SidebarWidget(
+                  defaultCourseId: widget.courseId,
+                  defaultCourseName: widget.courseName,
+                ),
+              ),
       body: Row(
         children: [
           // Sidebar en desktop y tablet landscape
@@ -259,7 +280,7 @@ class _UnitsPageState extends State<UnitsPage> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primaryLightBlue.withValues(alpha: 0.1),
+            color: AppColors.primaryLightBlue.withOpacity(0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(Icons.assignment, color: AppColors.primaryLightBlue),
@@ -297,11 +318,12 @@ class _UnitsPageState extends State<UnitsPage> {
       MaterialPageRoute(
         builder:
             (context) => TestProviders(
-              child: InicioExamenScreen(
-                examenId: examen.id,
-                usuarioId:
-                    'user_current', // Aquí deberías usar el ID real del usuario
-                titulo: examen.titulo,
+              child: TestIntroPage(
+                courseId: widget.courseId,
+                unitId: examen.id,
+                title: examen.titulo,
+                questionCount: examen.preguntas.length,
+                timeLimit: examen.tiempoLimiteMinutos,
               ),
             ),
       ),
@@ -328,7 +350,7 @@ class _UnitsPageState extends State<UnitsPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.05),
+            color: Colors.black.withOpacity(0.05),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -353,7 +375,7 @@ class _UnitsPageState extends State<UnitsPage> {
           // Foto del usuario
           const CircleAvatar(
             radius: 20,
-            backgroundImage: NetworkImage('https://placeholder.com/user'),
+            child: Icon(Icons.account_circle, size: 40),
           ),
           const SizedBox(width: 12),
           // Nombre del usuario
@@ -403,10 +425,11 @@ class _UnitsPageState extends State<UnitsPage> {
   }
 
   Widget _buildUnitsList(BuildContext context, Loaded state) {
-    final displayedUnits = state.units.take(state.displayedCount).toList();
+    // Usa todas las unidades en lugar de limitar
+    final units = state.units;
     final padding = ResponsiveUtils.getContentPadding(context);
 
-    if (displayedUnits.isEmpty) {
+    if (units.isEmpty) {
       return const Center(
         child: Text('No hay unidades disponibles para este curso.'),
       );
@@ -421,18 +444,9 @@ class _UnitsPageState extends State<UnitsPage> {
       child: ListView.builder(
         controller: _scrollController,
         padding: padding,
-        itemCount: displayedUnits.length + (state.hasMoreUnits ? 1 : 0),
+        itemCount: units.length,
         itemBuilder: (context, index) {
-          if (index == displayedUnits.length) {
-            return const Center(
-              child: Padding(
-                padding: EdgeInsets.all(16.0),
-                child: CircularProgressIndicator(),
-              ),
-            );
-          }
-
-          final unit = displayedUnits[index];
+          final unit = units[index];
           return AnimatedListItem(
             index: index,
             child: GestureDetector(
@@ -443,7 +457,7 @@ class _UnitsPageState extends State<UnitsPage> {
                     builder:
                         (context) => UnitDetailPage(
                           unitId: unit.id,
-                          cursoid: unit.courseId, // Añade el courseId aquí
+                          cursoid: unit.courseId,
                         ),
                   ),
                 );

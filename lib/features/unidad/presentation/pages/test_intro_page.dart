@@ -1,14 +1,12 @@
-import 'package:erelis/features/questions/domain/entities/examen_entity.dart';
 import 'package:erelis/features/questions/domain/repository/examen_repository.dart';
-import 'package:erelis/features/questions/presentation/blocs/examen/examen_bloc.dart';
-import 'package:erelis/features/questions/presentation/screens/cuestionario_screen.dart';
+import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:erelis/config/app_colors.dart';
-import 'package:erelis/config/app_text_styles.dart';
 
-/// Pantalla de introducción al examen que se muestra antes de iniciar.
-class TestIntroPage extends StatefulWidget {
+import '../../../questions/presentation/screens/cuestionario_screen.dart';
+import '../../../../config/app_colors.dart';
+
+class TestIntroPage extends StatelessWidget {
   final String courseId;
   final String unitId;
   final String title;
@@ -21,144 +19,50 @@ class TestIntroPage extends StatefulWidget {
     required this.unitId,
     required this.title,
     required this.questionCount,
-    this.timeLimit = 30, // Tiempo límite por defecto en minutos
+    required this.timeLimit,
   });
 
   @override
-  State<TestIntroPage> createState() => _TestIntroPageState();
-}
-
-class _TestIntroPageState extends State<TestIntroPage> {
-  bool cargando = true;
-  ExamenEntity? examen;
-  String? error;
-
-  @override
-  void initState() {
-    super.initState();
-    _cargarExamen();
-  }
-
-  Future<void> _cargarExamen() async {
-    try {
-      final repository = context.read<ExamenRepository>();
-
-      // Intentamos cargar los datos del examen
-      final result = await repository.obtenerExamen(
-        "${widget.courseId}_${widget.unitId}",
-      );
-
-      result.fold(
-        (failure) => setState(() {
-          cargando = false;
-          error = failure.mensaje;
-        }),
-        (examenEntity) => setState(() {
-          examen = examenEntity;
-          cargando = false;
-        }),
-      );
-    } catch (e) {
-      setState(() {
-        cargando = false;
-        error = "Error al cargar el examen: $e";
-      });
-    }
-  }
-
-  void _iniciarExamen() {
-    // Verificamos si tenemos un examen válido
-    if (examen == null) return;
-
-    final String usuarioId =
-        "usuario_actual"; // Esto debería obtenerse de tu sistema de autenticación
-
-    // Inicializamos el BLoC con el examen cargado
-    context.read<ExamenBloc>().add(
-      ExamenEvent.iniciado(examenId: examen!.id, usuarioId: usuarioId),
-    );
-
-    // Navegamos a la pantalla del cuestionario
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder:
-            (context) =>
-                CuestionarioScreen(examenId: examen!.id, usuarioId: usuarioId),
-      ),
-    );
-  }
-
-  @override
   Widget build(BuildContext context) {
+    // ID del examen: combinación de courseId y unitId
+    final examenId = '${courseId}_$unitId';
+
+    // ID del usuario (en una app real, obtendrías esto del servicio de autenticación)
+    final usuarioId = 'user_current';
+
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.title),
-        backgroundColor: AppColors.primaryDarkBlue,
+        title: const Text('Detalles del Examen'),
+        backgroundColor: AppColors.primary,
         foregroundColor: Colors.white,
-        elevation: 0,
       ),
       body: Container(
+        // Estilo pizarrón
         decoration: BoxDecoration(
-          color: const Color(0xFF0A5F38), // Verde pizarrón
+          color: const Color(0xFF0A5F38), // Verde escolar
           border: Border.all(
             color: const Color(0xFF8B4513), // Marrón "madera"
             width: 8.0,
           ),
-        ),
-        margin: const EdgeInsets.all(16.0),
-        child:
-            cargando
-                ? const Center(
-                  child: CircularProgressIndicator(color: Colors.white),
-                )
-                : error != null
-                ? _buildErrorView()
-                : _buildContenido(),
-      ),
-    );
-  }
-
-  Widget _buildErrorView() {
-    return Center(
-      child: Padding(
-        padding: const EdgeInsets.all(24.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            const Icon(Icons.error_outline, color: Colors.white, size: 64),
-            const SizedBox(height: 16),
-            const Text(
-              'Error',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-                fontWeight: FontWeight.bold,
-              ),
-            ),
-            const SizedBox(height: 8),
-            Text(
-              error!,
-              style: const TextStyle(color: Colors.white, fontSize: 16),
-              textAlign: TextAlign.center,
-            ),
-            const SizedBox(height: 24),
-            ElevatedButton(
-              onPressed: () => Navigator.of(context).pop(),
-              style: ElevatedButton.styleFrom(
-                backgroundColor: AppColors.primaryOrange,
-              ),
-              child: const Text('VOLVER'),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.5),
+              blurRadius: 10,
+              spreadRadius: 2,
             ),
           ],
         ),
+        margin: const EdgeInsets.all(16.0),
+        child: _buildContent(context, examenId, usuarioId),
       ),
     );
   }
 
-  Widget _buildContenido() {
-    final totalPreguntas = examen?.preguntas.length ?? widget.questionCount;
-    final tiempoLimite = examen?.tiempoLimiteMinutos ?? widget.timeLimit;
-
+  Widget _buildContent(
+    BuildContext context,
+    String examenId,
+    String usuarioId,
+  ) {
     return Padding(
       padding: const EdgeInsets.all(24.0),
       child: Column(
@@ -167,7 +71,7 @@ class _TestIntroPageState extends State<TestIntroPage> {
         children: [
           // Título con estilo tiza
           Text(
-            widget.title,
+            title,
             style: const TextStyle(
               fontFamily: 'Chalkboard', // Tipografía tipo gis
               fontSize: 32,
@@ -186,35 +90,27 @@ class _TestIntroPageState extends State<TestIntroPage> {
           const SizedBox(height: 32),
 
           // Detalles del examen
-          _buildInfoItem(
-            label: 'Total de preguntas:',
-            valor: '$totalPreguntas',
-          ),
+          _buildInfoRow('Total de preguntas:', '$questionCount'),
           const SizedBox(height: 16),
-          _buildInfoItem(
-            label: 'Tiempo límite:',
-            valor: '$tiempoLimite minutos',
-          ),
+          _buildInfoRow('Tiempo límite:', '$timeLimit minutos'),
+
           const SizedBox(height: 16),
-          _buildInfoItem(
-            label: 'Puntos totales:',
-            valor: '${examen?.puntajeTotal ?? 100}',
-          ),
+          _buildInfoRow('Unidad:', title),
 
           const SizedBox(height: 48),
 
           // Botón de inicio
           ElevatedButton(
-            onPressed: _iniciarExamen,
+            onPressed: () => _iniciarExamen(context, examenId, usuarioId),
             style: ElevatedButton.styleFrom(
-              backgroundColor: AppColors.primaryOrange,
+              backgroundColor: const Color(0xFFF59E0B), // Naranja
               padding: const EdgeInsets.symmetric(vertical: 16.0),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(8.0),
               ),
             ),
             child: const Text(
-              'INICIAR EXAMEN',
+              'COMENZAR EXAMEN',
               style: TextStyle(
                 fontSize: 18,
                 fontWeight: FontWeight.bold,
@@ -249,7 +145,7 @@ class _TestIntroPageState extends State<TestIntroPage> {
                   '• Selecciona la respuesta correcta.\n'
                   '• Puedes navegar entre preguntas usando los botones.\n'
                   '• Tu progreso se guarda automáticamente.\n'
-                  '• Al finalizar, presiona el botón "Terminar".',
+                  '• Al finalizar, presiona el botón "Finalizar".',
                   style: TextStyle(color: Colors.white, fontSize: 14),
                 ),
               ],
@@ -260,13 +156,13 @@ class _TestIntroPageState extends State<TestIntroPage> {
     );
   }
 
-  Widget _buildInfoItem({required String label, required String valor}) {
+  Widget _buildInfoRow(String label, String value) {
     return Row(
       children: [
         Text(label, style: const TextStyle(color: Colors.white, fontSize: 16)),
         const Spacer(),
         Text(
-          valor,
+          value,
           style: const TextStyle(
             color: Colors.white,
             fontSize: 16,
@@ -274,6 +170,55 @@ class _TestIntroPageState extends State<TestIntroPage> {
           ),
         ),
       ],
+    );
+  }
+
+  void _iniciarExamen(
+    BuildContext context,
+    String examenId,
+    String usuarioId,
+  ) async {
+    // Combinar courseId y unitId para formar un ID único
+    final combinedId = "${courseId}_$unitId";
+
+    // Verificar si el examen existe
+    final examenRepository = context.read<ExamenRepository>();
+    final resultado = await examenRepository.obtenerExamen(examenId);
+
+    // Si el examen no existe, mostramos un error
+    resultado.fold((failure) => _mostrarError(context, failure.mensaje), (
+      examen,
+    ) {
+      // CRUCIAL: Usar TestProviders para proporcionar TODOS los BLoCs necesarios
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder:
+              (context) => TestProviders(
+                child: CuestionarioScreen(
+                  examenId: combinedId,
+                  usuarioId: usuarioId,
+                ),
+              ),
+        ),
+      );
+    });
+  }
+
+  void _mostrarError(BuildContext context, String mensaje) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Error'),
+            content: Text(mensaje),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('ACEPTAR'),
+              ),
+            ],
+          ),
     );
   }
 }

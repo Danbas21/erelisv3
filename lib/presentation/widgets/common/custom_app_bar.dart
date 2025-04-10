@@ -42,10 +42,7 @@ class CustomAppBarState extends State<CustomAppBar> {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Expanded(child: _buildLogo()),
-              if (!isMobile) ...[
-                SizedBox(width: 40),
-                Expanded(child: _buildNavItems()),
-              ],
+              if (!isMobile) ...[SizedBox(width: 10), _buildNavItems()],
             ],
           ),
           actions: [
@@ -103,7 +100,7 @@ class CustomAppBarState extends State<CustomAppBar> {
           children: [
             _buildSvgWithFallback(
               ImagesUtils.logo,
-              width: 55,
+              width: 30,
               height: 55,
               fallbackIcon: Icons.school,
             ),
@@ -136,13 +133,13 @@ class CustomAppBarState extends State<CustomAppBar> {
             (context) => Icon(fallbackIcon, size: width, color: Colors.white70),
       );
     } catch (e) {
-      print('Error al cargar SVG: $e');
       return Icon(fallbackIcon, size: width, color: Colors.white70);
     }
   }
 
   Widget _buildNavItems() {
     return Row(
+      crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
         _buildNavItem('Home', () => _navigateToSection('hero')),

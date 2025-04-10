@@ -31,39 +31,40 @@ class GoogleImporterState extends State<GoogleImporter> {
       appBar: AppBar(title: const Text('Importador de Google Docs/Sheets')),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: isLoading
-            ? const Center(child: CircularProgressIndicator())
-            : !isAuthenticated
+        child:
+            isLoading
+                ? const Center(child: CircularProgressIndicator())
+                : !isAuthenticated
                 ? Center(
-                    child: ElevatedButton(
-                      onPressed: _authenticate,
-                      child: const Text('Iniciar sesión con Google'),
-                    ),
-                  )
-                : DefaultTabController(
-                    length: 2,
-                    child: Column(
-                      children: [
-                        const TabBar(
-                          tabs: [
-                            Tab(text: 'Google Docs'),
-                            Tab(text: 'Google Sheets'),
-                          ],
-                          labelColor: Colors.blue,
-                        ),
-                        Expanded(
-                          child: TabBarView(
-                            children: [
-                              // Tab de Google Docs
-                              _buildDocumentsList(),
-                              // Tab de Google Sheets
-                              _buildSpreadsheetsList(),
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
+                  child: ElevatedButton(
+                    onPressed: _authenticate,
+                    child: const Text('Iniciar sesión con Google'),
                   ),
+                )
+                : DefaultTabController(
+                  length: 2,
+                  child: Column(
+                    children: [
+                      const TabBar(
+                        tabs: [
+                          Tab(text: 'Google Docs'),
+                          Tab(text: 'Google Sheets'),
+                        ],
+                        labelColor: Colors.blue,
+                      ),
+                      Expanded(
+                        child: TabBarView(
+                          children: [
+                            // Tab de Google Docs
+                            _buildDocumentsList(),
+                            // Tab de Google Sheets
+                            _buildSpreadsheetsList(),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
       ),
     );
   }
@@ -73,10 +74,10 @@ class GoogleImporterState extends State<GoogleImporter> {
 
     // Expresión regular para encontrar unidades completas con todo su contenido
     final RegExp unitPattern = RegExp(
-        r'===INICIO_UNIDAD_(\d+)===\s*TÍTULO:\s*([^\n]+)\s*CONTENIDO:\s*(.*?)===FIN_UNIDAD_\1===',
-        multiLine: true,
-        dotAll: true // Permite que el punto coincida con saltos de línea
-        );
+      r'===INICIO_UNIDAD_(\d+)===\s*TÍTULO:\s*([^\n]+)\s*CONTENIDO:\s*(.*?)===FIN_UNIDAD_\1===',
+      multiLine: true,
+      dotAll: true, // Permite que el punto coincida con saltos de línea
+    );
 
     // Encontrar todas las unidades
     final matches = unitPattern.allMatches(content);
@@ -110,20 +111,22 @@ class GoogleImporterState extends State<GoogleImporter> {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: documentsList.isEmpty
-              ? const Center(child: Text('No hay documentos disponibles'))
-              : ListView.builder(
-                  itemCount: documentsList.length,
-                  itemBuilder: (context, index) {
-                    final doc = documentsList[index];
-                    return ListTile(
-                      title: Text(doc.name),
-                      subtitle:
-                          Text('Última modificación: ${doc.modifiedTime}'),
-                      onTap: () => _importGoogleDoc(doc.id),
-                    );
-                  },
-                ),
+          child:
+              documentsList.isEmpty
+                  ? const Center(child: Text('No hay documentos disponibles'))
+                  : ListView.builder(
+                    itemCount: documentsList.length,
+                    itemBuilder: (context, index) {
+                      final doc = documentsList[index];
+                      return ListTile(
+                        title: Text(doc.name),
+                        subtitle: Text(
+                          'Última modificación: ${doc.modifiedTime}',
+                        ),
+                        onTap: () => _importGoogleDoc(doc.id),
+                      );
+                    },
+                  ),
         ),
       ],
     );
@@ -138,20 +141,22 @@ class GoogleImporterState extends State<GoogleImporter> {
         ),
         const SizedBox(height: 10),
         Expanded(
-          child: spreadsheetsList.isEmpty
-              ? const Center(child: Text('No hay hojas disponibles'))
-              : ListView.builder(
-                  itemCount: spreadsheetsList.length,
-                  itemBuilder: (context, index) {
-                    final sheet = spreadsheetsList[index];
-                    return ListTile(
-                      title: Text(sheet.name),
-                      subtitle:
-                          Text('Última modificación: ${sheet.modifiedTime}'),
-                      onTap: () => _importGoogleSheet(sheet.id),
-                    );
-                  },
-                ),
+          child:
+              spreadsheetsList.isEmpty
+                  ? const Center(child: Text('No hay hojas disponibles'))
+                  : ListView.builder(
+                    itemCount: spreadsheetsList.length,
+                    itemBuilder: (context, index) {
+                      final sheet = spreadsheetsList[index];
+                      return ListTile(
+                        title: Text(sheet.name),
+                        subtitle: Text(
+                          'Última modificación: ${sheet.modifiedTime}',
+                        ),
+                        onTap: () => _importGoogleSheet(sheet.id),
+                      );
+                    },
+                  ),
         ),
       ],
     );
@@ -201,9 +206,9 @@ class GoogleImporterState extends State<GoogleImporter> {
       });
       print('Error de autenticación: $e');
 
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al autenticar: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al autenticar: $e')));
     }
   }
 
@@ -224,13 +229,16 @@ class GoogleImporterState extends State<GoogleImporter> {
       );
 
       setState(() {
-        documentsList = (response.files ?? [])
-            .map((file) => DriveFile(
-                  id: file.id ?? '',
-                  name: file.name ?? 'Sin nombre',
-                  modifiedTime: file.modifiedTime?.toLocal().toString() ?? '',
-                ))
-            .toList();
+        documentsList =
+            (response.files ?? [])
+                .map(
+                  (file) => DriveFile(
+                    id: file.id ?? '',
+                    name: file.name ?? 'Sin nombre',
+                    modifiedTime: file.modifiedTime?.toLocal().toString() ?? '',
+                  ),
+                )
+                .toList();
         isLoading = false;
       });
     } catch (e) {
@@ -261,13 +269,16 @@ class GoogleImporterState extends State<GoogleImporter> {
       );
 
       setState(() {
-        spreadsheetsList = (response.files ?? [])
-            .map((file) => DriveFile(
-                  id: file.id ?? '',
-                  name: file.name ?? 'Sin nombre',
-                  modifiedTime: file.modifiedTime?.toLocal().toString() ?? '',
-                ))
-            .toList();
+        spreadsheetsList =
+            (response.files ?? [])
+                .map(
+                  (file) => DriveFile(
+                    id: file.id ?? '',
+                    name: file.name ?? 'Sin nombre',
+                    modifiedTime: file.modifiedTime?.toLocal().toString() ?? '',
+                  ),
+                )
+                .toList();
         isLoading = false;
       });
     } catch (e) {
@@ -329,7 +340,7 @@ class GoogleImporterState extends State<GoogleImporter> {
           'passingScore': 70,
           'certificateTemplate': 'template_basic',
           'enrolledStudents': 0,
-          'completedStudents': 0
+          'completedStudents': 0,
         });
       }
 
@@ -344,8 +355,10 @@ class GoogleImporterState extends State<GoogleImporter> {
         // Obtener datos de la hoja
         final range =
             '$sheetTitle!A1:H1000'; // Ajustar según la estructura esperada
-        final response =
-            await sheetsApi.spreadsheets.values.get(spreadsheetId, range);
+        final response = await sheetsApi.spreadsheets.values.get(
+          spreadsheetId,
+          range,
+        );
         final rows = response.values ?? [];
 
         if (rows.isEmpty || rows.length < 2) {
@@ -356,31 +369,36 @@ class GoogleImporterState extends State<GoogleImporter> {
         if (!_validateHeaders(rows[0])) {
           // Mostrar error y continuar con la siguiente hoja
           print(
-              'Error: La hoja "$sheetTitle" no tiene los encabezados esperados.');
+            'Error: La hoja "$sheetTitle" no tiene los encabezados esperados.',
+          );
           continue;
         }
 
         // Crear la unidad en Firestore
-        final unitRef = FirebaseFirestore.instance
-            .collection('courses')
-            .doc(courseId)
-            .collection('units')
-            .doc();
+        final unitRef =
+            FirebaseFirestore.instance
+                .collection('courses')
+                .doc(courseId)
+                .collection('units')
+                .doc();
 
         await unitRef.set({
           'title': sheetTitle,
           'description': 'Unidad importada desde Google Sheets',
           'order': totalHojas + 1, // Asignar orden secuencial
-          'content': 'Contenido generado automáticamente desde Google Sheets',
+          'content': "pulsa iniciar y lee las intrucciones",
           'duration': 30, // Duración estimada en minutos
           'isActive': true,
           'hasTest': true,
-          'courseId': courseId
+          'courseId': courseId,
         });
 
         // Procesar las preguntas de la hoja
-        int preguntasEnHoja =
-            await _processSheetQuestions(rows, courseId, unitRef.id);
+        int preguntasEnHoja = await _processSheetQuestions(
+          rows,
+          courseId,
+          unitRef.id,
+        );
 
         totalHojas++;
         totalPreguntas += preguntasEnHoja;
@@ -396,7 +414,8 @@ class GoogleImporterState extends State<GoogleImporter> {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(
           content: Text(
-              'Se importaron $totalHojas hojas con un total de $totalPreguntas preguntas'),
+            'Se importaron $totalHojas hojas con un total de $totalPreguntas preguntas',
+          ),
         ),
       );
     } catch (e) {
@@ -408,13 +427,13 @@ class GoogleImporterState extends State<GoogleImporter> {
         isLoading = false;
       });
       print('Error al importar hoja: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al importar hoja: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al importar hoja: $e')));
     }
   }
 
-// Función para validar los encabezados de la hoja
+  // Función para validar los encabezados de la hoja
   bool _validateHeaders(List<dynamic> headers) {
     final expectedHeaders = [
       '#',
@@ -424,7 +443,7 @@ class GoogleImporterState extends State<GoogleImporter> {
       'Opción C',
       'Opción D',
       'Respuesta Correcta',
-      'Retroalimentación'
+      'Retroalimentación',
     ];
 
     // Verificar si todos los encabezados esperados están presentes
@@ -443,26 +462,36 @@ class GoogleImporterState extends State<GoogleImporter> {
   }
 
   Future<int> _processSheetQuestions(
-      List<List<dynamic>> rows, String courseId, String unitId) async {
+    List<List<dynamic>> rows,
+    String courseId,
+    String unitId,
+  ) async {
     // La primera fila contiene los encabezados
     final headers = rows[0].map((h) => h.toString().trim()).toList();
 
     // Obtener índices de cada columna
     final numIndex = headers.indexWhere((h) => h.toLowerCase() == '#');
-    final questionIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'pregunta');
-    final optionAIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'opción a');
-    final optionBIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'opción b');
-    final optionCIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'opción c');
-    final optionDIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'opción d');
-    final correctAnswerIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'respuesta correcta');
-    final feedbackIndex =
-        headers.indexWhere((h) => h.toLowerCase() == 'retroalimentación');
+    final questionIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'pregunta',
+    );
+    final optionAIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'opción a',
+    );
+    final optionBIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'opción b',
+    );
+    final optionCIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'opción c',
+    );
+    final optionDIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'opción d',
+    );
+    final correctAnswerIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'respuesta correcta',
+    );
+    final feedbackIndex = headers.indexWhere(
+      (h) => h.toLowerCase() == 'retroalimentación',
+    );
 
     int importedQuestions = 0;
 
@@ -488,10 +517,11 @@ class GoogleImporterState extends State<GoogleImporter> {
         options.add({
           'id': 'optA',
           'text': row[optionAIndex].toString().trim(),
-          'isCorrect': correctAnswerIndex >= 0 &&
+          'isCorrect':
+              correctAnswerIndex >= 0 &&
               correctAnswerIndex < row.length &&
               row[correctAnswerIndex] != null &&
-              row[correctAnswerIndex].toString().toLowerCase().contains('a')
+              row[correctAnswerIndex].toString().toLowerCase().contains('a'),
         });
       }
 
@@ -501,10 +531,11 @@ class GoogleImporterState extends State<GoogleImporter> {
         options.add({
           'id': 'optB',
           'text': row[optionBIndex].toString().trim(),
-          'isCorrect': correctAnswerIndex >= 0 &&
+          'isCorrect':
+              correctAnswerIndex >= 0 &&
               correctAnswerIndex < row.length &&
               row[correctAnswerIndex] != null &&
-              row[correctAnswerIndex].toString().toLowerCase().contains('b')
+              row[correctAnswerIndex].toString().toLowerCase().contains('b'),
         });
       }
 
@@ -514,10 +545,11 @@ class GoogleImporterState extends State<GoogleImporter> {
         options.add({
           'id': 'optC',
           'text': row[optionCIndex].toString().trim(),
-          'isCorrect': correctAnswerIndex >= 0 &&
+          'isCorrect':
+              correctAnswerIndex >= 0 &&
               correctAnswerIndex < row.length &&
               row[correctAnswerIndex] != null &&
-              row[correctAnswerIndex].toString().toLowerCase().contains('c')
+              row[correctAnswerIndex].toString().toLowerCase().contains('c'),
         });
       }
 
@@ -527,10 +559,11 @@ class GoogleImporterState extends State<GoogleImporter> {
         options.add({
           'id': 'optD',
           'text': row[optionDIndex].toString().trim(),
-          'isCorrect': correctAnswerIndex >= 0 &&
+          'isCorrect':
+              correctAnswerIndex >= 0 &&
               correctAnswerIndex < row.length &&
               row[correctAnswerIndex] != null &&
-              row[correctAnswerIndex].toString().toLowerCase().contains('d')
+              row[correctAnswerIndex].toString().toLowerCase().contains('d'),
         });
       }
 
@@ -549,13 +582,14 @@ class GoogleImporterState extends State<GoogleImporter> {
       }
 
       // Crear la pregunta en Firestore
-      final questionRef = FirebaseFirestore.instance
-          .collection('courses')
-          .doc(courseId)
-          .collection('units')
-          .doc(unitId)
-          .collection('questions')
-          .doc();
+      final questionRef =
+          FirebaseFirestore.instance
+              .collection('courses')
+              .doc(courseId)
+              .collection('units')
+              .doc(unitId)
+              .collection('questions')
+              .doc();
 
       await questionRef.set({
         'text': questionText,
@@ -563,7 +597,7 @@ class GoogleImporterState extends State<GoogleImporter> {
         'points': 10, // Valor predeterminado
         'options': options,
         'explanation': explanation,
-        'order': i // Mantener el orden original
+        'order': i, // Mantener el orden original
       });
 
       importedQuestions++;
@@ -574,54 +608,59 @@ class GoogleImporterState extends State<GoogleImporter> {
 
   // Función para extraer contenido de un documento Google Docs
   void _showImportSuccessDialog(
-      BuildContext context, String type, String title, String content) {
+    BuildContext context,
+    String type,
+    String title,
+    String content,
+  ) {
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('$type importado: $title'),
-        content: SizedBox(
-          width: double.maxFinite,
-          child: SingleChildScrollView(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                const Text('Vista previa del contenido:'),
-                const SizedBox(height: 10),
-                Container(
-                  padding: const EdgeInsets.all(8),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[200],
-                    borderRadius: BorderRadius.circular(4),
-                  ),
-                  child: Text(
-                    content.length > 1000
-                        ? '${content.substring(0, 1000)}...'
-                        : content,
-                    style: const TextStyle(fontFamily: 'monospace'),
-                  ),
+      builder:
+          (context) => AlertDialog(
+            title: Text('$type importado: $title'),
+            content: SizedBox(
+              width: double.maxFinite,
+              child: SingleChildScrollView(
+                child: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text('Vista previa del contenido:'),
+                    const SizedBox(height: 10),
+                    Container(
+                      padding: const EdgeInsets.all(8),
+                      decoration: BoxDecoration(
+                        color: Colors.grey[200],
+                        borderRadius: BorderRadius.circular(4),
+                      ),
+                      child: Text(
+                        content.length > 1000
+                            ? '${content.substring(0, 1000)}...'
+                            : content,
+                        style: const TextStyle(fontFamily: 'monospace'),
+                      ),
+                    ),
+                    const SizedBox(height: 20),
+                    const Text('¿Deseas guardar este contenido en Firestore?'),
+                  ],
                 ),
-                const SizedBox(height: 20),
-                const Text('¿Deseas guardar este contenido en Firestore?'),
-              ],
+              ),
             ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancelar'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Aquí implementa la función para guardar en Firestore
+                  _saveToFirestore(type, title, content);
+                  Navigator.pop(context);
+                },
+                child: const Text('Guardar'),
+              ),
+            ],
           ),
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              // Aquí implementa la función para guardar en Firestore
-              _saveToFirestore(type, title, content);
-              Navigator.pop(context);
-            },
-            child: const Text('Guardar'),
-          ),
-        ],
-      ),
     );
   }
 
@@ -649,7 +688,8 @@ class GoogleImporterState extends State<GoogleImporter> {
             prefix = '# ';
           } else if (style == 'HEADING_2')
             prefix = '## ';
-          else if (style == 'HEADING_3') prefix = '### ';
+          else if (style == 'HEADING_3')
+            prefix = '### ';
         }
 
         markdownContent.write(prefix);
@@ -703,8 +743,9 @@ class GoogleImporterState extends State<GoogleImporter> {
       Map<String, dynamic> rowData = {};
 
       // Solo procesar filas que tengan datos
-      if (rows[i]
-          .any((cell) => cell != null && cell.toString().trim().isNotEmpty)) {
+      if (rows[i].any(
+        (cell) => cell != null && cell.toString().trim().isNotEmpty,
+      )) {
         for (int j = 0; j < headers.length && j < rows[i].length; j++) {
           rowData[headers[j]] = rows[i][j];
         }
@@ -751,92 +792,108 @@ class GoogleImporterState extends State<GoogleImporter> {
     }
   }
 
-// Función para extraer temas enumerados del contenido del documento
+  // Función para extraer temas enumerados del contenido del documento
 
-// Función para procesar datos de cuestionarios desde una hoja de cálculo
+  // Función para procesar datos de cuestionarios desde una hoja de cálculo
 
   void _showSaveOptionsDialog(
-      BuildContext context, String type, String title, String content) {
-    final TextEditingController materiaController =
-        TextEditingController(text: title);
+    BuildContext context,
+    String type,
+    String title,
+    String content,
+  ) {
+    final TextEditingController materiaController = TextEditingController(
+      text: title,
+    );
 
     showDialog(
       context: context,
-      builder: (context) => AlertDialog(
-        title: Text('Guardar $type'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            const Text('Nombre de la materia:'),
-            TextField(
-              controller: materiaController,
-              decoration: const InputDecoration(
-                hintText: 'Ej: Matemáticas, Español, Ciencias',
-              ),
-            ),
-            const SizedBox(height: 20),
-            const Text('Vista previa:'),
-            Container(
-              height: 200,
-              width: double.maxFinite,
-              padding: const EdgeInsets.all(8),
-              margin: const EdgeInsets.only(top: 8),
-              decoration: BoxDecoration(
-                color: Colors.grey[200],
-                borderRadius: BorderRadius.circular(4),
-              ),
-              child: SingleChildScrollView(
-                child: Text(
-                  content.length > 500
-                      ? '${content.substring(0, 500)}...'
-                      : content,
-                  style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Guardar $type'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text('Nombre de la materia:'),
+                TextField(
+                  controller: materiaController,
+                  decoration: const InputDecoration(
+                    hintText: 'Ej: Matemáticas, Español, Ciencias',
+                  ),
                 ),
-              ),
+                const SizedBox(height: 20),
+                const Text('Vista previa:'),
+                Container(
+                  height: 200,
+                  width: double.maxFinite,
+                  padding: const EdgeInsets.all(8),
+                  margin: const EdgeInsets.only(top: 8),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[200],
+                    borderRadius: BorderRadius.circular(4),
+                  ),
+                  child: SingleChildScrollView(
+                    child: Text(
+                      content.length > 500
+                          ? '${content.substring(0, 500)}...'
+                          : content,
+                      style: const TextStyle(
+                        fontFamily: 'monospace',
+                        fontSize: 12,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
             ),
-          ],
-        ),
-        actions: [
-          TextButton(
-            onPressed: () => Navigator.pop(context),
-            child: const Text('Cancelar'),
-          ),
-          ElevatedButton(
-            onPressed: () {
-              final materia = materiaController.text.trim();
-              if (materia.isEmpty) {
-                ScaffoldMessenger.of(context).showSnackBar(
-                  const SnackBar(
-                      content:
-                          Text('El nombre de la materia no puede estar vacío')),
-                );
-                return;
-              }
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('Cancelar'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  final materia = materiaController.text.trim();
+                  if (materia.isEmpty) {
+                    ScaffoldMessenger.of(context).showSnackBar(
+                      const SnackBar(
+                        content: Text(
+                          'El nombre de la materia no puede estar vacío',
+                        ),
+                      ),
+                    );
+                    return;
+                  }
 
-              // Guardar con el nombre de materia confirmado o modificado
-              Navigator.pop(context);
-              _saveToFirestore(type, materia, content);
-            },
-            child: const Text('Guardar'),
+                  // Guardar con el nombre de materia confirmado o modificado
+                  Navigator.pop(context);
+                  _saveToFirestore(type, materia, content);
+                },
+                child: const Text('Guardar'),
+              ),
+            ],
           ),
-        ],
-      ),
     );
   }
 
-// Y actualiza el método SaveToFirestore
-// Versión corregida del método _saveToFirestore
+  // Y actualiza el método SaveToFirestore
+  // Versión corregida del método _saveToFirestore
   Future<void> _saveToFirestore(
-      String type, String title, String content) async {
+    String type,
+    String title,
+    String content,
+  ) async {
     try {
       setState(() {
         isLoading = true;
       });
 
       // Solicitar información del curso
-      final Map<String, dynamic>? courseInfo =
-          await _requestCourseInfo(context, title);
+      final Map<String, dynamic>? courseInfo = await _requestCourseInfo(
+        context,
+        title,
+      );
       if (courseInfo == null) {
         // El usuario canceló la importación
         setState(() {
@@ -873,15 +930,16 @@ class GoogleImporterState extends State<GoogleImporter> {
           'passingScore': 70,
           'certificateTemplate': 'template_basic',
           'enrolledStudents': 0,
-          'completedStudents': 0
+          'completedStudents': 0,
         });
       }
 
       // Procesar según el tipo de contenido
       if (type == 'Documento') {
         // Extraer unidades del documento
-        final List<Map<String, dynamic>> units =
-            _extractUnitsFromDocContent(content);
+        final List<Map<String, dynamic>> units = _extractUnitsFromDocContent(
+          content,
+        );
 
         if (units.isEmpty) {
           throw Exception('No se pudieron extraer unidades del documento');
@@ -893,15 +951,18 @@ class GoogleImporterState extends State<GoogleImporter> {
           // Estimar duración basada en la longitud del contenido (1 minuto por cada 500 caracteres)
           int estimatedDuration =
               ((unit['content'].toString().length / 500) * 60).round();
-          estimatedDuration =
-              max(10, min(estimatedDuration, 120)); // Entre 10 y 120 minutos
+          estimatedDuration = max(
+            10,
+            min(estimatedDuration, 120),
+          ); // Entre 10 y 120 minutos
           totalDuration += estimatedDuration;
 
-          final unitRef = FirebaseFirestore.instance
-              .collection('courses')
-              .doc(courseId)
-              .collection('units')
-              .doc();
+          final unitRef =
+              FirebaseFirestore.instance
+                  .collection('courses')
+                  .doc(courseId)
+                  .collection('units')
+                  .doc();
 
           await unitRef.set({
             'title': unit['title'],
@@ -911,7 +972,7 @@ class GoogleImporterState extends State<GoogleImporter> {
             'duration': estimatedDuration,
             'isActive': true,
             'hasTest': false,
-            'courseId': courseId
+            'courseId': courseId,
             // Por defecto no tiene test
           });
         }
@@ -921,14 +982,16 @@ class GoogleImporterState extends State<GoogleImporter> {
             .collection('courses')
             .doc(courseId)
             .update({
-          'duration': totalDuration,
-          'updatedAt': FieldValue.serverTimestamp()
-        });
+              'duration': totalDuration,
+              'updatedAt': FieldValue.serverTimestamp(),
+            });
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Se importaron ${units.length} unidades correctamente al curso')),
+            content: Text(
+              'Se importaron ${units.length} unidades correctamente al curso',
+            ),
+          ),
         );
       } else if (type == 'Hoja de cálculo') {
         // Solicitar información de la unidad a la que pertenece el test
@@ -943,48 +1006,53 @@ class GoogleImporterState extends State<GoogleImporter> {
         }
 
         // Procesar datos de preguntas desde el contenido JSON
-        final List<Map<String, dynamic>> questionsData =
-            _parseQuestionData(content);
+        final List<Map<String, dynamic>> questionsData = _parseQuestionData(
+          content,
+        );
 
         if (questionsData.isEmpty) {
           throw Exception(
-              'No se pudieron extraer preguntas válidas de la hoja de cálculo');
+            'No se pudieron extraer preguntas válidas de la hoja de cálculo',
+          );
         }
 
         // Convertir al formato esperado por Firestore
         final List<Map<String, dynamic>> firestoreQuestions =
             questionsData.asMap().entries.map((entry) {
-          final index = entry.key;
-          final question = entry.value;
-
-          return {
-            'id': 'q${index + 1}',
-            'text': question['texto'] ?? '',
-            'type': question['tipo'] ?? 'multiple-choice',
-            'points': question['puntos'] ?? 10,
-            'options': (question['opciones'] as List<Map<String, dynamic>>)
-                .asMap()
-                .entries
-                .map((optEntry) {
-              final optIndex = optEntry.key;
-              final option = optEntry.value;
+              final index = entry.key;
+              final question = entry.value;
 
               return {
-                'id': 'opt${optIndex + 1}',
-                'text': option['texto'] ?? '',
-                'isCorrect': option['esCorrecta'] ?? false
+                'id': 'q${index + 1}',
+                'text': question['texto'] ?? '',
+                'type': question['tipo'] ?? 'multiple-choice',
+                'points': question['puntos'] ?? 10,
+                'options':
+                    (question['opciones'] as List<Map<String, dynamic>>)
+                        .asMap()
+                        .entries
+                        .map((optEntry) {
+                          final optIndex = optEntry.key;
+                          final option = optEntry.value;
+
+                          return {
+                            'id': 'opt${optIndex + 1}',
+                            'text': option['texto'] ?? '',
+                            'isCorrect': option['esCorrecta'] ?? false,
+                          };
+                        })
+                        .toList(),
+                'explanation': question['explicacion'] ?? '',
               };
-            }).toList(),
-            'explanation': question['explicacion'] ?? ''
-          };
-        }).toList();
+            }).toList();
 
         // Guardar como test en Firestore
-        final testRef = FirebaseFirestore.instance
-            .collection('courses')
-            .doc(courseId)
-            .collection('tests')
-            .doc();
+        final testRef =
+            FirebaseFirestore.instance
+                .collection('courses')
+                .doc(courseId)
+                .collection('tests')
+                .doc();
 
         await testRef.set({
           'title': title,
@@ -997,7 +1065,7 @@ class GoogleImporterState extends State<GoogleImporter> {
           'shuffleQuestions': true,
           'shuffleOptions': true,
           'showResultsImmediately': true,
-          'questions': firestoreQuestions
+          'questions': firestoreQuestions,
         });
 
         // Si se especificó una unidad, actualizar la unidad para indicar que tiene test
@@ -1012,8 +1080,10 @@ class GoogleImporterState extends State<GoogleImporter> {
 
         ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(
-              content: Text(
-                  'Test "$title" importado correctamente con ${firestoreQuestions.length} preguntas')),
+            content: Text(
+              'Test "$title" importado correctamente con ${firestoreQuestions.length} preguntas',
+            ),
+          ),
         );
       }
 
@@ -1033,19 +1103,23 @@ class GoogleImporterState extends State<GoogleImporter> {
       });
 
       print('Error al guardar en Firestore: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error al guardar: $e')),
-      );
+      ScaffoldMessenger.of(
+        context,
+      ).showSnackBar(SnackBar(content: Text('Error al guardar: $e')));
     }
   }
 
   Future<Map<String, dynamic>?> _requestCourseInfo(
-      BuildContext context, String docTitle) async {
+    BuildContext context,
+    String docTitle,
+  ) async {
     // Controladores para los campos del formulario
-    final TextEditingController courseNameController =
-        TextEditingController(text: docTitle);
-    final TextEditingController courseDescController =
-        TextEditingController(text: 'Curso importado desde Google Docs');
+    final TextEditingController courseNameController = TextEditingController(
+      text: docTitle,
+    );
+    final TextEditingController courseDescController = TextEditingController(
+      text: 'Curso importado desde Google Docs',
+    );
 
     // Valores para los dropdown
     String? selectedCourseId;
@@ -1055,24 +1129,25 @@ class GoogleImporterState extends State<GoogleImporter> {
     List<DropdownMenuItem<String>> courseItems = [];
 
     // Cargar cursos existentes
-    await FirebaseFirestore.instance
-        .collection('courses')
-        .get()
-        .then((snapshot) {
-      courseItems = snapshot.docs.map((doc) {
-        return DropdownMenuItem<String>(
-          value: doc.id,
-          child: Text(doc.data()['title'] ?? 'Sin título'),
-        );
-      }).toList();
+    await FirebaseFirestore.instance.collection('courses').get().then((
+      snapshot,
+    ) {
+      courseItems =
+          snapshot.docs.map((doc) {
+            return DropdownMenuItem<String>(
+              value: doc.id,
+              child: Text(doc.data()['title'] ?? 'Sin título'),
+            );
+          }).toList();
 
       // Añadir opción para nuevo curso
       courseItems.insert(
-          0,
-          const DropdownMenuItem<String>(
-            value: '',
-            child: Text('-- Crear nuevo curso --'),
-          ));
+        0,
+        const DropdownMenuItem<String>(
+          value: '',
+          child: Text('-- Crear nuevo curso --'),
+        ),
+      );
     });
 
     // Mostrar diálogo
@@ -1131,11 +1206,17 @@ class GoogleImporterState extends State<GoogleImporter> {
                         value: selectedLevel,
                         items: const [
                           DropdownMenuItem(
-                              value: 'beginner', child: Text('Principiante')),
+                            value: 'beginner',
+                            child: Text('Principiante'),
+                          ),
                           DropdownMenuItem(
-                              value: 'intermediate', child: Text('Intermedio')),
+                            value: 'intermediate',
+                            child: Text('Intermedio'),
+                          ),
                           DropdownMenuItem(
-                              value: 'advanced', child: Text('Avanzado')),
+                            value: 'advanced',
+                            child: Text('Avanzado'),
+                          ),
                         ],
                         onChanged: (value) {
                           setState(() {
@@ -1159,7 +1240,8 @@ class GoogleImporterState extends State<GoogleImporter> {
                         courseNameController.text.trim().isEmpty) {
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
-                            content: Text('Ingresa un nombre para el curso')),
+                          content: Text('Ingresa un nombre para el curso'),
+                        ),
                       );
                       return;
                     }
@@ -1193,7 +1275,9 @@ class GoogleImporterState extends State<GoogleImporter> {
   }
 
   Future<Map<String, dynamic>?> _requestUnitForTest(
-      BuildContext context, String courseId) async {
+    BuildContext context,
+    String courseId,
+  ) async {
     String? selectedUnitId;
     List<DropdownMenuItem<String>> unitItems = [];
 
@@ -1205,23 +1289,26 @@ class GoogleImporterState extends State<GoogleImporter> {
         .orderBy('order')
         .get()
         .then((snapshot) {
-      unitItems = snapshot.docs.map((doc) {
-        final Map<String, dynamic> data = doc.data();
-        return DropdownMenuItem<String>(
-          value: doc.id,
-          child:
-              Text('${data['order'] ?? ''}: ${data['title'] ?? 'Sin título'}'),
-        );
-      }).toList();
+          unitItems =
+              snapshot.docs.map((doc) {
+                final Map<String, dynamic> data = doc.data();
+                return DropdownMenuItem<String>(
+                  value: doc.id,
+                  child: Text(
+                    '${data['order'] ?? ''}: ${data['title'] ?? 'Sin título'}',
+                  ),
+                );
+              }).toList();
 
-      // Añadir opción para no asociar a ninguna unidad
-      unitItems.insert(
-          0,
-          const DropdownMenuItem<String>(
-            value: '',
-            child: Text('-- Sin asociar a unidad --'),
-          ));
-    });
+          // Añadir opción para no asociar a ninguna unidad
+          unitItems.insert(
+            0,
+            const DropdownMenuItem<String>(
+              value: '',
+              child: Text('-- Sin asociar a unidad --'),
+            ),
+          );
+        });
 
     // Mostrar diálogo para seleccionar unidad
     final result = await showDialog<Map<String, dynamic>>(
@@ -1238,7 +1325,8 @@ class GoogleImporterState extends State<GoogleImporter> {
               const SizedBox(height: 10),
               if (unitItems.isEmpty)
                 const Text(
-                    'No hay unidades disponibles en este curso. Debes crear primero las unidades.')
+                  'No hay unidades disponibles en este curso. Debes crear primero las unidades.',
+                )
               else
                 DropdownButton<String>(
                   isExpanded: true,
@@ -1259,9 +1347,7 @@ class GoogleImporterState extends State<GoogleImporter> {
             ),
             ElevatedButton(
               onPressed: () {
-                Navigator.pop(context, {
-                  'unitId': selectedUnitId ?? '',
-                });
+                Navigator.pop(context, {'unitId': selectedUnitId ?? ''});
               },
               child: const Text('Continuar'),
             ),
@@ -1274,21 +1360,25 @@ class GoogleImporterState extends State<GoogleImporter> {
   }
 
   void _showImportProgressDialog(
-      BuildContext context, String type, String title) {
+    BuildContext context,
+    String type,
+    String title,
+  ) {
     showDialog(
       context: context,
       barrierDismissible: false,
-      builder: (context) => AlertDialog(
-        title: Text('Importando $type'),
-        content: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Importando "$title"...'),
-            const SizedBox(height: 20),
-            const LinearProgressIndicator(),
-          ],
-        ),
-      ),
+      builder:
+          (context) => AlertDialog(
+            title: Text('Importando $type'),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text('Importando "$title"...'),
+                const SizedBox(height: 20),
+                const LinearProgressIndicator(),
+              ],
+            ),
+          ),
     );
   }
 
@@ -1315,7 +1405,7 @@ class GoogleImporterState extends State<GoogleImporter> {
             'Enunciado',
             'enunciado',
             'question',
-            'text'
+            'text',
           ]) {
             if (item.containsKey(campo) &&
                 item[campo] != null &&
@@ -1359,7 +1449,7 @@ class GoogleImporterState extends State<GoogleImporter> {
             'Explicacion',
             'explicacion',
             'feedback',
-            'explanation'
+            'explanation',
           ]) {
             if (item.containsKey(campo) && item[campo] != null) {
               explicacion = item[campo].toString().trim();
@@ -1386,7 +1476,7 @@ class GoogleImporterState extends State<GoogleImporter> {
                 'EsCorrecta$i',
                 'esCorrecta$i',
                 'isCorrect$i',
-                'correct$i'
+                'correct$i',
               ]) {
                 if (item.containsKey(posibleKey)) {
                   correctaKey = posibleKey;
@@ -1401,7 +1491,7 @@ class GoogleImporterState extends State<GoogleImporter> {
                 'option$i',
                 'Option$i',
                 'answer$i',
-                'Answer$i'
+                'Answer$i',
               ]) {
                 if (item.containsKey(alt)) {
                   textoKey = alt;
@@ -1417,7 +1507,8 @@ class GoogleImporterState extends State<GoogleImporter> {
               // Determinar si es correcta
               if (item.containsKey(correctaKey)) {
                 var valor = item[correctaKey];
-                esCorrecta = valor == true ||
+                esCorrecta =
+                    valor == true ||
                     valor == 1 ||
                     valor == '1' ||
                     valor.toString().toLowerCase() == 'true' ||
@@ -1426,17 +1517,18 @@ class GoogleImporterState extends State<GoogleImporter> {
                     valor.toString().toLowerCase() == 'si';
               } else if (item.containsKey('RespuestaCorrecta') ||
                   item.containsKey('respuestaCorrecta')) {
-                String respCorrecta = (item['RespuestaCorrecta'] ??
-                        item['respuestaCorrecta'] ??
-                        '')
-                    .toString();
+                String respCorrecta =
+                    (item['RespuestaCorrecta'] ??
+                            item['respuestaCorrecta'] ??
+                            '')
+                        .toString();
                 esCorrecta =
                     respCorrecta == textoKey || respCorrecta == i.toString();
               }
 
               opciones.add({
                 'texto': item[textoKey].toString().trim(),
-                'esCorrecta': esCorrecta
+                'esCorrecta': esCorrecta,
               });
             }
           }
@@ -1449,7 +1541,7 @@ class GoogleImporterState extends State<GoogleImporter> {
               'options',
               'Options',
               'answers',
-              'Answers'
+              'Answers',
             ]) {
               if (item.containsKey(arrayKey) && item[arrayKey] is List) {
                 List<dynamic> opcionesArray = item[arrayKey];
@@ -1458,10 +1550,13 @@ class GoogleImporterState extends State<GoogleImporter> {
                 int correctIndex = -1;
                 if (item.containsKey('respuestaCorrecta') ||
                     item.containsKey('RespuestaCorrecta')) {
-                  correctIndex = int.tryParse((item['respuestaCorrecta'] ??
-                              item['RespuestaCorrecta'] ??
-                              '-1')
-                          .toString()) ??
+                  correctIndex =
+                      int.tryParse(
+                        (item['respuestaCorrecta'] ??
+                                item['RespuestaCorrecta'] ??
+                                '-1')
+                            .toString(),
+                      ) ??
                       -1;
                   correctIndex--; // Ajustar índice (suponiendo que comienza en 1)
                 }
@@ -1479,7 +1574,7 @@ class GoogleImporterState extends State<GoogleImporter> {
                       'texto',
                       'text',
                       'value',
-                      'label'
+                      'label',
                     ]) {
                       if (opcion.containsKey(textKey)) {
                         textoOpcion = opcion[textKey].toString().trim();
@@ -1490,11 +1585,12 @@ class GoogleImporterState extends State<GoogleImporter> {
                     for (String correctKey in [
                       'esCorrecta',
                       'correct',
-                      'isCorrect'
+                      'isCorrect',
                     ]) {
                       if (opcion.containsKey(correctKey)) {
                         var valor = opcion[correctKey];
-                        esCorrecta = valor == true ||
+                        esCorrecta =
+                            valor == true ||
                             valor == 1 ||
                             valor.toString().toLowerCase() == 'true';
                         break;
@@ -1503,8 +1599,10 @@ class GoogleImporterState extends State<GoogleImporter> {
                   }
 
                   if (textoOpcion.isNotEmpty) {
-                    opciones
-                        .add({'texto': textoOpcion, 'esCorrecta': esCorrecta});
+                    opciones.add({
+                      'texto': textoOpcion,
+                      'esCorrecta': esCorrecta,
+                    });
                   }
                 }
 
@@ -1523,7 +1621,7 @@ class GoogleImporterState extends State<GoogleImporter> {
               'RespuestaCorrecta',
               'Correcta',
               'correcta',
-              'correct'
+              'correct',
             ]) {
               if (item.containsKey(campo)) {
                 respuestaCorrecta = item[campo].toString().toLowerCase().trim();
@@ -1531,14 +1629,15 @@ class GoogleImporterState extends State<GoogleImporter> {
               }
             }
 
-            bool esVerdadero = respuestaCorrecta == 'true' ||
+            bool esVerdadero =
+                respuestaCorrecta == 'true' ||
                 respuestaCorrecta == 'verdadero' ||
                 respuestaCorrecta == 'v' ||
                 respuestaCorrecta == '1';
 
             opciones = [
               {'texto': 'Verdadero', 'esCorrecta': esVerdadero},
-              {'texto': 'Falso', 'esCorrecta': !esVerdadero}
+              {'texto': 'Falso', 'esCorrecta': !esVerdadero},
             ];
           }
 
@@ -1549,7 +1648,7 @@ class GoogleImporterState extends State<GoogleImporter> {
               'tipo': tipo,
               'puntos': puntos,
               'opciones': opciones,
-              'explicacion': explicacion
+              'explicacion': explicacion,
             });
           }
         }
@@ -1569,7 +1668,8 @@ class GoogleImporterState extends State<GoogleImporter> {
     for (var unit in units) {
       print('Unidad ${unit['order']}: ${unit['title']}');
       print(
-          'Primeros 100 caracteres del contenido: ${unit['content'].substring(0, min<int>(100, unit['content'].length))}...');
+        'Primeros 100 caracteres del contenido: ${unit['content'].substring(0, min<int>(100, unit['content'].length))}...',
+      );
       print('-----------------------------------');
     }
   }
@@ -1587,9 +1687,5 @@ class DriveFile {
   final String name;
   final String modifiedTime;
 
-  DriveFile({
-    required this.id,
-    required this.name,
-    required this.modifiedTime,
-  });
+  DriveFile({required this.id, required this.name, required this.modifiedTime});
 }

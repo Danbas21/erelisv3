@@ -54,7 +54,7 @@ class AppTextStyles {
   );
 
   static TextStyle notebookContent = GoogleFonts.caveat(
-    fontSize: 22,
+    fontSize: 30,
     height: 1.5,
     color: AppColors.textPrimaryNote,
   );
