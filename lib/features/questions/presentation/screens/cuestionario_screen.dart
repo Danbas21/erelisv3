@@ -13,8 +13,6 @@ import '../../domain/entities/pregunta_entity.dart';
 import '../blocs/progreso/progreso_bloc.dart';
 
 /// Pantalla principal del cuestionario de examen.
-
-/// Pantalla principal del cuestionario de examen.
 class CuestionarioScreen extends StatelessWidget {
   final String examenId;
   final String usuarioId;
@@ -178,6 +176,7 @@ class _VistaExamen extends StatelessWidget {
     final totalPreguntas = examenState.examen.preguntas.length;
     final indiceActual = examenState.indicePreguntaActual;
     final respuestas = examenState.respuestas;
+    final examenBloc = BlocProvider.of<ExamenBloc>(context);
 
     return Scaffold(
       appBar: AppBar(
@@ -198,19 +197,7 @@ class _VistaExamen extends StatelessWidget {
             icon: const Icon(Icons.save),
             tooltip: 'Guardar progreso',
             onPressed: () {
-              context.read<ExamenBloc>().add(
-                ProgresoGuardadoExamen(
-                  examenId: examenId,
-                  usuarioId: usuarioId,
-                ),
-              );
-
-              ScaffoldMessenger.of(context).showSnackBar(
-                const SnackBar(
-                  content: Text('Progreso guardado'),
-                  duration: Duration(seconds: 1),
-                ),
-              );
+              _mostrarDialogoGuardarProgreso(context);
             },
           ),
         ],
@@ -280,9 +267,67 @@ class _VistaExamen extends StatelessWidget {
             indiceActual: indiceActual,
             totalPreguntas: totalPreguntas,
             usuarioId: usuarioId,
+            examenId: examenId,
           ),
         ],
       ),
+    );
+  }
+
+  // Diálogo para guardar progreso
+  void _mostrarDialogoGuardarProgreso(BuildContext context) {
+    final examenBloc = BlocProvider.of<ExamenBloc>(context);
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Guardar Progreso'),
+            content: const Text('¿Qué deseas hacer?'),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  // Guardar progreso
+                  examenBloc.add(
+                    ExamenEvent.progresoGuardado(
+                      examenId: examenId,
+                      usuarioId: usuarioId,
+                    ),
+                  );
+
+                  // Cerrar diálogo
+                  Navigator.pop(context);
+
+                  // Mostrar confirmación
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    const SnackBar(
+                      content: Text('Progreso guardado'),
+                      duration: Duration(seconds: 1),
+                    ),
+                  );
+                },
+                child: const Text('CONTINUAR EXAMEN'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Guardar progreso
+                  context.read<ExamenBloc>().add(
+                    ExamenEvent.progresoGuardado(
+                      examenId: examenId,
+                      usuarioId: usuarioId,
+                    ),
+                  );
+
+                  // Cerrar diálogo
+                  Navigator.pop(context);
+
+                  // Volver a la pantalla anterior
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(backgroundColor: Colors.amber),
+                child: const Text('GUARDAR Y SALIR'),
+              ),
+            ],
+          ),
     );
   }
 
@@ -302,7 +347,7 @@ class _VistaExamen extends StatelessWidget {
           onTap: () {
             // Registramos la respuesta en el ExamenBloc
             context.read<ExamenBloc>().add(
-              RespuestaSeleccionada(
+              ExamenEvent.respuestaSeleccionada(
                 preguntaId: pregunta.id,
                 respuesta: opcion.texto,
                 usuarioId: usuarioId,
@@ -328,11 +373,13 @@ class _BarraNavegacion extends StatelessWidget {
   final int indiceActual;
   final int totalPreguntas;
   final String usuarioId;
+  final String examenId;
 
   const _BarraNavegacion({
     required this.indiceActual,
     required this.totalPreguntas,
     required this.usuarioId,
+    required this.examenId,
   });
 
   @override
@@ -358,7 +405,9 @@ class _BarraNavegacion extends StatelessWidget {
                 indiceActual > 0
                     ? () {
                       context.read<ExamenBloc>().add(
-                        PreguntaCambiada(nuevaIndice: indiceActual - 1),
+                        ExamenEvent.preguntaCambiada(
+                          nuevaIndice: indiceActual - 1,
+                        ),
                       );
                     }
                     : null,
@@ -370,45 +419,18 @@ class _BarraNavegacion extends StatelessWidget {
             ),
           ),
 
-          // Botón finalizar
+          // Botón guardar y salir (antes "Finalizar")
           ElevatedButton.icon(
             onPressed: () {
-              // Mostramos diálogo de confirmación
-              showDialog(
-                context: context,
-                builder:
-                    (context) => AlertDialog(
-                      title: const Text('Finalizar examen'),
-                      content: const Text(
-                        '¿Estás seguro de que deseas finalizar el examen? '
-                        'No podrás volver a editarlo.',
-                      ),
-                      actions: [
-                        TextButton(
-                          onPressed: () => Navigator.pop(context),
-                          child: const Text('CANCELAR'),
-                        ),
-                        ElevatedButton(
-                          onPressed: () {
-                            Navigator.pop(context);
-                            context.read<ExamenBloc>().add(
-                              ExamenEvent.finalizado(usuarioId: usuarioId),
-                            );
-
-                            // Navegamos a la pantalla de resultados
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: Colors.red,
-                          ),
-                          child: const Text('FINALIZAR'),
-                        ),
-                      ],
-                    ),
-              );
+              _mostrarDialogoGuardarYSalir(context);
             },
-            icon: const Icon(Icons.done_all),
-            label: const Text('Finalizar'),
-            style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
+            icon: const Icon(Icons.save),
+            label: const Text('Guardar y Salir'),
+            style: ElevatedButton.styleFrom(
+              backgroundColor: const Color(
+                0xFFF59E0B,
+              ), // Cambiado a color naranja
+            ),
           ),
 
           // Botón siguiente
@@ -417,7 +439,9 @@ class _BarraNavegacion extends StatelessWidget {
                 indiceActual < totalPreguntas - 1
                     ? () {
                       context.read<ExamenBloc>().add(
-                        PreguntaCambiada(nuevaIndice: indiceActual + 1),
+                        ExamenEvent.preguntaCambiada(
+                          nuevaIndice: indiceActual + 1,
+                        ),
                       );
                     }
                     : null,
@@ -430,6 +454,48 @@ class _BarraNavegacion extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+
+  // Diálogo para guardar y salir
+  void _mostrarDialogoGuardarYSalir(BuildContext context) {
+    showDialog(
+      context: context,
+      builder:
+          (context) => AlertDialog(
+            title: const Text('Guardar y Salir'),
+            content: const Text(
+              '¿Deseas guardar tu progreso y salir del examen? '
+              'Podrás retomarlo más tarde.',
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.pop(context),
+                child: const Text('CONTINUAR EXAMEN'),
+              ),
+              ElevatedButton(
+                onPressed: () {
+                  // Guardamos el progreso
+                  context.read<ExamenBloc>().add(
+                    ExamenEvent.progresoGuardado(
+                      examenId: examenId,
+                      usuarioId: usuarioId,
+                    ),
+                  );
+
+                  // Cerramos el diálogo
+                  Navigator.pop(context);
+
+                  // Volvemos a la pantalla anterior
+                  Navigator.pop(context);
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: const Color(0xFFF59E0B),
+                ),
+                child: const Text('GUARDAR Y SALIR'),
+              ),
+            ],
+          ),
     );
   }
 }

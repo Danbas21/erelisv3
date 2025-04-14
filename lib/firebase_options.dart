@@ -64,6 +64,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '143135305604',
     projectId: 'cursos-erelis-8203e',
     storageBucket: 'cursos-erelis-8203e.firebasestorage.app',
+    iosClientId: '143135305604-g5n4h2rqu3jtb442docj3fefq4qq3vs0.apps.googleusercontent.com',
     iosBundleId: 'com.example.erelis',
   );
 
@@ -73,6 +74,7 @@ class DefaultFirebaseOptions {
     messagingSenderId: '143135305604',
     projectId: 'cursos-erelis-8203e',
     storageBucket: 'cursos-erelis-8203e.firebasestorage.app',
+    iosClientId: '143135305604-g5n4h2rqu3jtb442docj3fefq4qq3vs0.apps.googleusercontent.com',
     iosBundleId: 'com.example.erelis',
   );
 
@@ -85,5 +87,4 @@ class DefaultFirebaseOptions {
     storageBucket: 'cursos-erelis-8203e.firebasestorage.app',
     measurementId: 'G-HFY7BJ16ED',
   );
-
 }

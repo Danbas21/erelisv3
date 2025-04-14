@@ -1,21 +1,35 @@
 part of 'salon_bloc.dart';
 
+enum SalonStatus {
+  initial,
+  loading,
+  loaded,
+  detailsLoaded,
+  error,
+  operationSuccess,
+}
+
 @freezed
 sealed class SalonState with _$SalonState {
   const factory SalonState({
-    @Default([]) List<SubjectModel> subjects,
-    @Default(true) bool isSidebarExpanded,
-    @Default(false) bool isLoading,
-    String? errorMessage,
+    @Default(SalonStatus.initial) SalonStatus status,
+    @Default([]) List<dynamic> subject,
+    @Default('') String errorMessage,
+    @Default('') String operationMessage,
+    @Default(true)
+    bool isSidebarExpanded, // Añadido para controlar el estado del sidebar
   }) = _SalonState;
-  const factory SalonState.initial() = Initial;
-  const factory SalonState.loadInProgress() = LoadInProgress;
-  const factory SalonState.loaded({required List<SubjectModel> subject}) =
-      Loaded;
-  const factory SalonState.detailsLoaded({required SubjectModel subject}) =
-      DetailsLoaded;
 
-  const factory SalonState.courseOperationSuccess({required String message}) =
-      CourseOperationSuccess;
-  const factory SalonState.courseError({required String message}) = CourseError;
+  const SalonState._();
+
+  // Métodos de ayuda para facilitar la comprobación del estado
+  bool get isInitial => status == SalonStatus.initial;
+  bool get isLoading => status == SalonStatus.loading;
+  bool get isLoaded => status == SalonStatus.loaded;
+  bool get isDetailsLoaded => status == SalonStatus.detailsLoaded;
+  bool get isError => status == SalonStatus.error;
+  bool get isOperationSuccess => status == SalonStatus.operationSuccess;
 }
+
+// Estos son los estados específicos que puedes usar si prefieres un enfoque más directo
+// y que no contradiga el enfoque anterior usando freezed

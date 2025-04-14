@@ -7,33 +7,33 @@ sealed class ExamenEvent with _$ExamenEvent {
   const factory ExamenEvent.iniciado({
     required String examenId,
     required String usuarioId,
-  }) = ExamenIniciado;
+  }) = _ExamenIniciado;
 
   /// Evento para cambiar a una pregunta específica.
   const factory ExamenEvent.preguntaCambiada({required int nuevaIndice}) =
-      PreguntaCambiada;
+      _PreguntaCambiada;
 
   /// Evento para seleccionar una respuesta.
   const factory ExamenEvent.respuestaSeleccionada({
     required String preguntaId,
     required String respuesta,
     required String usuarioId,
-  }) = RespuestaSeleccionada;
+  }) = _RespuestaSeleccionada;
 
   /// Evento para guardar el progreso actual.
   const factory ExamenEvent.progresoGuardado({
     required String examenId,
     required String usuarioId,
-  }) = ProgresoGuardadoExamen;
+  }) = _ProgresoGuardadoExamen;
 
   /// Evento para finalizar el examen y calcular resultados.
   const factory ExamenEvent.finalizado({required String usuarioId}) =
-      ExamenFinalizado;
+      _ExamenFinalizado;
 
   /// Evento para recuperar un progreso previo.
   const factory ExamenEvent.progresoRecuperado({
     required String examenId,
     required String usuarioId,
     required ProgresoExamenEntity progreso,
-  }) = ProgresoRecuperado;
+  }) = _ProgresoRecuperado;
 }

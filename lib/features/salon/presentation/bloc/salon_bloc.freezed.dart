@@ -15,54 +15,90 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$SalonState {
 
-
+ SalonStatus get status; List<dynamic> get subject; String get errorMessage; String get operationMessage; bool get isSidebarExpanded;
+/// Create a copy of SalonState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$SalonStateCopyWith<SalonState> get copyWith => _$SalonStateCopyWithImpl<SalonState>(this as SalonState, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalonState);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is SalonState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other.subject, subject)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.operationMessage, operationMessage) || other.operationMessage == operationMessage)&&(identical(other.isSidebarExpanded, isSidebarExpanded) || other.isSidebarExpanded == isSidebarExpanded));
 }
 
 
 @override
-int get hashCode => runtimeType.hashCode;
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(subject),errorMessage,operationMessage,isSidebarExpanded);
 
 @override
 String toString() {
-  return 'SalonState()';
+  return 'SalonState(status: $status, subject: $subject, errorMessage: $errorMessage, operationMessage: $operationMessage, isSidebarExpanded: $isSidebarExpanded)';
 }
 
 
 }
 
 /// @nodoc
-class $SalonStateCopyWith<$Res>  {
-$SalonStateCopyWith(SalonState _, $Res Function(SalonState) __);
+abstract mixin class $SalonStateCopyWith<$Res>  {
+  factory $SalonStateCopyWith(SalonState value, $Res Function(SalonState) _then) = _$SalonStateCopyWithImpl;
+@useResult
+$Res call({
+ SalonStatus status, List<dynamic> subject, String errorMessage, String operationMessage, bool isSidebarExpanded
+});
+
+
+
+
 }
-
-
 /// @nodoc
+class _$SalonStateCopyWithImpl<$Res>
+    implements $SalonStateCopyWith<$Res> {
+  _$SalonStateCopyWithImpl(this._self, this._then);
 
-
-class _SalonState implements SalonState {
-  const _SalonState({final  List<SubjectModel> subjects = const [], this.isSidebarExpanded = true, this.isLoading = false, this.errorMessage}): _subjects = subjects;
-  
-
- final  List<SubjectModel> _subjects;
-@JsonKey() List<SubjectModel> get subjects {
-  if (_subjects is EqualUnmodifiableListView) return _subjects;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_subjects);
-}
-
-@JsonKey() final  bool isSidebarExpanded;
-@JsonKey() final  bool isLoading;
- final  String? errorMessage;
+  final SalonState _self;
+  final $Res Function(SalonState) _then;
 
 /// Create a copy of SalonState
 /// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline') @override $Res call({Object? status = null,Object? subject = null,Object? errorMessage = null,Object? operationMessage = null,Object? isSidebarExpanded = null,}) {
+  return _then(_self.copyWith(
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as SalonStatus,subject: null == subject ? _self.subject : subject // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String,operationMessage: null == operationMessage ? _self.operationMessage : operationMessage // ignore: cast_nullable_to_non_nullable
+as String,isSidebarExpanded: null == isSidebarExpanded ? _self.isSidebarExpanded : isSidebarExpanded // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+}
+
+
+/// @nodoc
+
+
+class _SalonState extends SalonState {
+  const _SalonState({this.status = SalonStatus.initial, final  List<dynamic> subject = const [], this.errorMessage = '', this.operationMessage = '', this.isSidebarExpanded = true}): _subject = subject,super._();
+  
+
+@override@JsonKey() final  SalonStatus status;
+ final  List<dynamic> _subject;
+@override@JsonKey() List<dynamic> get subject {
+  if (_subject is EqualUnmodifiableListView) return _subject;
+  // ignore: implicit_dynamic_type
+  return EqualUnmodifiableListView(_subject);
+}
+
+@override@JsonKey() final  String errorMessage;
+@override@JsonKey() final  String operationMessage;
+@override@JsonKey() final  bool isSidebarExpanded;
+
+/// Create a copy of SalonState
+/// with the given fields replaced by the non-null parameter values.
+@override @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
 _$SalonStateCopyWith<_SalonState> get copyWith => __$SalonStateCopyWithImpl<_SalonState>(this, _$identity);
 
@@ -70,16 +106,16 @@ _$SalonStateCopyWith<_SalonState> get copyWith => __$SalonStateCopyWithImpl<_Sal
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalonState&&const DeepCollectionEquality().equals(other._subjects, _subjects)&&(identical(other.isSidebarExpanded, isSidebarExpanded) || other.isSidebarExpanded == isSidebarExpanded)&&(identical(other.isLoading, isLoading) || other.isLoading == isLoading)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _SalonState&&(identical(other.status, status) || other.status == status)&&const DeepCollectionEquality().equals(other._subject, _subject)&&(identical(other.errorMessage, errorMessage) || other.errorMessage == errorMessage)&&(identical(other.operationMessage, operationMessage) || other.operationMessage == operationMessage)&&(identical(other.isSidebarExpanded, isSidebarExpanded) || other.isSidebarExpanded == isSidebarExpanded));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_subjects),isSidebarExpanded,isLoading,errorMessage);
+int get hashCode => Object.hash(runtimeType,status,const DeepCollectionEquality().hash(_subject),errorMessage,operationMessage,isSidebarExpanded);
 
 @override
 String toString() {
-  return 'SalonState(subjects: $subjects, isSidebarExpanded: $isSidebarExpanded, isLoading: $isLoading, errorMessage: $errorMessage)';
+  return 'SalonState(status: $status, subject: $subject, errorMessage: $errorMessage, operationMessage: $operationMessage, isSidebarExpanded: $isSidebarExpanded)';
 }
 
 
@@ -88,9 +124,9 @@ String toString() {
 /// @nodoc
 abstract mixin class _$SalonStateCopyWith<$Res> implements $SalonStateCopyWith<$Res> {
   factory _$SalonStateCopyWith(_SalonState value, $Res Function(_SalonState) _then) = __$SalonStateCopyWithImpl;
-@useResult
+@override @useResult
 $Res call({
- List<SubjectModel> subjects, bool isSidebarExpanded, bool isLoading, String? errorMessage
+ SalonStatus status, List<dynamic> subject, String errorMessage, String operationMessage, bool isSidebarExpanded
 });
 
 
@@ -107,356 +143,14 @@ class __$SalonStateCopyWithImpl<$Res>
 
 /// Create a copy of SalonState
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? subjects = null,Object? isSidebarExpanded = null,Object? isLoading = null,Object? errorMessage = freezed,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? status = null,Object? subject = null,Object? errorMessage = null,Object? operationMessage = null,Object? isSidebarExpanded = null,}) {
   return _then(_SalonState(
-subjects: null == subjects ? _self._subjects : subjects // ignore: cast_nullable_to_non_nullable
-as List<SubjectModel>,isSidebarExpanded: null == isSidebarExpanded ? _self.isSidebarExpanded : isSidebarExpanded // ignore: cast_nullable_to_non_nullable
-as bool,isLoading: null == isLoading ? _self.isLoading : isLoading // ignore: cast_nullable_to_non_nullable
-as bool,errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
-as String?,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class Initial implements SalonState {
-  const Initial();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Initial);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'SalonState.initial()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class LoadInProgress implements SalonState {
-  const LoadInProgress();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadInProgress);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'SalonState.loadInProgress()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class Loaded implements SalonState {
-  const Loaded({required final  List<SubjectModel> subject}): _subject = subject;
-  
-
- final  List<SubjectModel> _subject;
- List<SubjectModel> get subject {
-  if (_subject is EqualUnmodifiableListView) return _subject;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_subject);
-}
-
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$LoadedCopyWith<Loaded> get copyWith => _$LoadedCopyWithImpl<Loaded>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Loaded&&const DeepCollectionEquality().equals(other._subject, _subject));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_subject));
-
-@override
-String toString() {
-  return 'SalonState.loaded(subject: $subject)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $LoadedCopyWith<$Res> implements $SalonStateCopyWith<$Res> {
-  factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) _then) = _$LoadedCopyWithImpl;
-@useResult
-$Res call({
- List<SubjectModel> subject
-});
-
-
-
-
-}
-/// @nodoc
-class _$LoadedCopyWithImpl<$Res>
-    implements $LoadedCopyWith<$Res> {
-  _$LoadedCopyWithImpl(this._self, this._then);
-
-  final Loaded _self;
-  final $Res Function(Loaded) _then;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? subject = null,}) {
-  return _then(Loaded(
-subject: null == subject ? _self._subject : subject // ignore: cast_nullable_to_non_nullable
-as List<SubjectModel>,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class DetailsLoaded implements SalonState {
-  const DetailsLoaded({required this.subject});
-  
-
- final  SubjectModel subject;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$DetailsLoadedCopyWith<DetailsLoaded> get copyWith => _$DetailsLoadedCopyWithImpl<DetailsLoaded>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is DetailsLoaded&&(identical(other.subject, subject) || other.subject == subject));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,subject);
-
-@override
-String toString() {
-  return 'SalonState.detailsLoaded(subject: $subject)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $DetailsLoadedCopyWith<$Res> implements $SalonStateCopyWith<$Res> {
-  factory $DetailsLoadedCopyWith(DetailsLoaded value, $Res Function(DetailsLoaded) _then) = _$DetailsLoadedCopyWithImpl;
-@useResult
-$Res call({
- SubjectModel subject
-});
-
-
-$SubjectModelCopyWith<$Res> get subject;
-
-}
-/// @nodoc
-class _$DetailsLoadedCopyWithImpl<$Res>
-    implements $DetailsLoadedCopyWith<$Res> {
-  _$DetailsLoadedCopyWithImpl(this._self, this._then);
-
-  final DetailsLoaded _self;
-  final $Res Function(DetailsLoaded) _then;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? subject = null,}) {
-  return _then(DetailsLoaded(
-subject: null == subject ? _self.subject : subject // ignore: cast_nullable_to_non_nullable
-as SubjectModel,
-  ));
-}
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SubjectModelCopyWith<$Res> get subject {
-  
-  return $SubjectModelCopyWith<$Res>(_self.subject, (value) {
-    return _then(_self.copyWith(subject: value));
-  });
-}
-}
-
-/// @nodoc
-
-
-class CourseOperationSuccess implements SalonState {
-  const CourseOperationSuccess({required this.message});
-  
-
- final  String message;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$CourseOperationSuccessCopyWith<CourseOperationSuccess> get copyWith => _$CourseOperationSuccessCopyWithImpl<CourseOperationSuccess>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseOperationSuccess&&(identical(other.message, message) || other.message == message));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,message);
-
-@override
-String toString() {
-  return 'SalonState.courseOperationSuccess(message: $message)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $CourseOperationSuccessCopyWith<$Res> implements $SalonStateCopyWith<$Res> {
-  factory $CourseOperationSuccessCopyWith(CourseOperationSuccess value, $Res Function(CourseOperationSuccess) _then) = _$CourseOperationSuccessCopyWithImpl;
-@useResult
-$Res call({
- String message
-});
-
-
-
-
-}
-/// @nodoc
-class _$CourseOperationSuccessCopyWithImpl<$Res>
-    implements $CourseOperationSuccessCopyWith<$Res> {
-  _$CourseOperationSuccessCopyWithImpl(this._self, this._then);
-
-  final CourseOperationSuccess _self;
-  final $Res Function(CourseOperationSuccess) _then;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(CourseOperationSuccess(
-message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class CourseError implements SalonState {
-  const CourseError({required this.message});
-  
-
- final  String message;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-$CourseErrorCopyWith<CourseError> get copyWith => _$CourseErrorCopyWithImpl<CourseError>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CourseError&&(identical(other.message, message) || other.message == message));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,message);
-
-@override
-String toString() {
-  return 'SalonState.courseError(message: $message)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class $CourseErrorCopyWith<$Res> implements $SalonStateCopyWith<$Res> {
-  factory $CourseErrorCopyWith(CourseError value, $Res Function(CourseError) _then) = _$CourseErrorCopyWithImpl;
-@useResult
-$Res call({
- String message
-});
-
-
-
-
-}
-/// @nodoc
-class _$CourseErrorCopyWithImpl<$Res>
-    implements $CourseErrorCopyWith<$Res> {
-  _$CourseErrorCopyWithImpl(this._self, this._then);
-
-  final CourseError _self;
-  final $Res Function(CourseError) _then;
-
-/// Create a copy of SalonState
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(CourseError(
-message: null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
-as String,
+status: null == status ? _self.status : status // ignore: cast_nullable_to_non_nullable
+as SalonStatus,subject: null == subject ? _self._subject : subject // ignore: cast_nullable_to_non_nullable
+as List<dynamic>,errorMessage: null == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
+as String,operationMessage: null == operationMessage ? _self.operationMessage : operationMessage // ignore: cast_nullable_to_non_nullable
+as String,isSidebarExpanded: null == isSidebarExpanded ? _self.isSidebarExpanded : isSidebarExpanded // ignore: cast_nullable_to_non_nullable
+as bool,
   ));
 }
 
@@ -496,70 +190,6 @@ $SalonEventCopyWith(SalonEvent _, $Res Function(SalonEvent) __);
 /// @nodoc
 
 
-class _FetchSubjects implements SalonEvent {
-  const _FetchSubjects();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FetchSubjects);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'SalonEvent.fetchSubjects()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _ToggleSidebar implements SalonEvent {
-  const _ToggleSidebar();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToggleSidebar);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'SalonEvent.toggleSidebar()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
 class _LoadCourses implements SalonEvent {
   const _LoadCourses();
   
@@ -593,7 +223,7 @@ String toString() {
 
 
 class _LoadCourseDetails implements SalonEvent {
-  const _LoadCourseDetails({required this.courseId});
+  const _LoadCourseDetails(this.courseId);
   
 
  final  String courseId;
@@ -647,7 +277,7 @@ class __$LoadCourseDetailsCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? courseId = null,}) {
   return _then(_LoadCourseDetails(
-courseId: null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
+null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -659,10 +289,10 @@ as String,
 
 
 class _AddCourse implements SalonEvent {
-  const _AddCourse({required this.subject});
+  const _AddCourse(this.subject);
   
 
- final  SubjectModel subject;
+ final  dynamic subject;
 
 /// Create a copy of SalonEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -674,12 +304,12 @@ _$AddCourseCopyWith<_AddCourse> get copyWith => __$AddCourseCopyWithImpl<_AddCou
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddCourse&&(identical(other.subject, subject) || other.subject == subject));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _AddCourse&&const DeepCollectionEquality().equals(other.subject, subject));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,subject);
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(subject));
 
 @override
 String toString() {
@@ -694,11 +324,11 @@ abstract mixin class _$AddCourseCopyWith<$Res> implements $SalonEventCopyWith<$R
   factory _$AddCourseCopyWith(_AddCourse value, $Res Function(_AddCourse) _then) = __$AddCourseCopyWithImpl;
 @useResult
 $Res call({
- SubjectModel subject
+ dynamic subject
 });
 
 
-$SubjectModelCopyWith<$Res> get subject;
+
 
 }
 /// @nodoc
@@ -711,39 +341,24 @@ class __$AddCourseCopyWithImpl<$Res>
 
 /// Create a copy of SalonEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? subject = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? subject = freezed,}) {
   return _then(_AddCourse(
-subject: null == subject ? _self.subject : subject // ignore: cast_nullable_to_non_nullable
-as SubjectModel,
+freezed == subject ? _self.subject : subject // ignore: cast_nullable_to_non_nullable
+as dynamic,
   ));
 }
 
-/// Create a copy of SalonEvent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$SubjectModelCopyWith<$Res> get subject {
-  
-  return $SubjectModelCopyWith<$Res>(_self.subject, (value) {
-    return _then(_self.copyWith(subject: value));
-  });
-}
+
 }
 
 /// @nodoc
 
 
 class _UpdateCourse implements SalonEvent {
-  const _UpdateCourse({required final  List<SubjectModel> course}): _course = course;
+  const _UpdateCourse(this.subject);
   
 
- final  List<SubjectModel> _course;
- List<SubjectModel> get course {
-  if (_course is EqualUnmodifiableListView) return _course;
-  // ignore: implicit_dynamic_type
-  return EqualUnmodifiableListView(_course);
-}
-
+ final  dynamic subject;
 
 /// Create a copy of SalonEvent
 /// with the given fields replaced by the non-null parameter values.
@@ -755,16 +370,16 @@ _$UpdateCourseCopyWith<_UpdateCourse> get copyWith => __$UpdateCourseCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateCourse&&const DeepCollectionEquality().equals(other._course, _course));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateCourse&&const DeepCollectionEquality().equals(other.subject, subject));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(_course));
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(subject));
 
 @override
 String toString() {
-  return 'SalonEvent.updateCourse(course: $course)';
+  return 'SalonEvent.updateCourse(subject: $subject)';
 }
 
 
@@ -775,7 +390,7 @@ abstract mixin class _$UpdateCourseCopyWith<$Res> implements $SalonEventCopyWith
   factory _$UpdateCourseCopyWith(_UpdateCourse value, $Res Function(_UpdateCourse) _then) = __$UpdateCourseCopyWithImpl;
 @useResult
 $Res call({
- List<SubjectModel> course
+ dynamic subject
 });
 
 
@@ -792,10 +407,10 @@ class __$UpdateCourseCopyWithImpl<$Res>
 
 /// Create a copy of SalonEvent
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? course = null,}) {
+@pragma('vm:prefer-inline') $Res call({Object? subject = freezed,}) {
   return _then(_UpdateCourse(
-course: null == course ? _self._course : course // ignore: cast_nullable_to_non_nullable
-as List<SubjectModel>,
+freezed == subject ? _self.subject : subject // ignore: cast_nullable_to_non_nullable
+as dynamic,
   ));
 }
 
@@ -806,7 +421,7 @@ as List<SubjectModel>,
 
 
 class _DeleteCourse implements SalonEvent {
-  const _DeleteCourse({required this.courseId});
+  const _DeleteCourse(this.courseId);
   
 
  final  String courseId;
@@ -860,7 +475,7 @@ class __$DeleteCourseCopyWithImpl<$Res>
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? courseId = null,}) {
   return _then(_DeleteCourse(
-courseId: null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
+null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
 as String,
   ));
 }
@@ -872,11 +487,11 @@ as String,
 
 
 class _LoadCoursesSuccess implements SalonEvent {
-  const _LoadCoursesSuccess(final  List<SubjectModel> courses): _courses = courses;
+  const _LoadCoursesSuccess(final  List<dynamic> courses): _courses = courses;
   
 
- final  List<SubjectModel> _courses;
- List<SubjectModel> get courses {
+ final  List<dynamic> _courses;
+ List<dynamic> get courses {
   if (_courses is EqualUnmodifiableListView) return _courses;
   // ignore: implicit_dynamic_type
   return EqualUnmodifiableListView(_courses);
@@ -913,7 +528,7 @@ abstract mixin class _$LoadCoursesSuccessCopyWith<$Res> implements $SalonEventCo
   factory _$LoadCoursesSuccessCopyWith(_LoadCoursesSuccess value, $Res Function(_LoadCoursesSuccess) _then) = __$LoadCoursesSuccessCopyWithImpl;
 @useResult
 $Res call({
- List<SubjectModel> courses
+ List<dynamic> courses
 });
 
 
@@ -933,11 +548,43 @@ class __$LoadCoursesSuccessCopyWithImpl<$Res>
 @pragma('vm:prefer-inline') $Res call({Object? courses = null,}) {
   return _then(_LoadCoursesSuccess(
 null == courses ? _self._courses : courses // ignore: cast_nullable_to_non_nullable
-as List<SubjectModel>,
+as List<dynamic>,
   ));
 }
 
 
 }
+
+/// @nodoc
+
+
+class _ToggleSidebar implements SalonEvent {
+  const _ToggleSidebar();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _ToggleSidebar);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'SalonEvent.toggleSidebar()';
+}
+
+
+}
+
+
+
 
 // dart format on

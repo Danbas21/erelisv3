@@ -1,4 +1,5 @@
 // lib/features/salon/presentation/pages/salon_screen.dart
+// lib/features/salon/presentation/pages/salon_screen.dart
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:erelis/config/app_colors.dart';
@@ -24,42 +25,53 @@ class _SalonScreenState extends State<SalonScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: AppColors.background,
-      body: Row(
-        children: [
-          SalonSidebar(
-            isExpanded: true,
-            onToggle: () {
-              context.read<SalonBloc>().add(const SalonEvent.toggleSidebar());
-            },
+    return BlocBuilder<SalonBloc, SalonState>(
+      // Solo reconstruir cuando cambie el estado del sidebar
+      buildWhen:
+          (previous, current) =>
+              previous.isSidebarExpanded != current.isSidebarExpanded ||
+              previous.status != current.status,
+      builder: (context, state) {
+        return Scaffold(
+          backgroundColor: AppColors.background,
+          body: Row(
+            children: [
+              // Pasamos el estado actual de expansión y una función para alternarlo
+              SalonSidebar(
+                isExpanded: state.isSidebarExpanded,
+                onToggle: () {
+                  context.read<SalonBloc>().add(
+                    const SalonEvent.toggleSidebar(),
+                  );
+                },
+              ),
+              Expanded(child: _buildMainContent(context)),
+            ],
           ),
-          // _buildHeader(),
-          Expanded(
-            child: _buildMainContent(),
-          ),
-        ],
-      ),
+        );
+      },
     );
   }
-}
 
-Widget _buildMainContent() {
-  return BlocBuilder<SalonBloc, SalonState>(
+  Widget _buildMainContent(BuildContext context) {
+    return BlocBuilder<SalonBloc, SalonState>(
       buildWhen: (previous, current) {
-        return previous.runtimeType != current.runtimeType ||
-            (current is Loaded &&
-                previous is Loaded &&
-                current.subject != previous.subject);
+        return previous.status != current.status ||
+            (current.isLoaded && previous.subject != current.subject);
       },
-      builder: (context, state) => switch (state) {
-            LoadInProgress() => const Center(
-                child: CircularProgressIndicator(),
-              ),
-            Loaded(:final subject) => _buildSubjectGrid(context, subject),
-            CourseError(:final message) => _buildErrorView(context, message),
-            _ => const SizedBox(),
-          });
+      builder: (context, state) {
+        if (state.isLoading) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (state.isLoaded) {
+          return _buildSubjectGrid(context, state.subject);
+        } else if (state.isError) {
+          return _buildErrorView(context, state.errorMessage);
+        } else {
+          return const SizedBox();
+        }
+      },
+    );
+  }
 }
 
 Widget _buildErrorView(BuildContext context, String message) {
@@ -74,8 +86,9 @@ Widget _buildErrorView(BuildContext context, String message) {
         ),
         const SizedBox(height: 16),
         ElevatedButton(
-          onPressed: () =>
-              context.read<SalonBloc>().add(const SalonEvent.loadCourses()),
+          onPressed:
+              () =>
+                  context.read<SalonBloc>().add(const SalonEvent.loadCourses()),
           child: const Text('Reintentar'),
         ),
       ],
@@ -83,72 +96,72 @@ Widget _buildErrorView(BuildContext context, String message) {
   );
 }
 
-Widget _buildHeader() {
+Widget _buildHeader(BuildContext context) {
   final user = FirebaseAuth.instance.currentUser;
   final displayName = user?.displayName ?? 'Student';
 
-  return Row(
-    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-    children: [
-      Row(
-        children: [
-          if (user?.photoURL != null)
-            CircleAvatar(
-              backgroundImage: NetworkImage(user!.photoURL!),
-              radius: 20,
-            )
-          else
-            const CircleAvatar(
-              backgroundColor: AppColors.primaryLightBlue,
-              radius: 20,
-              child: Icon(
-                Icons.person,
-                color: Colors.white,
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Row(
+      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      children: [
+        Row(
+          children: [
+            if (user?.photoURL != null)
+              CircleAvatar(
+                backgroundImage: NetworkImage(user!.photoURL!),
+                radius: 20,
+              )
+            else
+              const CircleAvatar(
+                backgroundColor: AppColors.primaryLightBlue,
+                radius: 20,
+                child: Icon(Icons.person, color: Colors.white),
               ),
-            ),
-          const SizedBox(width: 12),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                displayName,
-                style: const TextStyle(
-                  color: AppColors.textPrimary,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 16,
+            const SizedBox(width: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  displayName,
+                  style: const TextStyle(
+                    color: AppColors.textPrimary,
+                    fontWeight: FontWeight.bold,
+                    fontSize: 16,
+                  ),
                 ),
-              ),
-              Text(
-                'Student',
-                style: TextStyle(
-                  color: AppColors.textSecondary,
-                  fontSize: 14,
+                Text(
+                  'Student',
+                  style: TextStyle(
+                    color: AppColors.textSecondary,
+                    fontSize: 14,
+                  ),
                 ),
+              ],
+            ),
+          ],
+        ),
+        Row(
+          children: [
+            IconButton(
+              icon: const Icon(
+                Icons.notifications_outlined,
+                color: AppColors.textPrimary,
               ),
-            ],
-          ),
-        ],
-      ),
-      Row(
-        children: [
-          IconButton(
-            icon: const Icon(
-              Icons.notifications_outlined,
-              color: AppColors.textPrimary,
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
-          const SizedBox(width: 8),
-          IconButton(
-            icon: const Icon(
-              Icons.email_outlined,
-              color: AppColors.textPrimary,
+            const SizedBox(width: 8),
+            IconButton(
+              icon: const Icon(
+                Icons.email_outlined,
+                color: AppColors.textPrimary,
+              ),
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
-        ],
-      ),
-    ],
+          ],
+        ),
+      ],
+    ),
   );
 }
 
@@ -157,38 +170,61 @@ Widget _buildSubjectGrid(BuildContext context, List<dynamic> course) {
     return const Center(child: Text('No hay cursos disponibles'));
   }
 
-  return LayoutBuilder(
-    builder: (context, constraints) {
-      // Responsive grid based on available width
-      int crossAxisCount = 1;
-      if (constraints.maxWidth > 1200) {
-        crossAxisCount = 4;
-      } else if (constraints.maxWidth > 900) {
-        crossAxisCount = 3;
-      } else if (constraints.maxWidth > 600) {
-        crossAxisCount = 2;
-      }
-
-      return GridView.builder(
-          gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-            crossAxisCount: crossAxisCount,
-            childAspectRatio: 0.75,
-            crossAxisSpacing: 20,
-            mainAxisSpacing: 20,
+  return Padding(
+    padding: const EdgeInsets.all(16.0),
+    child: Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        _buildHeader(context),
+        const SizedBox(height: 16),
+        const Text(
+          'Mis cursos',
+          style: TextStyle(
+            fontSize: 24,
+            fontWeight: FontWeight.bold,
+            color: AppColors.textPrimary,
           ),
-          itemCount: course.length,
-          itemBuilder: (_, index) => SubjectCard(
-                subject: course[index],
-                onOpenUnit: () {
-                  // Handle opening unit logic
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(
-                      content: Text('Abrir unidad'),
-                      backgroundColor: AppColors.primaryLightBlue,
+        ),
+        const SizedBox(height: 16),
+        Expanded(
+          child: LayoutBuilder(
+            builder: (context, constraints) {
+              // Responsive grid based on available width
+              int crossAxisCount = 1;
+              if (constraints.maxWidth > 1200) {
+                crossAxisCount = 4;
+              } else if (constraints.maxWidth > 900) {
+                crossAxisCount = 3;
+              } else if (constraints.maxWidth > 600) {
+                crossAxisCount = 2;
+              }
+
+              return GridView.builder(
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: crossAxisCount,
+                  childAspectRatio: 0.75,
+                  crossAxisSpacing: 20,
+                  mainAxisSpacing: 20,
+                ),
+                itemCount: course.length,
+                itemBuilder:
+                    (_, index) => SubjectCard(
+                      subject: course[index],
+                      onOpenUnit: () {
+                        // Handle opening unit logic
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          SnackBar(
+                            content: Text('Abrir unidad'),
+                            backgroundColor: AppColors.primaryLightBlue,
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-              ));
-    },
+              );
+            },
+          ),
+        ),
+      ],
+    ),
   );
 }

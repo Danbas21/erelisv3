@@ -4,14 +4,16 @@ import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:responsive_builder/responsive_builder.dart'
+    as responsive_builder;
 import 'package:erelis/presentation/blocs/navigation/navigation_bloc.dart';
 import 'package:erelis/presentation/blocs/navigation/navigation_event.dart';
 import 'package:erelis/presentation/widgets/common/custom_button.dart';
 import 'package:erelis/config/routes.dart';
 
 class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
-  final ValueNotifier<bool> menuOpenNotifier = ValueNotifier<bool>(false);
+  // Hacemos esto accesible para usarlo en LandingPage
+  final GlobalKey<ScaffoldState> scaffoldKey = GlobalKey<ScaffoldState>();
 
   CustomAppBar({super.key});
 
@@ -19,25 +21,23 @@ class CustomAppBar extends StatefulWidget implements PreferredSizeWidget {
   CustomAppBarState createState() => CustomAppBarState();
 
   @override
-  Size get preferredSize {
-    return Size.fromHeight(menuOpenNotifier.value ? 400.0 : 80.0);
-  }
+  Size get preferredSize => const Size.fromHeight(80.0);
 }
 
 class CustomAppBarState extends State<CustomAppBar> {
-  bool _isMenuOpen = false;
-
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(
+    return responsive_builder.ResponsiveBuilder(
       builder: (context, sizingInformation) {
         final isMobile =
-            sizingInformation.deviceScreenType == DeviceScreenType.mobile;
+            sizingInformation.deviceScreenType ==
+            responsive_builder.DeviceScreenType.mobile;
 
         return AppBar(
           backgroundColor: AppColors.background,
           elevation: 1,
           automaticallyImplyLeading: false,
+          toolbarHeight: 80.0,
           title: Row(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
@@ -51,41 +51,99 @@ class CustomAppBarState extends State<CustomAppBar> {
               SizedBox(width: 15),
             ] else ...[
               IconButton(
-                icon: Icon(_isMenuOpen ? Icons.close : Icons.menu),
+                icon: Icon(Icons.menu),
                 onPressed: () {
-                  setState(() {
-                    widget.menuOpenNotifier.value =
-                        !widget.menuOpenNotifier.value;
-                  });
+                  // Abrimos el drawer en lugar de expandir el AppBar
+                  widget.scaffoldKey.currentState?.openEndDrawer();
                 },
               ),
               SizedBox(width: 10),
             ],
           ],
-          bottom:
-              isMobile && _isMenuOpen
-                  ? PreferredSize(
-                    preferredSize: Size.fromHeight(.0),
-                    child: Container(
-                      color: AppColors.cardBackground,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: 20,
-                        vertical: 10,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          _buildMobileNavItems(),
-                          SizedBox(height: 15),
-                          _buildMobileActionButtons(),
-                        ],
-                      ),
-                    ),
-                  )
-                  : null,
         );
       },
+    );
+  }
+
+  Widget buildMobileDrawer(BuildContext context) {
+    return Drawer(
+      child: SafeArea(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.stretch,
+          children: [
+            // Encabezado del drawer
+            Container(
+              padding: EdgeInsets.all(16),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Text(
+                    'Menú',
+                    style: TextStyle(
+                      fontSize: 20,
+                      fontWeight: FontWeight.bold,
+                      color: AppColors.textPrimary,
+                    ),
+                  ),
+                  IconButton(
+                    icon: Icon(Icons.close),
+                    onPressed: () {
+                      Navigator.of(context).pop(); // Cierra el drawer
+                    },
+                  ),
+                ],
+              ),
+            ),
+            Divider(height: 1, thickness: 1),
+
+            // Contenido del menú
+            Expanded(
+              child: ListView(
+                padding: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                children: [
+                  _buildMobileNavItem(
+                    context,
+                    'Home',
+                    () => _navigateToSection(context, 'hero'),
+                  ),
+                  _buildMobileNavItem(
+                    context,
+                    'Cursos',
+                    () => _navigateToSection(context, 'courses'),
+                  ),
+                  _buildMobileNavItem(context, 'Acerca', () {}),
+                  _buildMobileNavItem(context, 'Blog', () {}),
+                  _buildMobileNavItem(context, 'Contacto', () {}),
+                  Divider(height: 32, thickness: 1),
+                  // Botones de acción
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: CustomButton(
+                      text: 'Ingresar',
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Cierra el drawer
+                        NavigationService().navigateTo(AppRoutes.login);
+                      },
+                      type: ButtonType.outlined,
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.symmetric(vertical: 8),
+                    child: CustomButton(
+                      text: 'Registrarse',
+                      onPressed: () {
+                        Navigator.of(context).pop(); // Cierra el drawer
+                        NavigationService().navigateTo(AppRoutes.register);
+                      },
+                      type: ButtonType.filled,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -117,7 +175,6 @@ class CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  // Método auxiliar para manejar errores en la carga de SVG
   Widget _buildSvgWithFallback(
     String assetPath, {
     required double width,
@@ -142,11 +199,11 @@ class CustomAppBarState extends State<CustomAppBar> {
       crossAxisAlignment: CrossAxisAlignment.center,
       mainAxisAlignment: MainAxisAlignment.end,
       children: [
-        _buildNavItem('Home', () => _navigateToSection('hero')),
-        _buildNavItem('Cursos', () => _navigateToSection('courses')),
-        _buildNavItem('Acerca', () => {}), // Implementar más adelante
-        _buildNavItem('Blog', () => {}), // Implementar más adelante
-        _buildNavItem('Contacto', () => {}), // Implementar más adelante
+        _buildNavItem('Home', () => _navigateToSection(context, 'hero')),
+        _buildNavItem('Cursos', () => _navigateToSection(context, 'courses')),
+        _buildNavItem('Acerca', () => {}),
+        _buildNavItem('Blog', () => {}),
+        _buildNavItem('Contacto', () => {}),
       ],
     );
   }
@@ -172,38 +229,24 @@ class CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  Widget _buildMobileNavItems() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        _buildMobileNavItem('Home', () => _navigateToSection('hero')),
-        _buildMobileNavItem('Cursos', () => _navigateToSection('courses')),
-        _buildMobileNavItem('Acerca', () => {}),
-        _buildMobileNavItem('Blog', () => {}),
-        _buildMobileNavItem('Contacto', () => {}),
-      ],
-    );
-  }
-
-  Widget _buildMobileNavItem(String title, VoidCallback onTap) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
-      child: InkWell(
-        onTap: () {
-          setState(() {
-            _isMenuOpen = false;
-          });
-          onTap();
-        },
-        child: Text(
-          title,
-          style: TextStyle(
-            color: AppColors.textPrimary,
-            fontSize: 16,
-            fontWeight: FontWeight.w500,
-          ),
+  Widget _buildMobileNavItem(
+    BuildContext context,
+    String title,
+    VoidCallback onTap,
+  ) {
+    return ListTile(
+      title: Text(
+        title,
+        style: TextStyle(
+          color: AppColors.textPrimary,
+          fontSize: 16,
+          fontWeight: FontWeight.w500,
         ),
       ),
+      onTap: () {
+        Navigator.of(context).pop(); // Cierra el drawer
+        onTap();
+      },
     );
   }
 
@@ -233,36 +276,7 @@ class CustomAppBarState extends State<CustomAppBar> {
     );
   }
 
-  Widget _buildMobileActionButtons() {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: [
-        CustomButton(
-          text: 'Ingresar',
-          onPressed: () {
-            setState(() {
-              _isMenuOpen = false;
-            });
-            NavigationService().navigateTo(AppRoutes.login);
-          },
-          type: ButtonType.outlined,
-        ),
-        SizedBox(height: 10),
-        CustomButton(
-          text: 'Registrarse',
-          onPressed: () {
-            setState(() {
-              _isMenuOpen = false;
-            });
-            NavigationService().navigateTo(AppRoutes.register);
-          },
-          type: ButtonType.filled,
-        ),
-      ],
-    );
-  }
-
-  void _navigateToSection(String sectionKey) {
+  void _navigateToSection(BuildContext context, String sectionKey) {
     context.read<NavigationBloc>().add(
       NavigateToSection(sectionKey: sectionKey),
     );

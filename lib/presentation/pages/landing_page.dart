@@ -14,7 +14,8 @@ import 'package:erelis/presentation/widgets/landing/how_to_use_section.dart';
 import 'package:erelis/presentation/widgets/landing/faq_section.dart';
 import 'package:erelis/presentation/widgets/landing/testimonials_section.dart';
 import 'package:erelis/presentation/widgets/landing/footer_section.dart';
-import 'package:responsive_builder/responsive_builder.dart';
+import 'package:responsive_builder/responsive_builder.dart'
+    as responsive_builder;
 
 class LandingPage extends StatefulWidget {
   const LandingPage({super.key});
@@ -34,6 +35,7 @@ class LandingPageState extends State<LandingPage> {
   };
 
   final ScrollController _scrollController = ScrollController();
+  final CustomAppBar _appBar = CustomAppBar();
 
   @override
   void initState() {
@@ -48,6 +50,10 @@ class LandingPageState extends State<LandingPage> {
   }
 
   void _scrollToSection(String sectionKey) {
+    if (_sectionKeys[sectionKey]?.currentContext == null) {
+      return;
+    }
+
     final RenderBox renderBox =
         _sectionKeys[sectionKey]!.currentContext!.findRenderObject()
             as RenderBox;
@@ -60,37 +66,39 @@ class LandingPageState extends State<LandingPage> {
     );
   }
 
-  // Método para abrir el menú de navegación
-  void _openMenu() {
-    setState(() {
-      _isMenuOpen = !_isMenuOpen;
-    });
-  }
-
   @override
   void dispose() {
     _scrollController.dispose();
     super.dispose();
   }
 
-  bool _isMenuOpen = false;
   @override
   Widget build(BuildContext context) {
-    return ResponsiveBuilder(
+    return responsive_builder.ResponsiveBuilder(
       builder: (context, sizingInformation) {
         final isMobile =
-            sizingInformation.deviceScreenType == DeviceScreenType.mobile;
+            sizingInformation.deviceScreenType ==
+            responsive_builder.DeviceScreenType.mobile;
+
         return BlocListener<AuthBloc, AuthState>(
           listener: (context, state) {
             if (state is Authenticated) {
-              // Navega a la ruta de diagnóstico cuando el usuario está autenticado
               Navigator.of(context).pushReplacementNamed(AppRoutes.salon);
             }
           },
           child: Scaffold(
+            key:
+                _appBar
+                    .scaffoldKey, // Usamos la key del scaffold desde el appBar
             backgroundColor: AppColors.background,
-            appBar: CustomAppBar(),
-
+            appBar: _appBar,
+            // Definimos el endDrawer para mostrar el menú móvil
+            endDrawer:
+                isMobile
+                    ? _appBar.createState().buildMobileDrawer(context)
+                    : null,
+            // Desactivamos el endDrawerEnableOpenDragGesture para evitar conflictos con gestos
+            endDrawerEnableOpenDragGesture: false,
             body: SingleChildScrollView(
               controller: _scrollController,
               child: Column(
