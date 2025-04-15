@@ -1,5 +1,7 @@
+import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
 import 'package:erelis/features/questions/presentation/widgets/grafico_resultado_widget.dart';
 import 'package:erelis/features/questions/presentation/widgets/lista_respuestas_widget.dart';
+import 'package:erelis/features/unidad/presentation/pages/unit_detail_page.dart';
 import 'package:flutter/material.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -13,6 +15,7 @@ class ResultadosScreen extends StatelessWidget {
   final int totalPreguntas;
   final int preguntasRespondidas;
   final int respuestasCorrectas;
+  final Map<String, String> respuestasSeleccionadas; // NUEVO
 
   const ResultadosScreen({
     super.key,
@@ -21,13 +24,13 @@ class ResultadosScreen extends StatelessWidget {
     required this.totalPreguntas,
     required this.preguntasRespondidas,
     required this.respuestasCorrectas,
+    required this.respuestasSeleccionadas, // NUEVO
   });
 
   @override
   Widget build(BuildContext context) {
-    // Calculamos el porcentaje de aprobación y lo usamos para determinar si aprobó
     final porcentaje = (puntajeObtenido / examen.puntajeTotal) * 100;
-    final aprobado = porcentaje >= 60; // Consideramos 60% como aprobado
+    final aprobado = porcentaje >= 60;
 
     return Scaffold(
       appBar: AppBar(
@@ -42,11 +45,8 @@ class ResultadosScreen extends StatelessWidget {
       ),
       body: Container(
         decoration: BoxDecoration(
-          color: const Color(0xFF0A5F38), // Verde pizarrón
-          border: Border.all(
-            color: const Color(0xFF8B4513), // Marrón "madera"
-            width: 8.0,
-          ),
+          color: const Color(0xFF0A5F38),
+          border: Border.all(color: const Color(0xFF8B4513), width: 8.0),
         ),
         margin: const EdgeInsets.all(16.0),
         child: SingleChildScrollView(
@@ -54,36 +54,26 @@ class ResultadosScreen extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              // Encabezado con el resultado
               _EncabezadoResultado(
                 aprobado: aprobado,
                 porcentaje: porcentaje,
                 puntajeObtenido: puntajeObtenido,
                 puntajeTotal: examen.puntajeTotal,
               ),
-
               const SizedBox(height: 32),
-
-              // Estadísticas generales
               _EstadisticasResultados(
                 totalPreguntas: totalPreguntas,
                 preguntasRespondidas: preguntasRespondidas,
                 respuestasCorrectas: respuestasCorrectas,
               ),
-
               const SizedBox(height: 32),
-
-              // Gráfico de resultados
               GraficoResultadoWidget(
                 respuestasCorrectas: respuestasCorrectas,
                 respuestasIncorrectas:
                     preguntasRespondidas - respuestasCorrectas,
                 preguntasSinResponder: totalPreguntas - preguntasRespondidas,
               ),
-
               const SizedBox(height: 32),
-
-              // Lista de respuestas
               const Text(
                 'Detalle de respuestas:',
                 style: TextStyle(
@@ -95,25 +85,26 @@ class ResultadosScreen extends StatelessWidget {
               const SizedBox(height: 16),
               ListaRespuestasWidget(
                 preguntas: examen.preguntas,
-                respuestas: examen.preguntas.fold<Map<String, String>>({}, (
-                  map,
-                  pregunta,
-                ) {
-                  if (pregunta.respuestaSeleccionada != null) {
-                    map[pregunta.id] = pregunta.respuestaSeleccionada!;
-                  }
-                  return map;
-                }),
+                respuestas: respuestasSeleccionadas, // CAMBIO AQUÍ
               ),
-
               const SizedBox(height: 32),
-
-              // Botones de acción
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed: () => Navigator.of(context).pop(),
+                    onPressed:
+                        () => Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                            builder:
+                                (_) => TestProviders(
+                                  child: UnitDetailPage(
+                                    unitId: examen.id.split('-')[0],
+                                    cursoid: examen.id.split('-')[1],
+                                  ),
+                                ),
+                          ),
+                        ),
                     icon: const Icon(Icons.arrow_back),
                     label: const Text('VOLVER'),
                     style: ElevatedButton.styleFrom(

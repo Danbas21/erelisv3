@@ -1,187 +1,177 @@
 // lib/presentation/widgets/unit_list/sidebar_navigation.dart
 import 'package:erelis/config/app_colors.dart';
+import 'package:erelis/core/utils/images_utils.dart';
+import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/svg.dart';
+
+class SidebarItem {
+  final String title;
+  final IconData icon;
+  final String route;
+
+  SidebarItem({required this.title, required this.icon, required this.route});
+}
 
 class SidebarNavigation extends StatelessWidget {
-  const SidebarNavigation({super.key});
+  final bool isExpanded;
+  final VoidCallback onToggle;
 
+  const SidebarNavigation({
+    super.key,
+    required this.isExpanded,
+    required this.onToggle,
+  });
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: AppColors.cardBackground,
+    final items = [
+      SidebarItem(title: 'Tablero', icon: Icons.dashboard, route: '/dashboard'),
+      SidebarItem(
+        title: 'Calender',
+        icon: Icons.calendar_today,
+        route: '/calendar',
+      ),
+      SidebarItem(
+        title: 'Biblioteca',
+        icon: Icons.local_library,
+        route: '/library',
+      ),
+      SidebarItem(title: 'Salon', icon: Icons.class_, route: '/classroom'),
+      SidebarItem(title: 'Cursos', icon: Icons.school, route: '/courses'),
+      SidebarItem(
+        title: 'Integración',
+        icon: Icons.integration_instructions,
+        route: '/integration',
+      ),
+      SidebarItem(
+        title: 'Asignaturas',
+        icon: Icons.assignment,
+        route: '/assignments',
+      ),
+      SidebarItem(
+        title: 'Asistencia',
+        icon: Icons.people,
+        route: '/attendance',
+      ),
+      SidebarItem(title: 'Mensajes', icon: Icons.message, route: '/messages'),
+      SidebarItem(title: 'Ayuda', icon: Icons.help, route: '/help'),
+      SidebarItem(
+        title: 'Configuración',
+        icon: Icons.settings,
+        route: '/settings',
+      ),
+      SidebarItem(title: 'Salir', icon: Icons.logout, route: '/initial'),
+    ];
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 300),
+      width: isExpanded ? 250 : 70,
+      decoration: BoxDecoration(
+        color: AppColors.background,
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.2),
+            blurRadius: 10,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
       child: Column(
         children: [
-          // Cabecera con perfil de usuario
-          Container(
-            padding: const EdgeInsets.all(16),
-            decoration: BoxDecoration(
-              border: Border(
-                bottom: BorderSide(
-                  color: AppColors.divider,
-                  width: 1,
-                ),
-              ),
-            ),
-            child: Row(
-              children: [
-                // Foto de perfil
-                const CircleAvatar(
-                  radius: 24,
-                  backgroundImage: NetworkImage(
-                    'https://via.placeholder.com/48',
-                  ),
-                ),
-
-                const SizedBox(width: 12),
-                // Nombre del usuario
-                Expanded(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'Nombre Estudiante',
-                        style:
-                            Theme.of(context).textTheme.titleMedium?.copyWith(
-                                  color: AppColors.textPrimary,
-                                  fontWeight: FontWeight.bold,
-                                ),
-                      ),
-                      Text(
-                        'Estudiante',
-                        style: Theme.of(context).textTheme.bodySmall?.copyWith(
-                              color: AppColors.textSecondary,
-                            ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
-          ),
-
-          // Lista de opciones de navegación
+          _buildSidebarHeader(),
+          const Divider(color: AppColors.divider),
           Expanded(
-            child: ListView(
-              padding: EdgeInsets.zero,
-              children: [
-                _buildNavItem(
-                  context,
-                  icon: Icons.calendar_today,
-                  label: 'Calendario',
-                  onTap: () {
-                    // Navegar al calendario
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.school,
-                  label: 'Salón',
-                  onTap: () {
-                    // Navegar al salón
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.menu_book,
-                  label: 'Librería',
-                  onTap: () {
-                    // Navegar a la librería
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.auto_stories,
-                  label: 'Cursos',
-                  onTap: () {
-                    // Navegar a cursos
-                  },
-                  isActive: true, // Esta es la sección activa
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.link,
-                  label: 'Integraciones',
-                  onTap: () {
-                    // Navegar a integraciones
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.people,
-                  label: 'Asistencia',
-                  onTap: () {
-                    // Navegar a asistencia
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.message,
-                  label: 'Mensajes',
-                  onTap: () {
-                    // Navegar a mensajes
-                  },
-                ),
-                _buildNavItem(
-                  context,
-                  icon: Icons.help,
-                  label: 'Ayuda',
-                  onTap: () {
-                    // Navegar a ayuda
-                  },
-                ),
-              ],
+            child: ListView.builder(
+              itemCount: items.length,
+              itemBuilder: (context, index) {
+                final item = items[index];
+                return _buildSidebarItem(item);
+              },
             ),
-          ),
-
-          // Sección inferior (Configuración y cierre de sesión)
-          Column(
-            children: [
-              Divider(color: AppColors.divider, height: 1),
-              _buildNavItem(
-                context,
-                icon: Icons.settings,
-                label: 'Configuración',
-                onTap: () {
-                  // Navegar a configuración
-                },
-              ),
-              _buildNavItem(
-                context,
-                icon: Icons.logout,
-                label: 'Cerrar sesión',
-                onTap: () {
-                  // Cerrar sesión
-                },
-              ),
-            ],
           ),
         ],
       ),
     );
   }
 
-  Widget _buildNavItem(
-    BuildContext context, {
-    required IconData icon,
-    required String label,
-    required VoidCallback onTap,
-    bool isActive = false,
-  }) {
-    return ListTile(
-      leading: Icon(
-        icon,
-        color: isActive ? AppColors.primaryLightBlue : AppColors.textPrimary,
-      ),
-      title: Text(
-        label,
-        style: TextStyle(
-          color: isActive ? AppColors.primaryLightBlue : AppColors.textPrimary,
-          fontWeight: isActive ? FontWeight.bold : FontWeight.normal,
+  Widget _buildSidebarHeader() {
+    // Si la barra está expandida, mostramos texto y botón
+    if (isExpanded) {
+      return Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            const Expanded(
+              child: Text(
+                'CURSOS ERELIS',
+                style: TextStyle(
+                  color: AppColors.primaryLightBlue,
+                  fontSize: 18,
+                  fontWeight: FontWeight.bold,
+                ),
+                overflow: TextOverflow.ellipsis,
+              ),
+            ),
+            IconButton(
+              icon: const Icon(Icons.menu),
+              color: AppColors.textPrimary,
+              onPressed: onToggle,
+              padding: EdgeInsets.zero,
+              constraints: const BoxConstraints(),
+            ),
+          ],
         ),
+      );
+    }
+    // Si la barra está contraída, mostramos solo un logo centrado y pequeño
+    else {
+      return GestureDetector(
+        onTap: onToggle,
+        child: Container(
+          height: 70,
+          width: 70,
+          padding: const EdgeInsets.all(16.0),
+          alignment: Alignment.center,
+          child: SvgPicture.asset(
+            ImagesUtils.logo,
+            height: 40,
+            width: 40,
+            colorFilter: ColorFilter.mode(
+              AppColors.primaryLightBlue,
+
+              BlendMode.srcIn,
+            ),
+          ),
+        ),
+      );
+    }
+  }
+
+  Widget _buildSidebarItem(SidebarItem item) {
+    return ListTile(
+      contentPadding: EdgeInsets.symmetric(
+        horizontal: isExpanded ? 16.0 : 0,
+        vertical: 2.0,
       ),
-      onTap: onTap,
-      tileColor:
-          isActive ? AppColors.primaryLightBlue.withValues(alpha: 0.2) : null,
+      leading: Padding(
+        padding: EdgeInsets.only(left: isExpanded ? 0 : 25),
+        child: Icon(item.icon, color: AppColors.primaryLightBlue),
+      ),
+      title:
+          isExpanded
+              ? Text(
+                item.title,
+                style: const TextStyle(color: AppColors.textPrimary),
+              )
+              : null,
+      onTap: () {
+        if (item.route == '/') {
+          // Handle logout separately
+        } else {
+          NavigationService().navigateTo(item.route);
+        }
+      },
     );
   }
 }

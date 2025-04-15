@@ -10,5 +10,6 @@ sealed class OpcionEntity with _$OpcionEntity {
   const factory OpcionEntity({
     required String texto,
     required bool esCorrecta,
+    final String? explicacion,
   }) = _OpcionEntity;
 }

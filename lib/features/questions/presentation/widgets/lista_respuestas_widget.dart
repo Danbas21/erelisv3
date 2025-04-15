@@ -79,6 +79,13 @@ class _ItemRespuesta extends StatefulWidget {
 class _ItemRespuestaState extends State<_ItemRespuesta> {
   bool expandido = false;
 
+  OpcionEntity? _obtenerOpcionSeleccionada() {
+    return widget.pregunta.opciones.firstWhere(
+      (opcion) => opcion.texto == widget.respuestaUsuario,
+      orElse: () => const OpcionEntity(texto: '', esCorrecta: false),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return InkWell(
@@ -177,7 +184,22 @@ class _ItemRespuestaState extends State<_ItemRespuesta> {
                     fontSize: 14,
                   ),
                 ),
+
+                // Explicación de la opción seleccionada
+                if (_obtenerOpcionSeleccionada()?.explicacion != null &&
+                    _obtenerOpcionSeleccionada()!.explicacion!.isNotEmpty) ...[
+                  const SizedBox(height: 8),
+                  Text(
+                    'Explicación de tu respuesta:\n${_obtenerOpcionSeleccionada()!.esCorrecta}',
+                    style: const TextStyle(
+                      color: Colors.white70,
+                      fontSize: 12,
+                      fontStyle: FontStyle.italic,
+                    ),
+                  ),
+                ],
               ],
+              // Respuesta incorrecta explicacion de su respuesta (solo si respondió incorrectamente
 
               // Respuesta correcta (solo si respondió incorrectamente)
               if (widget.respondida && !widget.esCorrecta) ...[

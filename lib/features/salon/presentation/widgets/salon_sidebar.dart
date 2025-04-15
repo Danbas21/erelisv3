@@ -27,44 +27,43 @@ class SalonSidebar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final items = [
-      SidebarItem(
-        title: 'Dashboard',
-        icon: Icons.dashboard,
-        route: '/dashboard',
-      ),
+      SidebarItem(title: 'Tablero', icon: Icons.dashboard, route: '/dashboard'),
       SidebarItem(
         title: 'Calender',
         icon: Icons.calendar_today,
         route: '/calendar',
       ),
       SidebarItem(
-        title: 'Library',
+        title: 'Biblioteca',
         icon: Icons.local_library,
         route: '/library',
       ),
-      SidebarItem(title: 'Classroom', icon: Icons.class_, route: '/classroom'),
-      SidebarItem(title: 'Courses', icon: Icons.school, route: '/courses'),
+      SidebarItem(title: 'Salon', icon: Icons.class_, route: '/classroom'),
+      SidebarItem(title: 'Cursos', icon: Icons.school, route: '/courses'),
       SidebarItem(
-        title: 'Integration',
+        title: 'Integración',
         icon: Icons.integration_instructions,
         route: '/integration',
       ),
       SidebarItem(
-        title: 'Assignments',
+        title: 'Asignaturas',
         icon: Icons.assignment,
         route: '/assignments',
       ),
       SidebarItem(
-        title: 'Attendance',
+        title: 'Asistencia',
         icon: Icons.people,
         route: '/attendance',
       ),
-      SidebarItem(title: 'Messages', icon: Icons.message, route: '/messages'),
-      SidebarItem(title: 'Help', icon: Icons.help, route: '/help'),
-      SidebarItem(title: 'Setting', icon: Icons.settings, route: '/settings'),
-      SidebarItem(title: 'Log out', icon: Icons.logout, route: '/initial'),
+      SidebarItem(title: 'Mensajes', icon: Icons.message, route: '/messages'),
+      SidebarItem(title: 'Ayuda', icon: Icons.help, route: '/help'),
+      SidebarItem(
+        title: 'Configuración',
+        icon: Icons.settings,
+        route: '/settings',
+      ),
+      SidebarItem(title: 'Salir', icon: Icons.logout, route: '/initial'),
     ];
-
     return AnimatedContainer(
       duration: const Duration(milliseconds: 300),
       width: isExpanded ? 250 : 70,

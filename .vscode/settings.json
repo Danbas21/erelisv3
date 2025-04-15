@@ -1,5 +1,7 @@
 {
     "cSpell.words": [
         "grafico"
-    ]
+    ],
+    "cmake.sourceDirectory": "D:/flutter/erelis/windows",
+    "cmake.ignoreCMakeListsMissing": true
 }

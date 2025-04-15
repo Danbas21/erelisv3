@@ -1,6 +1,5 @@
 import 'package:erelis/features/questions/domain/repository/examen_repository.dart';
 import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
-import 'package:erelis/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -28,14 +27,8 @@ class TestIntroPage extends StatelessWidget {
     // ID del examen: combinación de courseId y unitId
     final examenId = '${courseId}_$unitId';
 
-    final authState = context.watch<AuthBloc>().state;
-
     // ID del usuario (en una app real, obtendrías esto del servicio de autenticación)
-    String usuarioId = 'user_default';
-
-    if (authState is Authenticated) {
-      usuarioId = authState.user.id; // Asumiendo que user tiene un campo 'id'
-    }
+    final usuarioId = 'user_current';
 
     return Scaffold(
       appBar: AppBar(
@@ -53,7 +46,7 @@ class TestIntroPage extends StatelessWidget {
           ),
           boxShadow: [
             BoxShadow(
-              color: Colors.black.withValues(alpha: 0.5),
+              color: Colors.black.withOpacity(0.5),
               blurRadius: 10,
               spreadRadius: 2,
             ),

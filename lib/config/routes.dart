@@ -160,6 +160,8 @@ class AppRoutes {
                     totalPreguntas: args['totalPreguntas'] ?? 0,
                     preguntasRespondidas: args['preguntasRespondidas'] ?? 0,
                     respuestasCorrectas: args['respuestasCorrectas'] ?? 0,
+                    respuestasSeleccionadas:
+                        args['respuestasSeleccionadas'] ?? {},
                   ),
                 ),
           );

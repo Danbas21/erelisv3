@@ -15,7 +15,7 @@ T _$identity<T>(T value) => value;
 /// @nodoc
 mixin _$OpcionEntity {
 
- String get texto; bool get esCorrecta;
+ String get texto; bool get esCorrecta; String? get explicacion;
 /// Create a copy of OpcionEntity
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
@@ -26,16 +26,16 @@ $OpcionEntityCopyWith<OpcionEntity> get copyWith => _$OpcionEntityCopyWithImpl<O
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is OpcionEntity&&(identical(other.texto, texto) || other.texto == texto)&&(identical(other.esCorrecta, esCorrecta) || other.esCorrecta == esCorrecta));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is OpcionEntity&&(identical(other.texto, texto) || other.texto == texto)&&(identical(other.esCorrecta, esCorrecta) || other.esCorrecta == esCorrecta)&&(identical(other.explicacion, explicacion) || other.explicacion == explicacion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,texto,esCorrecta);
+int get hashCode => Object.hash(runtimeType,texto,esCorrecta,explicacion);
 
 @override
 String toString() {
-  return 'OpcionEntity(texto: $texto, esCorrecta: $esCorrecta)';
+  return 'OpcionEntity(texto: $texto, esCorrecta: $esCorrecta, explicacion: $explicacion)';
 }
 
 
@@ -46,7 +46,7 @@ abstract mixin class $OpcionEntityCopyWith<$Res>  {
   factory $OpcionEntityCopyWith(OpcionEntity value, $Res Function(OpcionEntity) _then) = _$OpcionEntityCopyWithImpl;
 @useResult
 $Res call({
- String texto, bool esCorrecta
+ String texto, bool esCorrecta, String? explicacion
 });
 
 
@@ -63,11 +63,12 @@ class _$OpcionEntityCopyWithImpl<$Res>
 
 /// Create a copy of OpcionEntity
 /// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') @override $Res call({Object? texto = null,Object? esCorrecta = null,}) {
+@pragma('vm:prefer-inline') @override $Res call({Object? texto = null,Object? esCorrecta = null,Object? explicacion = freezed,}) {
   return _then(_self.copyWith(
 texto: null == texto ? _self.texto : texto // ignore: cast_nullable_to_non_nullable
 as String,esCorrecta: null == esCorrecta ? _self.esCorrecta : esCorrecta // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,explicacion: freezed == explicacion ? _self.explicacion : explicacion // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 
@@ -78,11 +79,12 @@ as bool,
 
 
 class _OpcionEntity implements OpcionEntity {
-  const _OpcionEntity({required this.texto, required this.esCorrecta});
+  const _OpcionEntity({required this.texto, required this.esCorrecta, this.explicacion});
   
 
 @override final  String texto;
 @override final  bool esCorrecta;
+@override final  String? explicacion;
 
 /// Create a copy of OpcionEntity
 /// with the given fields replaced by the non-null parameter values.
@@ -94,16 +96,16 @@ _$OpcionEntityCopyWith<_OpcionEntity> get copyWith => __$OpcionEntityCopyWithImp
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OpcionEntity&&(identical(other.texto, texto) || other.texto == texto)&&(identical(other.esCorrecta, esCorrecta) || other.esCorrecta == esCorrecta));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _OpcionEntity&&(identical(other.texto, texto) || other.texto == texto)&&(identical(other.esCorrecta, esCorrecta) || other.esCorrecta == esCorrecta)&&(identical(other.explicacion, explicacion) || other.explicacion == explicacion));
 }
 
 
 @override
-int get hashCode => Object.hash(runtimeType,texto,esCorrecta);
+int get hashCode => Object.hash(runtimeType,texto,esCorrecta,explicacion);
 
 @override
 String toString() {
-  return 'OpcionEntity(texto: $texto, esCorrecta: $esCorrecta)';
+  return 'OpcionEntity(texto: $texto, esCorrecta: $esCorrecta, explicacion: $explicacion)';
 }
 
 
@@ -114,7 +116,7 @@ abstract mixin class _$OpcionEntityCopyWith<$Res> implements $OpcionEntityCopyWi
   factory _$OpcionEntityCopyWith(_OpcionEntity value, $Res Function(_OpcionEntity) _then) = __$OpcionEntityCopyWithImpl;
 @override @useResult
 $Res call({
- String texto, bool esCorrecta
+ String texto, bool esCorrecta, String? explicacion
 });
 
 
@@ -131,11 +133,12 @@ class __$OpcionEntityCopyWithImpl<$Res>
 
 /// Create a copy of OpcionEntity
 /// with the given fields replaced by the non-null parameter values.
-@override @pragma('vm:prefer-inline') $Res call({Object? texto = null,Object? esCorrecta = null,}) {
+@override @pragma('vm:prefer-inline') $Res call({Object? texto = null,Object? esCorrecta = null,Object? explicacion = freezed,}) {
   return _then(_OpcionEntity(
 texto: null == texto ? _self.texto : texto // ignore: cast_nullable_to_non_nullable
 as String,esCorrecta: null == esCorrecta ? _self.esCorrecta : esCorrecta // ignore: cast_nullable_to_non_nullable
-as bool,
+as bool,explicacion: freezed == explicacion ? _self.explicacion : explicacion // ignore: cast_nullable_to_non_nullable
+as String?,
   ));
 }
 

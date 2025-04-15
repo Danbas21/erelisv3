@@ -106,7 +106,7 @@ class SidebarWidget extends StatelessWidget {
           _buildSidebarItem(
             context,
             Icons.logout,
-            'Logout',
+            'Salir',
             isDesktop: isDesktop,
             isTablet: isTablet,
             isLogout: true,
@@ -139,7 +139,7 @@ class SidebarWidget extends StatelessWidget {
             //hagamos un switch para que no se rompa la app
 
             switch (label) {
-              case 'Logout':
+              case 'Salir':
                 // Acción para cerrar sesión
                 showDialog(
                   context: context,
@@ -156,9 +156,13 @@ class SidebarWidget extends StatelessWidget {
                           ),
                           TextButton(
                             onPressed: () {
-                              Navigator.of(context).pop();
                               // Aquí iría la lógica para cerrar sesión
-                              // Por ejemplo: context.read<AuthBloc>().add(LogoutEvent());
+                              // Por ejemplo, llamar a un método de autenticación
+                              // AuthService.logout();
+                              Navigator.pushNamed(context, '/initial');
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(content: Text('Sesión cerrada')),
+                              );
                             },
                             child: const Text('Cerrar sesión'),
                           ),
@@ -235,15 +239,15 @@ class SidebarWidget extends StatelessWidget {
                     label,
                     style: TextStyle(
                       color: isLogout ? AppColors.error : Colors.white,
-                      fontSize: 12,
+                      fontSize: isDesktop ? 11 : 24,
                     ),
                   )
                 else if (isTablet)
                   Text(
-                    label.characters.first,
+                    label,
                     style: TextStyle(
                       color: isLogout ? AppColors.error : Colors.white,
-                      fontSize: 12,
+                      fontSize: isDesktop ? 28 : 14,
                     ),
                   ),
               ],
