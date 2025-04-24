@@ -1,7 +1,7 @@
-import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
+import 'package:erelis/config/routes.dart';
 import 'package:erelis/features/questions/presentation/widgets/grafico_resultado_widget.dart';
 import 'package:erelis/features/questions/presentation/widgets/lista_respuestas_widget.dart';
-import 'package:erelis/features/unidad/presentation/pages/unit_detail_page.dart';
+import 'package:erelis/services/navigation_service.dart';
 import 'package:flutter/material.dart';
 
 import 'package:share_plus/share_plus.dart';
@@ -42,6 +42,30 @@ class ResultadosScreen extends StatelessWidget {
             onPressed: () => _compartirResultados(context),
           ),
         ],
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back),
+          onPressed: () {
+            final partes = examen.id.split('_');
+
+            if (partes.length < 2 || partes[0].isEmpty || partes[1].isEmpty) {
+              ScaffoldMessenger.of(context).showSnackBar(
+                const SnackBar(
+                  content: Text('Error: ID de examen inválido'),
+                  backgroundColor: Colors.red,
+                ),
+              );
+              return;
+            }
+
+            final courseId = partes[0];
+
+            // Navega a la vista de unidades del curso correspondiente
+            navigationService.navigateToReplace(
+              AppRoutes.units,
+              arguments: {'courseId': courseId},
+            );
+          },
+        ),
       ),
       body: Container(
         decoration: BoxDecoration(
@@ -92,19 +116,29 @@ class ResultadosScreen extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   ElevatedButton.icon(
-                    onPressed:
-                        () => Navigator.pushReplacement(
-                          context,
-                          MaterialPageRoute(
-                            builder:
-                                (_) => TestProviders(
-                                  child: UnitDetailPage(
-                                    unitId: examen.id.split('-')[0],
-                                    cursoid: examen.id.split('-')[1],
-                                  ),
-                                ),
+                    onPressed: () {
+                      final partes = examen.id.split('_');
+
+                      if (partes.length < 2 ||
+                          partes[0].isEmpty ||
+                          partes[1].isEmpty) {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('Error: ID de examen inválido'),
+                            backgroundColor: Colors.red,
                           ),
-                        ),
+                        );
+                        return;
+                      }
+
+                      final courseId = partes[0];
+
+                      // Navega a la vista de unidades del curso correspondiente
+                      navigationService.navigateToReplace(
+                        AppRoutes.units,
+                        arguments: {'courseId': courseId},
+                      );
+                    },
                     icon: const Icon(Icons.arrow_back),
                     label: const Text('VOLVER'),
                     style: ElevatedButton.styleFrom(

@@ -49,4 +49,5 @@ class AppColors {
   static const Color pendingTextColor = Color(0xFFF59E0B); // Texto naranja
   static const Color completedColor = Color(0xFFF0FDF4); // Fondo verde claro
   static const Color completedTextColor = Color(0xFF22C55E); // Texto verde
+  static const Color cuestionary = Color.fromARGB(255, 13, 112, 49);
 }

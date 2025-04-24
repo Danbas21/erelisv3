@@ -5,4 +5,6 @@ sealed class UnitsEvent with _$UnitsEvent {
   const factory UnitsEvent.started(String courseId, String courseName) =
       _Started;
   const factory UnitsEvent.loadMore() = _LoadMore;
+  const factory UnitsEvent.checkComplete(String unidadId, String courseId) =
+      _CheckComplete;
 }

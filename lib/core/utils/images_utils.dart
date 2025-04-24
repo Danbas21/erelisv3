@@ -19,7 +19,7 @@ class ImagesUtils {
   static const String geografia = '${_basePath}geografia.jpg';
   static const String habilidadVerbal = '${_basePath}habilidadVerbal.png';
   static const String quimica = '${_basePath}quimica.png';
-  static const String fisica = '${_basePath}fisica.png';
+  static const String fisica = '${_basePath}fisica.jpg';
   static const String civismo = '${_basePath}civismo.jpg';
   // Agrega más imágenes según sea necesario
 }

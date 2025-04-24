@@ -315,6 +315,74 @@ as String,
 }
 
 /// @nodoc
+
+
+class Completed implements UnitsState {
+  const Completed({required this.unidadId, required this.isCompleted});
+  
+
+ final  String unidadId;
+ final  bool isCompleted;
+
+/// Create a copy of UnitsState
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$CompletedCopyWith<Completed> get copyWith => _$CompletedCopyWithImpl<Completed>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Completed&&(identical(other.unidadId, unidadId) || other.unidadId == unidadId)&&(identical(other.isCompleted, isCompleted) || other.isCompleted == isCompleted));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,unidadId,isCompleted);
+
+@override
+String toString() {
+  return 'UnitsState.completed(unidadId: $unidadId, isCompleted: $isCompleted)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $CompletedCopyWith<$Res> implements $UnitsStateCopyWith<$Res> {
+  factory $CompletedCopyWith(Completed value, $Res Function(Completed) _then) = _$CompletedCopyWithImpl;
+@useResult
+$Res call({
+ String unidadId, bool isCompleted
+});
+
+
+
+
+}
+/// @nodoc
+class _$CompletedCopyWithImpl<$Res>
+    implements $CompletedCopyWith<$Res> {
+  _$CompletedCopyWithImpl(this._self, this._then);
+
+  final Completed _self;
+  final $Res Function(Completed) _then;
+
+/// Create a copy of UnitsState
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? unidadId = null,Object? isCompleted = null,}) {
+  return _then(Completed(
+unidadId: null == unidadId ? _self.unidadId : unidadId // ignore: cast_nullable_to_non_nullable
+as String,isCompleted: null == isCompleted ? _self.isCompleted : isCompleted // ignore: cast_nullable_to_non_nullable
+as bool,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$UnitsEvent {
 
 
@@ -443,5 +511,73 @@ String toString() {
 
 
 
+
+/// @nodoc
+
+
+class _CheckComplete implements UnitsEvent {
+  const _CheckComplete(this.unidadId, this.courseId);
+  
+
+ final  String unidadId;
+ final  String courseId;
+
+/// Create a copy of UnitsEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+_$CheckCompleteCopyWith<_CheckComplete> get copyWith => __$CheckCompleteCopyWithImpl<_CheckComplete>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CheckComplete&&(identical(other.unidadId, unidadId) || other.unidadId == unidadId)&&(identical(other.courseId, courseId) || other.courseId == courseId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,unidadId,courseId);
+
+@override
+String toString() {
+  return 'UnitsEvent.checkComplete(unidadId: $unidadId, courseId: $courseId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class _$CheckCompleteCopyWith<$Res> implements $UnitsEventCopyWith<$Res> {
+  factory _$CheckCompleteCopyWith(_CheckComplete value, $Res Function(_CheckComplete) _then) = __$CheckCompleteCopyWithImpl;
+@useResult
+$Res call({
+ String unidadId, String courseId
+});
+
+
+
+
+}
+/// @nodoc
+class __$CheckCompleteCopyWithImpl<$Res>
+    implements _$CheckCompleteCopyWith<$Res> {
+  __$CheckCompleteCopyWithImpl(this._self, this._then);
+
+  final _CheckComplete _self;
+  final $Res Function(_CheckComplete) _then;
+
+/// Create a copy of UnitsEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? unidadId = null,Object? courseId = null,}) {
+  return _then(_CheckComplete(
+null == unidadId ? _self.unidadId : unidadId // ignore: cast_nullable_to_non_nullable
+as String,null == courseId ? _self.courseId : courseId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
 
 // dart format on

@@ -175,8 +175,8 @@ $UnitDetailStateCopyWith(UnitDetailState _, $Res Function(UnitDetailState) __);
 /// @nodoc
 
 
-class Initial implements UnitDetailState {
-  const Initial();
+class InitialDetail implements UnitDetailState {
+  const InitialDetail();
   
 
 
@@ -186,7 +186,7 @@ class Initial implements UnitDetailState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Initial);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is InitialDetail);
 }
 
 
@@ -207,8 +207,8 @@ String toString() {
 /// @nodoc
 
 
-class Loading implements UnitDetailState {
-  const Loading();
+class LoadingDetail implements UnitDetailState {
+  const LoadingDetail();
   
 
 
@@ -218,7 +218,7 @@ class Loading implements UnitDetailState {
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Loading);
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadingDetail);
 }
 
 
@@ -239,8 +239,8 @@ String toString() {
 /// @nodoc
 
 
-class Loaded implements UnitDetailState {
-  const Loaded({required this.unit, required final  List<HighlightData> highlights}): _highlights = highlights;
+class LoadedDetail implements UnitDetailState {
+  const LoadedDetail({required this.unit, required final  List<HighlightData> highlights}): _highlights = highlights;
   
 
  final  Unit unit;
@@ -256,13 +256,13 @@ class Loaded implements UnitDetailState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$LoadedCopyWith<Loaded> get copyWith => _$LoadedCopyWithImpl<Loaded>(this, _$identity);
+$LoadedDetailCopyWith<LoadedDetail> get copyWith => _$LoadedDetailCopyWithImpl<LoadedDetail>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Loaded&&(identical(other.unit, unit) || other.unit == unit)&&const DeepCollectionEquality().equals(other._highlights, _highlights));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is LoadedDetail&&(identical(other.unit, unit) || other.unit == unit)&&const DeepCollectionEquality().equals(other._highlights, _highlights));
 }
 
 
@@ -278,8 +278,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $LoadedCopyWith<$Res> implements $UnitDetailStateCopyWith<$Res> {
-  factory $LoadedCopyWith(Loaded value, $Res Function(Loaded) _then) = _$LoadedCopyWithImpl;
+abstract mixin class $LoadedDetailCopyWith<$Res> implements $UnitDetailStateCopyWith<$Res> {
+  factory $LoadedDetailCopyWith(LoadedDetail value, $Res Function(LoadedDetail) _then) = _$LoadedDetailCopyWithImpl;
 @useResult
 $Res call({
  Unit unit, List<HighlightData> highlights
@@ -290,17 +290,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$LoadedCopyWithImpl<$Res>
-    implements $LoadedCopyWith<$Res> {
-  _$LoadedCopyWithImpl(this._self, this._then);
+class _$LoadedDetailCopyWithImpl<$Res>
+    implements $LoadedDetailCopyWith<$Res> {
+  _$LoadedDetailCopyWithImpl(this._self, this._then);
 
-  final Loaded _self;
-  final $Res Function(Loaded) _then;
+  final LoadedDetail _self;
+  final $Res Function(LoadedDetail) _then;
 
 /// Create a copy of UnitDetailState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? unit = null,Object? highlights = null,}) {
-  return _then(Loaded(
+  return _then(LoadedDetail(
 unit: null == unit ? _self.unit : unit // ignore: cast_nullable_to_non_nullable
 as Unit,highlights: null == highlights ? _self._highlights : highlights // ignore: cast_nullable_to_non_nullable
 as List<HighlightData>,
@@ -313,8 +313,8 @@ as List<HighlightData>,
 /// @nodoc
 
 
-class Error implements UnitDetailState {
-  const Error(this.message);
+class ErrorDetail implements UnitDetailState {
+  const ErrorDetail(this.message);
   
 
  final  String message;
@@ -323,13 +323,13 @@ class Error implements UnitDetailState {
 /// with the given fields replaced by the non-null parameter values.
 @JsonKey(includeFromJson: false, includeToJson: false)
 @pragma('vm:prefer-inline')
-$ErrorCopyWith<Error> get copyWith => _$ErrorCopyWithImpl<Error>(this, _$identity);
+$ErrorDetailCopyWith<ErrorDetail> get copyWith => _$ErrorDetailCopyWithImpl<ErrorDetail>(this, _$identity);
 
 
 
 @override
 bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is Error&&(identical(other.message, message) || other.message == message));
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is ErrorDetail&&(identical(other.message, message) || other.message == message));
 }
 
 
@@ -345,8 +345,8 @@ String toString() {
 }
 
 /// @nodoc
-abstract mixin class $ErrorCopyWith<$Res> implements $UnitDetailStateCopyWith<$Res> {
-  factory $ErrorCopyWith(Error value, $Res Function(Error) _then) = _$ErrorCopyWithImpl;
+abstract mixin class $ErrorDetailCopyWith<$Res> implements $UnitDetailStateCopyWith<$Res> {
+  factory $ErrorDetailCopyWith(ErrorDetail value, $Res Function(ErrorDetail) _then) = _$ErrorDetailCopyWithImpl;
 @useResult
 $Res call({
  String message
@@ -357,17 +357,17 @@ $Res call({
 
 }
 /// @nodoc
-class _$ErrorCopyWithImpl<$Res>
-    implements $ErrorCopyWith<$Res> {
-  _$ErrorCopyWithImpl(this._self, this._then);
+class _$ErrorDetailCopyWithImpl<$Res>
+    implements $ErrorDetailCopyWith<$Res> {
+  _$ErrorDetailCopyWithImpl(this._self, this._then);
 
-  final Error _self;
-  final $Res Function(Error) _then;
+  final ErrorDetail _self;
+  final $Res Function(ErrorDetail) _then;
 
 /// Create a copy of UnitDetailState
 /// with the given fields replaced by the non-null parameter values.
 @pragma('vm:prefer-inline') $Res call({Object? message = null,}) {
-  return _then(Error(
+  return _then(ErrorDetail(
 null == message ? _self.message : message // ignore: cast_nullable_to_non_nullable
 as String,
   ));
@@ -541,37 +541,5 @@ as String,
 
 
 }
-
-/// @nodoc
-
-
-class _MarkAsCompleted implements UnitDetailEvent {
-  const _MarkAsCompleted();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _MarkAsCompleted);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'UnitDetailEvent.markAsCompleted()';
-}
-
-
-}
-
-
-
 
 // dart format on

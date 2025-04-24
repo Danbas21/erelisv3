@@ -18,13 +18,16 @@ import 'package:erelis/features/tablero/domain/usecases/get_leaders_usecase.dart
 import 'package:erelis/features/tablero/domain/usecases/get_user_profile_usecase.dart';
 import 'package:erelis/features/tablero/domain/usecases/update_course_progress_usecase.dart';
 import 'package:erelis/features/unidad/data/datasources/highlight_remote_data_source.dart';
+import 'package:erelis/features/unidad/data/datasources/unit_progress_data.dart';
 import 'package:erelis/features/unidad/data/datasources/unit_remote_data_source.dart';
+import 'package:erelis/features/unidad/data/repositories/adapter_progress.dart';
 import 'package:erelis/features/unidad/data/repositories/highlight_repository_impl.dart';
 import 'package:erelis/features/unidad/data/repositories/unit_repository_impl.dart';
 import 'package:erelis/features/unidad/domain/repositories/highlight_repository.dart';
 import 'package:erelis/features/unidad/domain/repositories/unit_repository.dart';
 import 'package:erelis/features/unidad/presentation/blocs/unit_detail/unit_detail_bloc.dart';
 import 'package:erelis/features/unidad/presentation/blocs/units/units_bloc.dart';
+import 'package:erelis/features/unidad/presentation/blocs/use_progress/use_progress_bloc.dart';
 
 // Importaciones para el módulo de exámenes
 
@@ -163,7 +166,16 @@ class MyApp extends StatelessWidget {
               (context) =>
                   UnitDetailBloc(repository: context.read<UnitsRepository>()),
         ),
-
+        BlocProvider<UnitProgressBloc>(
+          create:
+              (context) => UnitProgressBloc(
+                repository: AdapterProgress(
+                  dataSource: UnitProgressDataSourceImpl(
+                    firestore: FirebaseFirestore.instance,
+                  ),
+                ),
+              ),
+        ),
         // No proporcionamos BLoCs de exámenes aquí, ya que se crearán dinámicamente
         // cuando sean necesarios usando el TestProviders
       ],

@@ -6,5 +6,9 @@ abstract class UnitsRepository {
   Stream<Result<List<Unit>>> getUnitsByCourse(String courseId);
   Stream<Result<Unit>> getUnitById(String unitId, String courseId);
   Future<Result<List<Unit>>> getUnitsByCourseOnce(
-      String courseId, String courseName);
+    String courseId,
+    String courseName,
+  );
+
+  Future<Result<Unit>> markUnitAsComplete(String unidadId, String courseId);
 }

@@ -40,25 +40,25 @@ class _SubjectCardState extends State<SubjectCard>
   String getCoverImageForSubject(SubjectModel subject) {
     // Mapeo directo basado en el título del tema
     switch (subject.title.toLowerCase()) {
-      case 'matematicas':
+      case 'matemáticas':
         return ImagesUtils.matematicas;
       case 'español':
         return ImagesUtils.espanol;
-      case 'historia de mexico':
+      case 'historia de méxico':
         return ImagesUtils.historiaMx;
-      case 'geografia':
+      case 'geografía':
         return ImagesUtils.geografia;
-      case 'biologia':
+      case 'biología':
         return ImagesUtils.biologia;
       case 'historia universal':
         return ImagesUtils.historiaUniversal;
-      case 'quimica':
+      case 'química':
         return ImagesUtils.quimica;
-      case 'fisica':
+      case 'física':
         return ImagesUtils.fisica;
       case 'habilidad verbal':
         return ImagesUtils.habilidadVerbal;
-      case 'civismo y etica':
+      case 'civismo y ética':
         return ImagesUtils.civismo;
       default:
         return ImagesUtils.habilidadVerbal;

@@ -27,7 +27,7 @@ class SidebarNavigation extends StatelessWidget {
     final items = [
       SidebarItem(title: 'Tablero', icon: Icons.dashboard, route: '/dashboard'),
       SidebarItem(
-        title: 'Calender',
+        title: 'Calendario',
         icon: Icons.calendar_today,
         route: '/calendar',
       ),
@@ -36,7 +36,7 @@ class SidebarNavigation extends StatelessWidget {
         icon: Icons.local_library,
         route: '/library',
       ),
-      SidebarItem(title: 'Salon', icon: Icons.class_, route: '/classroom'),
+      SidebarItem(title: 'Salón', icon: Icons.class_, route: '/classroom'),
       SidebarItem(title: 'Cursos', icon: Icons.school, route: '/courses'),
       SidebarItem(
         title: 'Integración',

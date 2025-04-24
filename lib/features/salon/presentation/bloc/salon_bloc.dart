@@ -3,7 +3,6 @@ import 'dart:async';
 import 'package:bloc/bloc.dart';
 import 'package:erelis/features/salon/domain/repositories/subjects_repository.dart';
 import 'package:freezed_annotation/freezed_annotation.dart';
-import 'package:erelis/features/salon/domain/models/subject_model.dart';
 
 part 'salon_state.dart';
 part 'salon_event.dart';

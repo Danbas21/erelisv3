@@ -8,6 +8,7 @@ abstract class UnitsRemoteDataSource {
   // Añadir este nuevo método
   Future<List<UnitModel>> getUnitsByCourseOnce(String courseId);
   Stream<UnitModel> getUnitById(String unitId, String courseId);
+  Future<UnitModel> getIscomplete(String unitId, String courseId);
 }
 
 class UnitsRemoteDataSourceImpl implements UnitsRemoteDataSource {
@@ -56,6 +57,30 @@ class UnitsRemoteDataSourceImpl implements UnitsRemoteDataSource {
     } catch (e) {
       rethrow;
     }
+  }
+
+  @override
+  Future<UnitModel> getIscomplete(String unidadId, String courseId) async {
+    await FirebaseFirestore.instance
+        .collection('courses')
+        .doc(courseId)
+        .collection('units')
+        .doc(unidadId)
+        .update({'isComplete': true});
+
+    final snapshot =
+        await FirebaseFirestore.instance
+            .collection('courses')
+            .doc(courseId)
+            .collection('units')
+            .doc(unidadId)
+            .get();
+
+    if (!snapshot.exists) {
+      throw Exception("Unidad no encontrada");
+    }
+
+    return UnitModel.fromFirestore(snapshot.data()!, snapshot.id);
   }
 
   Future<UnitModel> getUnitByIdOnce(String unitId) async {

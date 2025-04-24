@@ -11,5 +11,4 @@ sealed class UnitDetailEvent with _$UnitDetailEvent {
     required String text,
     required String color,
   }) = _HighlightText;
-  const factory UnitDetailEvent.markAsCompleted() = _MarkAsCompleted;
 }

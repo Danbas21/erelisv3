@@ -8,8 +8,13 @@ import '../../domain/entities/unit.dart';
 
 class UnitCardWidget extends StatefulWidget {
   final Unit unit;
+  final bool isCompleted;
 
-  const UnitCardWidget({super.key, required this.unit});
+  const UnitCardWidget({
+    super.key,
+    required this.unit,
+    required this.isCompleted,
+  });
 
   @override
   State<UnitCardWidget> createState() => _UnitCardWidgetState();
@@ -23,19 +28,27 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
       elevation: 2,
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12),
-        side: widget.unit.isCompleted
-            ? BorderSide(color: AppColors.success.withOpacity(0.3), width: 2)
-            : BorderSide.none,
+        side:
+            widget.isCompleted
+                ? BorderSide(
+                  color: AppColors.success.withValues(alpha: 0.3),
+                  width: 2,
+                )
+                : BorderSide.none,
       ),
       child: ClipRRect(
         borderRadius: BorderRadius.circular(12),
         child: Container(
           decoration: BoxDecoration(
+            color:
+                widget.unit.title.startsWith('Cuestionario: ') ||
+                        widget.unit.title.startsWith('Examen')
+                    ? AppColors.cuestionary
+                    : AppColors.primaryDark,
             border: Border(
               left: BorderSide(
-                color: widget.unit.isCompleted
-                    ? AppColors.success
-                    : AppColors.primary,
+                color:
+                    widget.isCompleted ? AppColors.success : AppColors.primary,
                 width: 4,
               ),
             ),
@@ -54,18 +67,20 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
                         Container(
                           padding: const EdgeInsets.all(8),
                           decoration: BoxDecoration(
-                            color: widget.unit.isCompleted
-                                ? AppColors.success.withOpacity(0.1)
-                                : AppColors.primary.withOpacity(0.1),
+                            color:
+                                widget.isCompleted
+                                    ? AppColors.success.withValues(alpha: 0.1)
+                                    : AppColors.primary.withValues(alpha: 0.1),
                             borderRadius: BorderRadius.circular(8),
                           ),
                           child: Icon(
-                            widget.unit.isCompleted
+                            widget.isCompleted
                                 ? Icons.check_circle_outline
                                 : Icons.book_outlined,
-                            color: widget.unit.isCompleted
-                                ? AppColors.success
-                                : AppColors.primary,
+                            color:
+                                widget.isCompleted
+                                    ? AppColors.success
+                                    : AppColors.primary,
                           ),
                         ),
                         const SizedBox(width: 16),
@@ -95,7 +110,7 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
                 ),
               ),
               // Indicador de completado (esquina)
-              if (widget.unit.isCompleted)
+              if (widget.isCompleted)
                 Positioned(
                   top: 0,
                   right: 0,
@@ -129,7 +144,7 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Colors.black.withOpacity(0.05),
+                        Colors.black.withValues(alpha: 0.05),
                         Colors.transparent,
                       ],
                     ),
@@ -147,29 +162,27 @@ class _UnitCardWidgetState extends State<UnitCardWidget> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
       decoration: BoxDecoration(
-        color: widget.unit.isCompleted
-            ? AppColors.success.withOpacity(0.1)
-            : AppColors.warning.withOpacity(0.1),
+        color:
+            widget.isCompleted
+                ? AppColors.success.withValues(alpha: 0.1)
+                : AppColors.warning.withValues(alpha: 0.1),
         borderRadius: BorderRadius.circular(16),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
           Icon(
-            widget.unit.isCompleted ? Icons.check_circle : Icons.access_time,
+            widget.isCompleted ? Icons.check_circle : Icons.access_time,
             size: 16,
-            color:
-                widget.unit.isCompleted ? AppColors.success : AppColors.warning,
+            color: widget.isCompleted ? AppColors.success : AppColors.warning,
           ),
           const SizedBox(width: 4),
           Text(
-            widget.unit.isCompleted ? 'Completada' : 'Pendiente',
+            widget.isCompleted ? 'Completada' : 'Pendiente',
             style: TextStyle(
               fontSize: 12,
               fontWeight: FontWeight.bold,
-              color: widget.unit.isCompleted
-                  ? AppColors.success
-                  : AppColors.warning,
+              color: widget.isCompleted ? AppColors.success : AppColors.warning,
             ),
           ),
         ],

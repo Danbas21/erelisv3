@@ -19,15 +19,17 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
   UnitsBloc({required this.repository}) : super(const UnitsState.initial()) {
     on<_Started>(_onStarted);
     on<_LoadMore>(_onLoadMore);
+    on<_CheckComplete>(_onCheckComplete);
   }
 
   Future<void> debugCheckUnits(String courseId, String courseName) async {
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('courses')
-          .doc(courseId)
-          .collection('units')
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('courses')
+              .doc(courseId)
+              .collection('units')
+              .get();
 
       if (snapshot.docs.isEmpty) {
       } else {}
@@ -44,25 +46,36 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
 
       // Usar el método de carga única
       final result = await repository.getUnitsByCourseOnce(
-          event.courseId, event.courseName);
+        event.courseId,
+        event.courseName,
+      );
 
-      result.fold((error) {
-        emit(UnitsState.error(error.toString()));
-      }, (units) {
-        print("Unidades cargadas con éxito: ${units.length}");
-        if (units.isEmpty) {
-          emit(const UnitsState.empty(
-              "No hay unidades disponibles para este curso."));
-        } else {
-          emit(UnitsState.loaded(
-            units: units,
-            hasMoreUnits: units.length > initialLoadCount,
-            displayedCount: units.length > initialLoadCount
-                ? initialLoadCount
-                : units.length,
-          ));
-        }
-      });
+      result.fold(
+        (error) {
+          emit(UnitsState.error(error.toString()));
+        },
+        (units) {
+          print("Unidades cargadas con éxito: ${units.length}");
+          if (units.isEmpty) {
+            emit(
+              const UnitsState.empty(
+                "No hay unidades disponibles para este curso.",
+              ),
+            );
+          } else {
+            emit(
+              UnitsState.loaded(
+                units: units,
+                hasMoreUnits: units.length > initialLoadCount,
+                displayedCount:
+                    units.length > initialLoadCount
+                        ? initialLoadCount
+                        : units.length,
+              ),
+            );
+          }
+        },
+      );
     } catch (e) {
       emit(UnitsState.error(e.toString()));
     }
@@ -77,11 +90,61 @@ class UnitsBloc extends Bloc<UnitsEvent, UnitsState> {
         newDisplayCount = currentState.units.length;
       }
 
-      emit(UnitsState.loaded(
-        units: currentState.units,
-        hasMoreUnits: newDisplayCount < currentState.units.length,
-        displayedCount: newDisplayCount,
-      ));
+      emit(
+        UnitsState.loaded(
+          units: currentState.units,
+          hasMoreUnits: newDisplayCount < currentState.units.length,
+          displayedCount: newDisplayCount,
+        ),
+      );
+    }
+  }
+
+  Future<void> _onCheckComplete(
+    _CheckComplete event,
+    Emitter<UnitsState> emit,
+  ) async {
+    try {
+      final result = await repository.markUnitAsComplete(
+        event.unidadId,
+        event.courseId,
+      );
+
+      result.fold(
+        (error) {
+          emit(UnitsState.error(error.toString()));
+        },
+        (unidadActualizada) {
+          switch (state) {
+            case Loaded(
+              :final units,
+              :final hasMoreUnits,
+              :final displayedCount,
+            ):
+              final unidadesActualizadas =
+                  units.map((unidad) {
+                    return unidad.id == unidadActualizada.id
+                        ? unidadActualizada
+                        : unidad;
+                  }).toList();
+
+              emit(
+                UnitsState.loaded(
+                  units: unidadesActualizadas,
+                  hasMoreUnits: hasMoreUnits,
+                  displayedCount: displayedCount,
+                ),
+              );
+              break;
+
+            default:
+              // Si no estamos en estado Loaded, podrías emitir un error o ignorar
+              break;
+          }
+        },
+      );
+    } catch (e) {
+      emit(UnitsState.error(e.toString()));
     }
   }
 }

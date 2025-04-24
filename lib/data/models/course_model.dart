@@ -132,18 +132,18 @@ class CourseModel {
         rating: 4.6,
         studentsCount: 780,
       ),
-      CourseModel(
-        id: '6',
-        title: 'Curso de admisión CONAMAT',
-        categoryId: 'conamat',
-        instructorName: 'Diana Flores',
-        instructorAvatar: 'assets/images/instructors/diana.png',
-        description: 'Preparación especializada para el examen CONAMAT',
-        isRecurrent: true,
-        isPopular: true,
-        rating: 4.7,
-        studentsCount: 680,
-      ),
+      // CourseModel(
+      //   id: '6',
+      //   title: 'Curso de admisión CONAMAT',
+      //   categoryId: 'conamat',
+      //   instructorName: 'Diana Flores',
+      //   instructorAvatar: 'assets/images/instructors/diana.png',
+      //   description: 'Preparación especializada para el examen CONAMAT',
+      //   isRecurrent: true,
+      //   isPopular: true,
+      //   rating: 4.7,
+      //   studentsCount: 680,
+      // ),
     ];
   }
 }

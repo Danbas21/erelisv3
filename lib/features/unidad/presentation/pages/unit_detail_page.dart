@@ -4,8 +4,11 @@ import 'package:erelis/features/questions/domain/entities/examen_entity.dart';
 import 'package:erelis/features/questions/domain/entities/option_entity.dart';
 import 'package:erelis/features/questions/domain/entities/pregunta_entity.dart';
 import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
+import 'package:erelis/features/unidad/presentation/blocs/units/units_bloc.dart';
+import 'package:erelis/features/unidad/presentation/blocs/use_progress/use_progress_bloc.dart';
 import 'package:erelis/features/unidad/presentation/pages/test_intro_page.dart';
 import 'package:erelis/features/unidad/presentation/widgets/unit_content_widget.dart';
+import 'package:erelis/presentation/blocs/auth/auth_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:erelis/config/app_colors.dart';
@@ -46,7 +49,7 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
       appBar: AppBar(
         title: BlocBuilder<UnitDetailBloc, UnitDetailState>(
           builder: (context, state) {
-            if (state is Loaded) {
+            if (state is LoadedDetail) {
               return Text(state.unit.title);
             }
             return const Text('Detalle de unidad');
@@ -58,10 +61,14 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
       body: BlocBuilder<UnitDetailBloc, UnitDetailState>(
         builder: (context, state) {
           return switch (state) {
-            Initial() => const Center(child: Text("Inicializando...")),
-            Loading() => const Center(child: CircularProgressIndicator()),
-            Loaded success => _buildContent(success.unit, context, success),
-            Error error => Center(
+            InitialDetail() => const Center(child: Text("Inicializando...")),
+            LoadingDetail() => const Center(child: CircularProgressIndicator()),
+            LoadedDetail success => _buildContent(
+              success.unit,
+              context,
+              success,
+            ),
+            ErrorDetail error => Center(
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
@@ -92,7 +99,7 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
     );
   }
 
-  Widget _buildContent(Unit unit, BuildContext context, Loaded state) {
+  Widget _buildContent(Unit unit, BuildContext context, LoadedDetail state) {
     return Container(
       color: AppColors.background,
       padding: ResponsiveUtils.getContentPadding(context),
@@ -173,69 +180,101 @@ class _UnitDetailPageState extends State<UnitDetailPage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
       child: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              children: [
-                Icon(Icons.quiz, color: AppColors.primaryLightBlue),
-                const SizedBox(width: 10),
-                Text('Evaluaciones', style: AppTextStyles.h3),
-              ],
-            ),
-            const SizedBox(height: 16),
-            FutureBuilder<List<ExamenEntity>>(
-              future: _fetchTests(widget.cursoid, widget.unitId, unit.title),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(
-                    child: Text(
-                      "Error al cargar evaluaciones: ${snapshot.error}",
-                      style: TextStyle(color: AppColors.error),
-                    ),
-                  );
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(
-                    child: Column(
+        child:
+            unit.title.startsWith('Unidad ')
+                ? SizedBox(
+                  width: double.infinity,
+                  height: 50,
+                  child: FloatingActionButton(
+                    onPressed: () {
+                      final authState = context.read<AuthBloc>().state;
+
+                      final userId = (authState as Authenticated).user.id;
+
+                      context.read<UnitProgressBloc>().add(
+                        UnitProgressEvent.markAsCompleted(
+                          userId: userId,
+                          unitId: widget.unitId,
+                          courseId: widget.cursoid,
+                          title: unit.title,
+                        ),
+                      );
+                    },
+                    backgroundColor: AppColors.primaryLightBlue,
+                    child: const Text("Marcar unidad como completa"),
+                  ),
+                )
+                : Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
                       children: [
-                        const SizedBox(height: 16),
-                        Icon(
-                          Icons.assignment_late,
-                          size: 48,
-                          color: Colors.grey[400],
-                        ),
-                        const SizedBox(height: 16),
-                        const Text(
-                          "No hay evaluaciones disponibles para esta unidad",
-                          textAlign: TextAlign.center,
-                          style: TextStyle(color: Colors.grey),
-                        ),
+                        Icon(Icons.quiz, color: AppColors.primaryLightBlue),
+                        const SizedBox(width: 10),
+                        Text('Evaluaciones', style: AppTextStyles.h3),
                       ],
                     ),
-                  );
-                }
+                    const SizedBox(height: 16),
+                    FutureBuilder<List<ExamenEntity>>(
+                      future: _fetchTests(
+                        widget.cursoid,
+                        widget.unitId,
+                        unit.title,
+                      ),
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                            child: CircularProgressIndicator(),
+                          );
+                        } else if (snapshot.hasError) {
+                          return Center(
+                            child: Text(
+                              "Error al cargar evaluaciones: ${snapshot.error}",
+                              style: TextStyle(color: AppColors.error),
+                            ),
+                          );
+                        } else if (!snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return Center(
+                            child: Column(
+                              children: [
+                                const SizedBox(height: 16),
+                                Icon(
+                                  Icons.assignment_late,
+                                  size: 48,
+                                  color: Colors.grey[400],
+                                ),
+                                const SizedBox(height: 16),
+                                const Text(
+                                  "No hay evaluaciones disponibles para esta unidad",
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(color: Colors.grey),
+                                ),
+                              ],
+                            ),
+                          );
+                        }
 
-                // Mostrar lista de exámenes disponibles
-                return ListView.builder(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemCount: snapshot.data!.length,
-                  itemBuilder: (context, index) {
-                    final test = snapshot.data![index];
-                    return _buildTestItem(
-                      context,
-                      test,
-                      widget.cursoid,
-                      widget.unitId,
-                    );
-                  },
-                );
-              },
-            ),
-          ],
-        ),
+                        // Mostrar lista de exámenes disponibles
+                        return ListView.builder(
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemCount: snapshot.data!.length,
+                          itemBuilder: (context, index) {
+                            final test = snapshot.data![index];
+                            return _buildTestItem(
+                              context,
+                              test,
+                              widget.cursoid,
+                              widget.unitId,
+                            );
+                          },
+                        );
+                      },
+                    ),
+                  ],
+                ),
       ),
     );
   }

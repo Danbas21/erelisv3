@@ -226,7 +226,6 @@ class SidebarWidget extends StatelessWidget {
           child: Container(
             padding: const EdgeInsets.symmetric(vertical: 12),
             child: Column(
-              mainAxisSize: MainAxisSize.min,
               children: [
                 Icon(
                   icon,
@@ -234,22 +233,14 @@ class SidebarWidget extends StatelessWidget {
                   size: isDesktop ? 28 : 24,
                 ),
                 if (isDesktop || isTablet) const SizedBox(height: 4),
-                if (isDesktop)
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: isLogout ? AppColors.error : Colors.white,
-                      fontSize: isDesktop ? 11 : 24,
-                    ),
-                  )
-                else if (isTablet)
-                  Text(
-                    label,
-                    style: TextStyle(
-                      color: isLogout ? AppColors.error : Colors.white,
-                      fontSize: isDesktop ? 28 : 14,
-                    ),
+
+                Text(
+                  label,
+                  style: TextStyle(
+                    color: isLogout ? AppColors.error : Colors.white,
+                    fontSize: isDesktop ? 11 : 10,
                   ),
+                ),
               ],
             ),
           ),

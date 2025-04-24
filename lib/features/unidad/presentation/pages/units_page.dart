@@ -1,5 +1,7 @@
 import 'package:erelis/features/questions/data/repository/examen_repository_impl.dart';
+import 'package:erelis/features/questions/presentation/blocs/progreso/progreso_bloc.dart';
 import 'package:erelis/features/questions/presentation/providers/examenes%20_providers.dart';
+import 'package:erelis/features/unidad/presentation/blocs/use_progress/use_progress_bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
@@ -130,69 +132,108 @@ class _UnitsPageState extends State<UnitsPage> {
                 ),
                 // Lista de unidades
                 Expanded(
-                  child: BlocBuilder<UnitsBloc, UnitsState>(
-                    builder: (context, state) {
-                      return switch (state) {
-                        Initial() => const Center(
-                          child: Text("Inicializando..."),
-                        ),
-                        Loading() => const Center(
-                          child: CircularProgressIndicator(),
-                        ),
-                        Loaded loaded => _buildUnitsList(context, loaded),
-                        Empty empty => Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.folder_open,
-                                size: 64,
-                                color: Colors.grey[400],
+                  child: BlocBuilder<UnitProgressBloc, UnitProgressState>(
+                    builder: (context, progressState) {
+                      return BlocBuilder<UnitsBloc, UnitsState>(
+                        builder: (context, state) {
+                          if (state is Initial &&
+                              progressState is InitialProgress) {
+                            return const Center(
+                              child: Text("Inicializando..."),
+                            );
+                          }
+                          return switch (state) {
+                            Initial() => const Center(
+                              child: Text("Inicializando..."),
+                            ),
+                            Loading() => const Center(
+                              child: CircularProgressIndicator(),
+                            ),
+                            Loaded loaded => _buildUnitsList(context, loaded),
+                            Empty empty => Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.folder_open,
+                                    size: 64,
+                                    color: Colors.grey[400],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    empty.message,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.grey[600]),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed: () => Navigator.pop(context),
+                                    child: const Text('Volver'),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 16),
-                              Text(
-                                empty.message,
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.grey[600]),
+                            ),
+                            Completed completed => Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.check_circle_outline,
+                                    size: 64,
+                                    color: Colors.green[300],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    "Unidad ${completed.unidadId} completada",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.green[700]),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed:
+                                        () => context.read<UnitsBloc>().add(
+                                          UnitsEvent.started(
+                                            widget.courseId,
+                                            widget.courseName,
+                                          ),
+                                        ),
+                                    child: const Text('Volver a cargar'),
+                                  ),
+                                ],
                               ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed: () => Navigator.pop(context),
-                                child: const Text('Volver'),
+                            ),
+                            Error error => Center(
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  Icon(
+                                    Icons.error_outline,
+                                    size: 64,
+                                    color: Colors.red[300],
+                                  ),
+                                  const SizedBox(height: 16),
+                                  Text(
+                                    "Error: ${error.message}",
+                                    textAlign: TextAlign.center,
+                                    style: TextStyle(color: Colors.red[700]),
+                                  ),
+                                  const SizedBox(height: 16),
+                                  ElevatedButton(
+                                    onPressed:
+                                        () => context.read<UnitsBloc>().add(
+                                          UnitsEvent.started(
+                                            widget.courseId,
+                                            widget.courseName,
+                                          ),
+                                        ),
+                                    child: const Text('Reintentar'),
+                                  ),
+                                ],
                               ),
-                            ],
-                          ),
-                        ),
-                        Error error => Center(
-                          child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Icon(
-                                Icons.error_outline,
-                                size: 64,
-                                color: Colors.red[300],
-                              ),
-                              const SizedBox(height: 16),
-                              Text(
-                                "Error: ${error.message}",
-                                textAlign: TextAlign.center,
-                                style: TextStyle(color: Colors.red[700]),
-                              ),
-                              const SizedBox(height: 16),
-                              ElevatedButton(
-                                onPressed:
-                                    () => context.read<UnitsBloc>().add(
-                                      UnitsEvent.started(
-                                        widget.courseId,
-                                        widget.courseName,
-                                      ),
-                                    ),
-                                child: const Text('Reintentar'),
-                              ),
-                            ],
-                          ),
-                        ),
-                      };
+                            ),
+                          };
+                        },
+                      );
                     },
                   ),
                 ),
@@ -202,14 +243,14 @@ class _UnitsPageState extends State<UnitsPage> {
         ],
       ),
       // Agregar botón flotante para acceder directamente a los exámenes
-      floatingActionButton: FloatingActionButton.extended(
-        onPressed: () {
-          _mostrarExamenes(context);
-        },
-        icon: const Icon(Icons.quiz),
-        label: const Text('Exámenes'),
-        backgroundColor: AppColors.primaryOrange,
-      ),
+      // floatingActionButton: FloatingActionButton.extended(
+      //   onPressed: () {
+      //     _mostrarExamenes(context);
+      //   },
+      //   icon: const Icon(Icons.quiz),
+      //   label: const Text('Exámenes'),
+      //   backgroundColor: AppColors.primaryOrange,
+      // ),
     );
   }
 
@@ -280,7 +321,7 @@ class _UnitsPageState extends State<UnitsPage> {
         leading: Container(
           padding: const EdgeInsets.all(8),
           decoration: BoxDecoration(
-            color: AppColors.primaryLightBlue.withOpacity(0.1),
+            color: AppColors.primaryLightBlue.withValues(alpha: 0.1),
             borderRadius: BorderRadius.circular(8),
           ),
           child: Icon(Icons.assignment, color: AppColors.primaryLightBlue),
@@ -350,7 +391,7 @@ class _UnitsPageState extends State<UnitsPage> {
         color: Colors.white,
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.05),
+            color: Colors.black.withValues(alpha: 0.05),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -429,6 +470,22 @@ class _UnitsPageState extends State<UnitsPage> {
     final units = state.units;
     final padding = ResponsiveUtils.getContentPadding(context);
 
+    final List unidades =
+        units.where((u) => u.title.startsWith('Unidad ')).toList()
+          ..sort((a, b) {
+            final numeroA = int.tryParse(a.title.split(' ')[1]) ?? 0;
+            final numeroB = int.tryParse(b.title.split(' ')[1]) ?? 0;
+            return numeroA.compareTo(numeroB);
+          });
+    final List examenes =
+        units.where((u) => u.title.toLowerCase().contains('examen')).toList();
+    final List cuestionarios =
+        units.where((u) => u.title.startsWith('Cuestionario:')).toList();
+    final List ordenados = [...unidades, ...cuestionarios, ...examenes];
+
+    final unidadesCompletadas =
+        progresoList.where((p) => p.isCompleted).map((p) => p.unidadId).toSet();
+
     if (units.isEmpty) {
       return const Center(
         child: Text('No hay unidades disponibles para este curso.'),
@@ -441,12 +498,13 @@ class _UnitsPageState extends State<UnitsPage> {
           UnitsEvent.started(widget.courseId, widget.courseName),
         );
       },
+
       child: ListView.builder(
         controller: _scrollController,
         padding: padding,
-        itemCount: units.length,
+        itemCount: ordenados.length,
         itemBuilder: (context, index) {
-          final unit = units[index];
+          final unit = ordenados[index];
           return AnimatedListItem(
             index: index,
             child: GestureDetector(

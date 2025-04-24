@@ -12,4 +12,8 @@ sealed class UnitsState with _$UnitsState {
   // Añadir este estado
   const factory UnitsState.empty(String message) = Empty;
   const factory UnitsState.error(String message) = Error;
+  const factory UnitsState.completed({
+    required String unidadId,
+    required bool isCompleted,
+  }) = Completed;
 }

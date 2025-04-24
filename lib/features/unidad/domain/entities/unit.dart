@@ -3,7 +3,7 @@ class Unit {
   final String id;
   final String title;
   final String content;
-  final bool isCompleted;
+  final bool isComplete;
   final String courseId;
   final DateTime lastVisited;
 
@@ -11,7 +11,7 @@ class Unit {
     required this.id,
     required this.title,
     required this.content,
-    this.isCompleted = false,
+    required this.isComplete,
     required this.courseId,
     required this.lastVisited,
   });
@@ -28,7 +28,7 @@ class Unit {
       id: id ?? this.id,
       title: title ?? this.title,
       content: content ?? this.content,
-      isCompleted: isCompleted ?? this.isCompleted,
+      isComplete: isCompleted ?? isComplete,
       courseId: courseId ?? this.courseId,
       lastVisited: lastVisited ?? this.lastVisited,
     );

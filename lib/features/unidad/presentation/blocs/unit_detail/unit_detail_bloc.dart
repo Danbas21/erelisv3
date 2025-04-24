@@ -14,7 +14,7 @@ class UnitDetailBloc extends Bloc<UnitDetailEvent, UnitDetailState> {
   final UnitsRepository repository;
 
   UnitDetailBloc({required this.repository})
-      : super(const UnitDetailState.initial()) {
+    : super(const UnitDetailState.initial()) {
     on<UnitDetailEvent>((event, emit) async {
       switch (event) {
         case _LoadUnit loadUnit:
@@ -23,15 +23,14 @@ class UnitDetailBloc extends Bloc<UnitDetailEvent, UnitDetailState> {
         case _HighlightText highlightText:
           _onHighlightText(highlightText, emit);
           break;
-        case _MarkAsCompleted _:
-          _onMarkAsCompleted(emit);
-          break;
       }
     });
   }
 
   Future<void> _onLoadUnit(
-      _LoadUnit event, Emitter<UnitDetailState> emit) async {
+    _LoadUnit event,
+    Emitter<UnitDetailState> emit,
+  ) async {
     emit(const UnitDetailState.loading());
 
     try {
@@ -43,17 +42,17 @@ class UnitDetailBloc extends Bloc<UnitDetailEvent, UnitDetailState> {
           return switch (result) {
             // Verificar explícitamente que la unidad no sea null
             Success(value: final unit) => UnitDetailState.loaded(
-                unit: unit,
-                highlights: const [],
-              ),
+              unit: unit,
+              highlights: const [],
+            ),
             // Manejar explícitamente el caso de unit null
             // ignore: constant_pattern_never_matches_value_type
             Success(value: null) => UnitDetailState.error(
-                'Error: La unidad recibida es null',
-              ),
-            Error(message: final message) => UnitDetailState.error(
-                'No se pudo cargar la unidad: $message',
-              ),
+              'Error: La unidad recibida es null',
+            ),
+            ErrorDetail(message: final message) => UnitDetailState.error(
+              'No se pudo cargar la unidad: $message',
+            ),
             _ => UnitDetailState.error('Resultado inesperado'),
           };
         },
@@ -67,40 +66,15 @@ class UnitDetailBloc extends Bloc<UnitDetailEvent, UnitDetailState> {
   void _onHighlightText(_HighlightText event, Emitter<UnitDetailState> emit) {
     final currentState = state;
 
-    if (currentState is Loaded) {
-      final newHighlight = HighlightData(
-        text: event.text,
-        color: event.color,
+    if (currentState is LoadedDetail) {
+      final newHighlight = HighlightData(text: event.text, color: event.color);
+
+      emit(
+        UnitDetailState.loaded(
+          unit: currentState.unit,
+          highlights: [...currentState.highlights, newHighlight],
+        ),
       );
-
-      emit(UnitDetailState.loaded(
-        unit: currentState.unit,
-        highlights: [...currentState.highlights, newHighlight],
-      ));
-    }
-  }
-
-  void _onMarkAsCompleted(Emitter<UnitDetailState> emit) {
-    final currentState = state;
-
-    switch (currentState) {
-      case Loaded loaded:
-        // Verificar que la unidad no sea null antes de intentar copiarla
-        // Crear una copia de la unidad con isCompleted = true
-        final updatedUnit = loaded.unit.copyWith(isCompleted: true);
-
-        // Actualizar el estado con la unidad modificada manteniendo los highlights
-        emit(UnitDetailState.loaded(
-          unit: updatedUnit,
-          highlights: loaded.highlights,
-        ));
-
-        print('Unidad marcada como completada: ${updatedUnit.id}');
-
-      case _:
-        // No hacer nada si no estamos en estado Loaded
-        print('No se puede marcar como completada: estado incorrecto');
-        break;
     }
   }
 }

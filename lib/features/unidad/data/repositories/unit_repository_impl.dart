@@ -17,35 +17,43 @@ class UnitsRepositoryImpl implements UnitsRepository {
 
   @override
   Stream<Result<List<Unit>>> getUnitsByCourse(String courseId) {
-    return remoteDataSource.getUnitsByCourse(courseId).map((models) {
-      // Conversión explícita a List<Unit>
-      final List<Unit> unitEntities = models
-          .map<domain.Unit>((model) => model.toEntity())
-          .toList(); // Asegura que el tipo sea correcto
+    return remoteDataSource
+        .getUnitsByCourse(courseId)
+        .map((models) {
+          // Conversión explícita a List<Unit>
+          final List<Unit> unitEntities =
+              models
+                  .map<domain.Unit>((model) => model.toEntity())
+                  .toList(); // Asegura que el tipo sea correcto
 
-      return Result<List<Unit>>(data: unitEntities);
-    }).handleError((error) {
-      return Result<List<domain.Unit>>(error: Exception(error.toString()));
-    });
+          return Result<List<Unit>>(data: unitEntities);
+        })
+        .handleError((error) {
+          return Result<List<domain.Unit>>(error: Exception(error.toString()));
+        });
   }
 
-// data/datasources/units_remote_data_source.dart
+  // data/datasources/units_remote_data_source.dart
   @override
   Stream<Result<Unit>> getUnitById(String unitId, String courseId) {
-    return remoteDataSource.getUnitById(unitId, courseId).map((unit) {
-      return Success<Unit>(unit.toEntity());
-    }).handleError((error) {
-      return Error<Unit>(ServerFailure());
-    });
+    return remoteDataSource
+        .getUnitById(unitId, courseId)
+        .map((unit) {
+          return Success<Unit>(unit.toEntity());
+        })
+        .handleError((error) {
+          return Error<Unit>(ServerFailure());
+        });
   }
 
   Future<void> debugCheckUnits(String courseId) async {
     try {
-      final snapshot = await FirebaseFirestore.instance
-          .collection('courses')
-          .doc(courseId)
-          .collection('units')
-          .get();
+      final snapshot =
+          await FirebaseFirestore.instance
+              .collection('courses')
+              .doc(courseId)
+              .collection('units')
+              .get();
 
       if (snapshot.docs.isEmpty) {
       } else {}
@@ -55,7 +63,9 @@ class UnitsRepositoryImpl implements UnitsRepository {
 
   @override
   Future<Result<List<Unit>>> getUnitsByCourseOnce(
-      String courseId, String courseName) async {
+    String courseId,
+    String courseName,
+  ) async {
     try {
       final models = await remoteDataSource.getUnitsByCourseOnce(courseId);
 
@@ -65,6 +75,22 @@ class UnitsRepositoryImpl implements UnitsRepository {
       return Result<List<Unit>>(data: unitEntities);
     } catch (e) {
       return Result<List<Unit>>(error: Exception(e.toString()));
+    }
+  }
+
+  @override
+  Future<Result<Unit>> markUnitAsComplete(
+    String unidadId,
+    String courseId,
+  ) async {
+    try {
+      final updatedModel = await remoteDataSource.getIscomplete(
+        unidadId,
+        courseId,
+      );
+      return Result<Unit>(data: updatedModel.toEntity());
+    } catch (e) {
+      return Result<Unit>(error: Exception(e.toString()));
     }
   }
 }

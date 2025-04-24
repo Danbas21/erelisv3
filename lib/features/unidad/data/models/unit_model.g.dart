@@ -10,7 +10,7 @@ _UnitModel _$UnitModelFromJson(Map<String, dynamic> json) => _UnitModel(
   id: json['id'] as String,
   title: json['title'] as String,
   content: json['content'] as String,
-  isCompleted: json['isCompleted'] as bool? ?? false,
+  isComplete: json['isComplete'] as bool,
   courseId: json['courseId'] as String,
   lastVisited: DateTime.parse(json['lastVisited'] as String),
 );
@@ -20,7 +20,7 @@ Map<String, dynamic> _$UnitModelToJson(_UnitModel instance) =>
       'id': instance.id,
       'title': instance.title,
       'content': instance.content,
-      'isCompleted': instance.isCompleted,
+      'isComplete': instance.isComplete,
       'courseId': instance.courseId,
       'lastVisited': instance.lastVisited.toIso8601String(),
     };

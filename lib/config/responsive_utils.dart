@@ -1,11 +1,7 @@
 // core/utils/responsive_utils.dart
 import 'package:flutter/material.dart';
 
-enum DeviceType {
-  mobile,
-  tablet,
-  desktop,
-}
+enum DeviceType { mobile, tablet, desktop }
 
 class ResponsiveUtils {
   static DeviceType getDeviceType(BuildContext context) {
@@ -37,7 +33,7 @@ class ResponsiveUtils {
 
     switch (deviceType) {
       case DeviceType.mobile:
-        return 60;
+        return 20;
       case DeviceType.tablet:
         return 70;
       case DeviceType.desktop:
@@ -50,7 +46,7 @@ class ResponsiveUtils {
 
     switch (deviceType) {
       case DeviceType.mobile:
-        return const EdgeInsets.all(8);
+        return const EdgeInsets.all(2);
       case DeviceType.tablet:
         return const EdgeInsets.all(16);
       case DeviceType.desktop:

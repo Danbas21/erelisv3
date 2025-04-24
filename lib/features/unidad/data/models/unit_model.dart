@@ -14,7 +14,7 @@ sealed class UnitModel with _$UnitModel {
     required String id,
     required String title,
     required String content,
-    @Default(false) bool isCompleted,
+    required bool isComplete,
     required String courseId,
     required DateTime lastVisited,
   }) = _UnitModel;
@@ -23,16 +23,19 @@ sealed class UnitModel with _$UnitModel {
       _$UnitModelFromJson(json);
 
   factory UnitModel.fromFirestore(
-      Map<String, dynamic> firestoreData, String docId) {
+    Map<String, dynamic> firestoreData,
+    String docId,
+  ) {
     return UnitModel(
       id: docId,
       title: firestoreData['title'] ?? '',
       content: firestoreData['content'] ?? '',
-      isCompleted: firestoreData['isCompleted'] ?? false,
+      isComplete: firestoreData['isComplete'],
       courseId: firestoreData['courseId'] ?? '',
-      lastVisited: firestoreData['lastVisited'] != null
-          ? (firestoreData['lastVisited'] as Timestamp).toDate()
-          : DateTime.now(),
+      lastVisited:
+          firestoreData['lastVisited'] != null
+              ? (firestoreData['lastVisited'] as Timestamp).toDate()
+              : DateTime.now(),
     );
   }
 
@@ -42,7 +45,7 @@ sealed class UnitModel with _$UnitModel {
       id: id,
       title: title,
       content: content,
-      isCompleted: isCompleted,
+      isComplete: isComplete,
       courseId: courseId,
       lastVisited: lastVisited,
     );
