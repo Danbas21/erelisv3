@@ -2,9 +2,9 @@ part of 'calendar_bloc.dart';
 
 @freezed
 sealed class CalendarState with _$CalendarState {
-  const factory CalendarState.initial() = _Initial;
+  const factory CalendarState.initial() = Initial;
 
-  const factory CalendarState.loading() = _Loading;
+  const factory CalendarState.loading() = Loading;
 
   const factory CalendarState.loaded({
     required DateTime focusedDay,
@@ -13,7 +13,7 @@ sealed class CalendarState with _$CalendarState {
     required List<EventCalendar> selectedEvents,
     required int daysRemaining,
     EventCalendar? deadlineEvent,
-  }) = _Loaded;
+  }) = Loaded;
 
-  const factory CalendarState.error({String? errorMessage}) = _Error;
+  const factory CalendarState.error({String? errorMessage}) = Error;
 }
