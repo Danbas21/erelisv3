@@ -13,6 +13,641 @@ part of 'calendar_bloc.dart';
 // dart format off
 T _$identity<T>(T value) => value;
 /// @nodoc
+mixin _$CalendarEvent {
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEvent);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CalendarEvent()';
+}
+
+
+}
+
+/// @nodoc
+class $CalendarEventCopyWith<$Res>  {
+$CalendarEventCopyWith(CalendarEvent _, $Res Function(CalendarEvent) __);
+}
+
+
+/// @nodoc
+
+
+class Started implements CalendarEvent {
+  const Started();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is Started);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CalendarEvent.started()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class UpdateEventStatus implements CalendarEvent {
+  const UpdateEventStatus({required this.eventId, required this.newStatus});
+  
+
+ final  String eventId;
+ final  String newStatus;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$UpdateEventStatusCopyWith<UpdateEventStatus> get copyWith => _$UpdateEventStatusCopyWithImpl<UpdateEventStatus>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is UpdateEventStatus&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.newStatus, newStatus) || other.newStatus == newStatus));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,eventId,newStatus);
+
+@override
+String toString() {
+  return 'CalendarEvent.updateEventStatus(eventId: $eventId, newStatus: $newStatus)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $UpdateEventStatusCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $UpdateEventStatusCopyWith(UpdateEventStatus value, $Res Function(UpdateEventStatus) _then) = _$UpdateEventStatusCopyWithImpl;
+@useResult
+$Res call({
+ String eventId, String newStatus
+});
+
+
+
+
+}
+/// @nodoc
+class _$UpdateEventStatusCopyWithImpl<$Res>
+    implements $UpdateEventStatusCopyWith<$Res> {
+  _$UpdateEventStatusCopyWithImpl(this._self, this._then);
+
+  final UpdateEventStatus _self;
+  final $Res Function(UpdateEventStatus) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? newStatus = null,}) {
+  return _then(UpdateEventStatus(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,newStatus: null == newStatus ? _self.newStatus : newStatus // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class CalculateDaysRemaining implements CalendarEvent {
+  const CalculateDaysRemaining();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalculateDaysRemaining);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CalendarEvent.calculateDaysRemaining()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class GetEvents implements CalendarEvent {
+  const GetEvents();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetEvents);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CalendarEvent.getEvents()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class GetDeadlineDate implements CalendarEvent {
+  const GetDeadlineDate();
+  
+
+
+
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is GetDeadlineDate);
+}
+
+
+@override
+int get hashCode => runtimeType.hashCode;
+
+@override
+String toString() {
+  return 'CalendarEvent.getDeadlineDate()';
+}
+
+
+}
+
+
+
+
+/// @nodoc
+
+
+class DaySelected implements CalendarEvent {
+  const DaySelected(this.selectedDay, this.focusedDay);
+  
+
+ final  DateTime selectedDay;
+ final  DateTime focusedDay;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$DaySelectedCopyWith<DaySelected> get copyWith => _$DaySelectedCopyWithImpl<DaySelected>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is DaySelected&&(identical(other.selectedDay, selectedDay) || other.selectedDay == selectedDay)&&(identical(other.focusedDay, focusedDay) || other.focusedDay == focusedDay));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,selectedDay,focusedDay);
+
+@override
+String toString() {
+  return 'CalendarEvent.dateSelected(selectedDay: $selectedDay, focusedDay: $focusedDay)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $DaySelectedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $DaySelectedCopyWith(DaySelected value, $Res Function(DaySelected) _then) = _$DaySelectedCopyWithImpl;
+@useResult
+$Res call({
+ DateTime selectedDay, DateTime focusedDay
+});
+
+
+
+
+}
+/// @nodoc
+class _$DaySelectedCopyWithImpl<$Res>
+    implements $DaySelectedCopyWith<$Res> {
+  _$DaySelectedCopyWithImpl(this._self, this._then);
+
+  final DaySelected _self;
+  final $Res Function(DaySelected) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? selectedDay = null,Object? focusedDay = null,}) {
+  return _then(DaySelected(
+null == selectedDay ? _self.selectedDay : selectedDay // ignore: cast_nullable_to_non_nullable
+as DateTime,null == focusedDay ? _self.focusedDay : focusedDay // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class FormatChanged implements CalendarEvent {
+  const FormatChanged({this.format});
+  
+
+ final  dynamic format;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$FormatChangedCopyWith<FormatChanged> get copyWith => _$FormatChangedCopyWithImpl<FormatChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is FormatChanged&&const DeepCollectionEquality().equals(other.format, format));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(format));
+
+@override
+String toString() {
+  return 'CalendarEvent.formatChanged(format: $format)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $FormatChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $FormatChangedCopyWith(FormatChanged value, $Res Function(FormatChanged) _then) = _$FormatChangedCopyWithImpl;
+@useResult
+$Res call({
+ dynamic format
+});
+
+
+
+
+}
+/// @nodoc
+class _$FormatChangedCopyWithImpl<$Res>
+    implements $FormatChangedCopyWith<$Res> {
+  _$FormatChangedCopyWithImpl(this._self, this._then);
+
+  final FormatChanged _self;
+  final $Res Function(FormatChanged) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? format = freezed,}) {
+  return _then(FormatChanged(
+format: freezed == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
+as dynamic,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class PageChanged implements CalendarEvent {
+  const PageChanged(this.focusedDay);
+  
+
+ final  DateTime focusedDay;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$PageChangedCopyWith<PageChanged> get copyWith => _$PageChangedCopyWithImpl<PageChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is PageChanged&&(identical(other.focusedDay, focusedDay) || other.focusedDay == focusedDay));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,focusedDay);
+
+@override
+String toString() {
+  return 'CalendarEvent.pageChanged(focusedDay: $focusedDay)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $PageChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $PageChangedCopyWith(PageChanged value, $Res Function(PageChanged) _then) = _$PageChangedCopyWithImpl;
+@useResult
+$Res call({
+ DateTime focusedDay
+});
+
+
+
+
+}
+/// @nodoc
+class _$PageChangedCopyWithImpl<$Res>
+    implements $PageChangedCopyWith<$Res> {
+  _$PageChangedCopyWithImpl(this._self, this._then);
+
+  final PageChanged _self;
+  final $Res Function(PageChanged) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? focusedDay = null,}) {
+  return _then(PageChanged(
+null == focusedDay ? _self.focusedDay : focusedDay // ignore: cast_nullable_to_non_nullable
+as DateTime,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class EventStatusChanged implements CalendarEvent {
+  const EventStatusChanged({required this.eventId, required this.newStatus});
+  
+
+ final  String eventId;
+ final  String newStatus;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventStatusChangedCopyWith<EventStatusChanged> get copyWith => _$EventStatusChangedCopyWithImpl<EventStatusChanged>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventStatusChanged&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.newStatus, newStatus) || other.newStatus == newStatus));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,eventId,newStatus);
+
+@override
+String toString() {
+  return 'CalendarEvent.eventStatusChanged(eventId: $eventId, newStatus: $newStatus)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventStatusChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $EventStatusChangedCopyWith(EventStatusChanged value, $Res Function(EventStatusChanged) _then) = _$EventStatusChangedCopyWithImpl;
+@useResult
+$Res call({
+ String eventId, String newStatus
+});
+
+
+
+
+}
+/// @nodoc
+class _$EventStatusChangedCopyWithImpl<$Res>
+    implements $EventStatusChangedCopyWith<$Res> {
+  _$EventStatusChangedCopyWithImpl(this._self, this._then);
+
+  final EventStatusChanged _self;
+  final $Res Function(EventStatusChanged) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? newStatus = null,}) {
+  return _then(EventStatusChanged(
+eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,newStatus: null == newStatus ? _self.newStatus : newStatus // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
+
+
+class EventAdded implements CalendarEvent {
+  const EventAdded(this.event);
+  
+
+ final  EventCalendar event;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventAddedCopyWith<EventAdded> get copyWith => _$EventAddedCopyWithImpl<EventAdded>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventAdded&&(identical(other.event, event) || other.event == event));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,event);
+
+@override
+String toString() {
+  return 'CalendarEvent.eventAdded(event: $event)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventAddedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $EventAddedCopyWith(EventAdded value, $Res Function(EventAdded) _then) = _$EventAddedCopyWithImpl;
+@useResult
+$Res call({
+ EventCalendar event
+});
+
+
+$EventCalendarCopyWith<$Res> get event;
+
+}
+/// @nodoc
+class _$EventAddedCopyWithImpl<$Res>
+    implements $EventAddedCopyWith<$Res> {
+  _$EventAddedCopyWithImpl(this._self, this._then);
+
+  final EventAdded _self;
+  final $Res Function(EventAdded) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? event = null,}) {
+  return _then(EventAdded(
+null == event ? _self.event : event // ignore: cast_nullable_to_non_nullable
+as EventCalendar,
+  ));
+}
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@override
+@pragma('vm:prefer-inline')
+$EventCalendarCopyWith<$Res> get event {
+  
+  return $EventCalendarCopyWith<$Res>(_self.event, (value) {
+    return _then(_self.copyWith(event: value));
+  });
+}
+}
+
+/// @nodoc
+
+
+class EventDeleted implements CalendarEvent {
+  const EventDeleted(this.eventId);
+  
+
+ final  String eventId;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@JsonKey(includeFromJson: false, includeToJson: false)
+@pragma('vm:prefer-inline')
+$EventDeletedCopyWith<EventDeleted> get copyWith => _$EventDeletedCopyWithImpl<EventDeleted>(this, _$identity);
+
+
+
+@override
+bool operator ==(Object other) {
+  return identical(this, other) || (other.runtimeType == runtimeType&&other is EventDeleted&&(identical(other.eventId, eventId) || other.eventId == eventId));
+}
+
+
+@override
+int get hashCode => Object.hash(runtimeType,eventId);
+
+@override
+String toString() {
+  return 'CalendarEvent.eventDeleted(eventId: $eventId)';
+}
+
+
+}
+
+/// @nodoc
+abstract mixin class $EventDeletedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
+  factory $EventDeletedCopyWith(EventDeleted value, $Res Function(EventDeleted) _then) = _$EventDeletedCopyWithImpl;
+@useResult
+$Res call({
+ String eventId
+});
+
+
+
+
+}
+/// @nodoc
+class _$EventDeletedCopyWithImpl<$Res>
+    implements $EventDeletedCopyWith<$Res> {
+  _$EventDeletedCopyWithImpl(this._self, this._then);
+
+  final EventDeleted _self;
+  final $Res Function(EventDeleted) _then;
+
+/// Create a copy of CalendarEvent
+/// with the given fields replaced by the non-null parameter values.
+@pragma('vm:prefer-inline') $Res call({Object? eventId = null,}) {
+  return _then(EventDeleted(
+null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
+as String,
+  ));
+}
+
+
+}
+
+/// @nodoc
 mixin _$CalendarState {
 
 
@@ -260,641 +895,6 @@ class _$ErrorCopyWithImpl<$Res>
   return _then(Error(
 errorMessage: freezed == errorMessage ? _self.errorMessage : errorMessage // ignore: cast_nullable_to_non_nullable
 as String?,
-  ));
-}
-
-
-}
-
-/// @nodoc
-mixin _$CalendarEvent {
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is CalendarEvent);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'CalendarEvent()';
-}
-
-
-}
-
-/// @nodoc
-class $CalendarEventCopyWith<$Res>  {
-$CalendarEventCopyWith(CalendarEvent _, $Res Function(CalendarEvent) __);
-}
-
-
-/// @nodoc
-
-
-class _Started implements CalendarEvent {
-  const _Started();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _Started);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'CalendarEvent.started()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _UpdateEventStatus implements CalendarEvent {
-  const _UpdateEventStatus({required this.eventId, required this.newStatus});
-  
-
- final  String eventId;
- final  String newStatus;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$UpdateEventStatusCopyWith<_UpdateEventStatus> get copyWith => __$UpdateEventStatusCopyWithImpl<_UpdateEventStatus>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _UpdateEventStatus&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.newStatus, newStatus) || other.newStatus == newStatus));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,eventId,newStatus);
-
-@override
-String toString() {
-  return 'CalendarEvent.updateEventStatus(eventId: $eventId, newStatus: $newStatus)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$UpdateEventStatusCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$UpdateEventStatusCopyWith(_UpdateEventStatus value, $Res Function(_UpdateEventStatus) _then) = __$UpdateEventStatusCopyWithImpl;
-@useResult
-$Res call({
- String eventId, String newStatus
-});
-
-
-
-
-}
-/// @nodoc
-class __$UpdateEventStatusCopyWithImpl<$Res>
-    implements _$UpdateEventStatusCopyWith<$Res> {
-  __$UpdateEventStatusCopyWithImpl(this._self, this._then);
-
-  final _UpdateEventStatus _self;
-  final $Res Function(_UpdateEventStatus) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? newStatus = null,}) {
-  return _then(_UpdateEventStatus(
-eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,newStatus: null == newStatus ? _self.newStatus : newStatus // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _CalculateDaysRemaining implements CalendarEvent {
-  const _CalculateDaysRemaining();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _CalculateDaysRemaining);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'CalendarEvent.calculateDaysRemaining()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _GetEvents implements CalendarEvent {
-  const _GetEvents();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetEvents);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'CalendarEvent.getEvents()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _GetDeadlineDate implements CalendarEvent {
-  const _GetDeadlineDate();
-  
-
-
-
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _GetDeadlineDate);
-}
-
-
-@override
-int get hashCode => runtimeType.hashCode;
-
-@override
-String toString() {
-  return 'CalendarEvent.getDeadlineDate()';
-}
-
-
-}
-
-
-
-
-/// @nodoc
-
-
-class _DaySelected implements CalendarEvent {
-  const _DaySelected(this.selectedDay, this.focusedDay);
-  
-
- final  DateTime selectedDay;
- final  DateTime focusedDay;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$DaySelectedCopyWith<_DaySelected> get copyWith => __$DaySelectedCopyWithImpl<_DaySelected>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _DaySelected&&(identical(other.selectedDay, selectedDay) || other.selectedDay == selectedDay)&&(identical(other.focusedDay, focusedDay) || other.focusedDay == focusedDay));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,selectedDay,focusedDay);
-
-@override
-String toString() {
-  return 'CalendarEvent.dateSelected(selectedDay: $selectedDay, focusedDay: $focusedDay)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$DaySelectedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$DaySelectedCopyWith(_DaySelected value, $Res Function(_DaySelected) _then) = __$DaySelectedCopyWithImpl;
-@useResult
-$Res call({
- DateTime selectedDay, DateTime focusedDay
-});
-
-
-
-
-}
-/// @nodoc
-class __$DaySelectedCopyWithImpl<$Res>
-    implements _$DaySelectedCopyWith<$Res> {
-  __$DaySelectedCopyWithImpl(this._self, this._then);
-
-  final _DaySelected _self;
-  final $Res Function(_DaySelected) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? selectedDay = null,Object? focusedDay = null,}) {
-  return _then(_DaySelected(
-null == selectedDay ? _self.selectedDay : selectedDay // ignore: cast_nullable_to_non_nullable
-as DateTime,null == focusedDay ? _self.focusedDay : focusedDay // ignore: cast_nullable_to_non_nullable
-as DateTime,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _FormatChanged implements CalendarEvent {
-  const _FormatChanged({this.format});
-  
-
- final  dynamic format;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$FormatChangedCopyWith<_FormatChanged> get copyWith => __$FormatChangedCopyWithImpl<_FormatChanged>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _FormatChanged&&const DeepCollectionEquality().equals(other.format, format));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,const DeepCollectionEquality().hash(format));
-
-@override
-String toString() {
-  return 'CalendarEvent.formatChanged(format: $format)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$FormatChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$FormatChangedCopyWith(_FormatChanged value, $Res Function(_FormatChanged) _then) = __$FormatChangedCopyWithImpl;
-@useResult
-$Res call({
- dynamic format
-});
-
-
-
-
-}
-/// @nodoc
-class __$FormatChangedCopyWithImpl<$Res>
-    implements _$FormatChangedCopyWith<$Res> {
-  __$FormatChangedCopyWithImpl(this._self, this._then);
-
-  final _FormatChanged _self;
-  final $Res Function(_FormatChanged) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? format = freezed,}) {
-  return _then(_FormatChanged(
-format: freezed == format ? _self.format : format // ignore: cast_nullable_to_non_nullable
-as dynamic,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _PageChanged implements CalendarEvent {
-  const _PageChanged(this.focusedDay);
-  
-
- final  DateTime focusedDay;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$PageChangedCopyWith<_PageChanged> get copyWith => __$PageChangedCopyWithImpl<_PageChanged>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _PageChanged&&(identical(other.focusedDay, focusedDay) || other.focusedDay == focusedDay));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,focusedDay);
-
-@override
-String toString() {
-  return 'CalendarEvent.pageChanged(focusedDay: $focusedDay)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$PageChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$PageChangedCopyWith(_PageChanged value, $Res Function(_PageChanged) _then) = __$PageChangedCopyWithImpl;
-@useResult
-$Res call({
- DateTime focusedDay
-});
-
-
-
-
-}
-/// @nodoc
-class __$PageChangedCopyWithImpl<$Res>
-    implements _$PageChangedCopyWith<$Res> {
-  __$PageChangedCopyWithImpl(this._self, this._then);
-
-  final _PageChanged _self;
-  final $Res Function(_PageChanged) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? focusedDay = null,}) {
-  return _then(_PageChanged(
-null == focusedDay ? _self.focusedDay : focusedDay // ignore: cast_nullable_to_non_nullable
-as DateTime,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _EventStatusChanged implements CalendarEvent {
-  const _EventStatusChanged({required this.eventId, required this.newStatus});
-  
-
- final  String eventId;
- final  String newStatus;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$EventStatusChangedCopyWith<_EventStatusChanged> get copyWith => __$EventStatusChangedCopyWithImpl<_EventStatusChanged>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventStatusChanged&&(identical(other.eventId, eventId) || other.eventId == eventId)&&(identical(other.newStatus, newStatus) || other.newStatus == newStatus));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,eventId,newStatus);
-
-@override
-String toString() {
-  return 'CalendarEvent.eventStatusChanged(eventId: $eventId, newStatus: $newStatus)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$EventStatusChangedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$EventStatusChangedCopyWith(_EventStatusChanged value, $Res Function(_EventStatusChanged) _then) = __$EventStatusChangedCopyWithImpl;
-@useResult
-$Res call({
- String eventId, String newStatus
-});
-
-
-
-
-}
-/// @nodoc
-class __$EventStatusChangedCopyWithImpl<$Res>
-    implements _$EventStatusChangedCopyWith<$Res> {
-  __$EventStatusChangedCopyWithImpl(this._self, this._then);
-
-  final _EventStatusChanged _self;
-  final $Res Function(_EventStatusChanged) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? eventId = null,Object? newStatus = null,}) {
-  return _then(_EventStatusChanged(
-eventId: null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,newStatus: null == newStatus ? _self.newStatus : newStatus // ignore: cast_nullable_to_non_nullable
-as String,
-  ));
-}
-
-
-}
-
-/// @nodoc
-
-
-class _EventAdded implements CalendarEvent {
-  const _EventAdded(this.event);
-  
-
- final  EventCalendar event;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$EventAddedCopyWith<_EventAdded> get copyWith => __$EventAddedCopyWithImpl<_EventAdded>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventAdded&&(identical(other.event, event) || other.event == event));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,event);
-
-@override
-String toString() {
-  return 'CalendarEvent.eventAdded(event: $event)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$EventAddedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$EventAddedCopyWith(_EventAdded value, $Res Function(_EventAdded) _then) = __$EventAddedCopyWithImpl;
-@useResult
-$Res call({
- EventCalendar event
-});
-
-
-$EventCalendarCopyWith<$Res> get event;
-
-}
-/// @nodoc
-class __$EventAddedCopyWithImpl<$Res>
-    implements _$EventAddedCopyWith<$Res> {
-  __$EventAddedCopyWithImpl(this._self, this._then);
-
-  final _EventAdded _self;
-  final $Res Function(_EventAdded) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? event = null,}) {
-  return _then(_EventAdded(
-null == event ? _self.event : event // ignore: cast_nullable_to_non_nullable
-as EventCalendar,
-  ));
-}
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@override
-@pragma('vm:prefer-inline')
-$EventCalendarCopyWith<$Res> get event {
-  
-  return $EventCalendarCopyWith<$Res>(_self.event, (value) {
-    return _then(_self.copyWith(event: value));
-  });
-}
-}
-
-/// @nodoc
-
-
-class _EventDeleted implements CalendarEvent {
-  const _EventDeleted(this.eventId);
-  
-
- final  String eventId;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@JsonKey(includeFromJson: false, includeToJson: false)
-@pragma('vm:prefer-inline')
-_$EventDeletedCopyWith<_EventDeleted> get copyWith => __$EventDeletedCopyWithImpl<_EventDeleted>(this, _$identity);
-
-
-
-@override
-bool operator ==(Object other) {
-  return identical(this, other) || (other.runtimeType == runtimeType&&other is _EventDeleted&&(identical(other.eventId, eventId) || other.eventId == eventId));
-}
-
-
-@override
-int get hashCode => Object.hash(runtimeType,eventId);
-
-@override
-String toString() {
-  return 'CalendarEvent.eventDeleted(eventId: $eventId)';
-}
-
-
-}
-
-/// @nodoc
-abstract mixin class _$EventDeletedCopyWith<$Res> implements $CalendarEventCopyWith<$Res> {
-  factory _$EventDeletedCopyWith(_EventDeleted value, $Res Function(_EventDeleted) _then) = __$EventDeletedCopyWithImpl;
-@useResult
-$Res call({
- String eventId
-});
-
-
-
-
-}
-/// @nodoc
-class __$EventDeletedCopyWithImpl<$Res>
-    implements _$EventDeletedCopyWith<$Res> {
-  __$EventDeletedCopyWithImpl(this._self, this._then);
-
-  final _EventDeleted _self;
-  final $Res Function(_EventDeleted) _then;
-
-/// Create a copy of CalendarEvent
-/// with the given fields replaced by the non-null parameter values.
-@pragma('vm:prefer-inline') $Res call({Object? eventId = null,}) {
-  return _then(_EventDeleted(
-null == eventId ? _self.eventId : eventId // ignore: cast_nullable_to_non_nullable
-as String,
   ));
 }
 

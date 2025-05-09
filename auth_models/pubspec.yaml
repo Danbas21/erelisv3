@@ -1,7 +1,7 @@
 name: auth_models
 description: "A new Flutter package project."
 version: 0.0.1
-homepage: null
+
 
 environment:
   sdk: ^3.7.0
